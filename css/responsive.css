@@ -1,1 +1,233 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Responsive Stylesheet
+Version : 1.0.0
+==========================================================
+*/
 
+/* ==========================================
+   TABLET
+   768px - 991px
+========================================== */
+
+@media screen and (min-width:768px){
+
+    .container{
+        max-width:720px;
+    }
+
+    .header h1{
+        font-size:2rem;
+    }
+
+    .search-card,
+    .result-card,
+    .error-card{
+
+        padding:2rem;
+
+    }
+
+    #searchForm{
+
+        display:flex;
+        gap:1rem;
+
+    }
+
+    #searchForm input{
+
+        flex:1;
+
+    }
+
+    #searchForm button{
+
+        width:180px;
+
+    }
+
+}
+
+/* ==========================================
+   LAPTOP
+   992px - 1199px
+========================================== */
+
+@media screen and (min-width:992px){
+
+    .container{
+        max-width:960px;
+    }
+
+    body{
+
+        font-size:16px;
+
+    }
+
+    .header{
+
+        padding:3rem 0;
+
+    }
+
+    .header h1{
+
+        font-size:2.5rem;
+
+    }
+
+    .search-section{
+
+        padding:3rem 0;
+
+    }
+
+    .search-card{
+
+        max-width:650px;
+        margin:auto;
+
+    }
+
+    .result-card{
+
+        max-width:700px;
+        margin:auto;
+
+    }
+
+}
+
+/* ==========================================
+   DESKTOP
+   1200px+
+========================================== */
+
+@media screen and (min-width:1200px){
+
+    .container{
+
+        max-width:1140px;
+
+    }
+
+    .header h1{
+
+        font-size:3rem;
+
+    }
+
+    .search-card{
+
+        max-width:700px;
+
+    }
+
+    .result-card{
+
+        max-width:760px;
+
+    }
+
+}
+
+/* ==========================================
+   LARGE DESKTOP
+   1400px+
+========================================== */
+
+@media screen and (min-width:1400px){
+
+    .container{
+
+        max-width:1320px;
+
+    }
+
+}
+
+/* ==========================================
+   LANDSCAPE PHONE
+========================================== */
+
+@media screen and (max-height:500px)
+and (orientation:landscape){
+
+    .header{
+
+        padding:1.5rem 0;
+
+    }
+
+    .search-section{
+
+        padding:1rem 0;
+
+    }
+
+}
+
+/* ==========================================
+   SMALL PHONE
+========================================== */
+
+@media screen and (max-width:360px){
+
+    body{
+
+        font-size:14px;
+
+    }
+
+    .header h1{
+
+        font-size:1.5rem;
+
+    }
+
+    .search-card,
+    .result-card{
+
+        padding:1rem;
+
+    }
+
+    #searchForm button{
+
+        width:100%;
+
+    }
+
+}
+
+/* ==========================================
+   PRINT
+========================================== */
+
+@media print{
+
+    body{
+
+        background:#ffffff;
+        color:#000000;
+
+    }
+
+    button,
+    footer{
+
+        display:none;
+
+    }
+
+    .result-card{
+
+        box-shadow:none;
+        border:1px solid #000;
+
+    }
+
+}
