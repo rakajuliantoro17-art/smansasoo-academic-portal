@@ -1,1 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
 
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SMAN 1 Sooko Mojokerto | Pengumuman Kenaikan Kelas</title>
+
+    <meta name="description"
+        content="Portal Pengumuman Kenaikan Kelas dan Pembagian Kelas Baru SMAN 1 Sooko Mojokerto">
+
+    <meta name="theme-color" content="#0F4C81">
+
+    <!-- Favicon -->
+    <link rel="icon" href="assets/logo/favicon.ico">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/variables.css">
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <link rel="stylesheet" href="css/responsive.css">
+
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <img src="assets/logo/logo.png"
+                 alt="Logo SMAN 1 Sooko"
+                 class="logo">
+
+            <h1>
+                Pengumuman
+                <span>Kenaikan Kelas</span>
+            </h1>
+
+            <p>
+                Tahun Pelajaran
+                <strong>2026 / 2027</strong>
+            </p>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <main>
+
+        <section class="search-section">
+
+            <div class="container">
+
+                <div class="search-card">
+
+                    <h2>Cek Hasil</h2>
+
+                    <p>
+
+                        Masukkan NIS atau NISN untuk melihat hasil
+                        kenaikan kelas dan pembagian kelas baru.
+
+                    </p>
+
+                    <form id="searchForm">
+
+                        <input
+                            type="text"
+                            id="keyword"
+                            placeholder="Masukkan NIS / NISN"
+                            autocomplete="off"
+                            required>
+
+                        <button type="submit">
+
+                            Cari
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= LOADING ================= -->
+
+        <section id="loading" class="hidden">
+
+            <div class="container">
+
+                <div class="loading-box">
+
+                    <div class="spinner"></div>
+
+                    <p>Mencari data...</p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= RESULT ================= -->
+
+        <section id="result" class="hidden">
+
+            <div class="container">
+
+                <div class="result-card">
+
+                    <!-- hasil akan ditampilkan oleh JavaScript -->
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= ERROR ================= -->
+
+        <section id="error" class="hidden">
+
+            <div class="container">
+
+                <div class="error-card">
+
+                    Data tidak ditemukan.
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <div class="container">
+
+            <p>
+
+                © 2026
+
+                SMAN 1 Sooko Mojokerto
+
+            </p>
+
+            <small>
+
+                Academic Portal Version 1.0
+
+            </small>
+
+        </div>
+
+    </footer>
+
+
+
+    <!-- CONFIG -->
+
+    <script src="js/config.js"></script>
+
+    <!-- API -->
+
+    <script src="js/api.js"></script>
+
+    <!-- UI -->
+
+    <script src="js/ui.js"></script>
+
+    <!-- APP -->
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
