@@ -1,1 +1,359 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Main Stylesheet
+Version : 1.0.0
+==========================================================
+*/
 
+/* ==============================
+   RESET
+============================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+
+    font-family:'Plus Jakarta Sans',sans-serif;
+
+    background:var(--background);
+
+    color:var(--text);
+
+    line-height:1.6;
+
+    min-height:100vh;
+
+}
+
+/* ==============================
+   CONTAINER
+============================== */
+
+.container{
+
+    width:min(92%,1100px);
+
+    margin:auto;
+
+}
+
+/* ==============================
+   HEADER
+============================== */
+
+.header{
+
+    padding:50px 20px;
+
+    text-align:center;
+
+}
+
+.logo{
+
+    width:110px;
+
+    margin-bottom:20px;
+
+}
+
+.header h1{
+
+    font-size:2rem;
+
+    font-weight:800;
+
+    color:var(--primary);
+
+}
+
+.header h1 span{
+
+    display:block;
+
+    color:var(--secondary);
+
+}
+
+.header p{
+
+    margin-top:12px;
+
+    color:var(--text-light);
+
+}
+
+/* ==============================
+   SEARCH SECTION
+============================== */
+
+.search-section{
+
+    padding:20px;
+
+}
+
+.search-card{
+
+    background:#ffffff;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.search-card h2{
+
+    text-align:center;
+
+    margin-bottom:10px;
+
+    color:var(--primary);
+
+}
+
+.search-card p{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    color:var(--text-light);
+
+}
+
+/* ==============================
+   FORM
+============================== */
+
+#searchForm{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+#searchForm input{
+
+    height:55px;
+
+    padding:0 18px;
+
+    border:2px solid #e5e7eb;
+
+    border-radius:12px;
+
+    font-size:16px;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+#searchForm input:focus{
+
+    border-color:var(--primary);
+
+}
+
+#searchForm button{
+
+    height:55px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    background:var(--primary);
+
+    color:#fff;
+
+    font-size:16px;
+
+    font-weight:700;
+
+}
+
+/* ==============================
+   LOADING
+============================== */
+
+.loading-box{
+
+    text-align:center;
+
+    padding:40px;
+
+}
+
+.loading-box p{
+
+    margin-top:15px;
+
+    color:var(--text-light);
+
+}
+
+/* ==============================
+   RESULT
+============================== */
+
+.result-card{
+
+    background:#ffffff;
+
+    border-radius:20px;
+
+    padding:30px;
+
+    margin-top:25px;
+
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+
+}
+
+.result-title{
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+    color:var(--success);
+
+}
+
+.result-item{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    border-bottom:1px solid #eeeeee;
+
+}
+
+.result-item:last-child{
+
+    border-bottom:none;
+
+}
+
+.result-label{
+
+    font-weight:600;
+
+    color:var(--text-light);
+
+}
+
+.result-value{
+
+    font-weight:700;
+
+    text-align:right;
+
+}
+
+/* ==============================
+   ERROR
+============================== */
+
+.error-card{
+
+    margin-top:25px;
+
+    background:#ffeaea;
+
+    color:#d32f2f;
+
+    padding:18px;
+
+    border-radius:14px;
+
+    text-align:center;
+
+    font-weight:600;
+
+}
+
+/* ==============================
+   FOOTER
+============================== */
+
+footer{
+
+    margin-top:60px;
+
+    padding:30px 20px;
+
+    text-align:center;
+
+    color:var(--text-light);
+
+    font-size:14px;
+
+}
+
+footer small{
+
+    display:block;
+
+    margin-top:8px;
+
+}
+
+/* ==============================
+   UTILITIES
+============================== */
+
+.hidden{
+
+    display:none;
+
+}
+
+.text-center{
+
+    text-align:center;
+
+}
+
+.mt-1{
+
+    margin-top:10px;
+
+}
+
+.mt-2{
+
+    margin-top:20px;
+
+}
+
+.mt-3{
+
+    margin-top:30px;
+
+}
