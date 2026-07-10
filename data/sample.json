@@ -1,1 +1,48 @@
-
+{
+  "success": true,
+  "version": "1.0.0",
+  "academic_year": "2026/2027",
+  "school": {
+    "name": "SMAN 1 Sooko Mojokerto",
+    "city": "Mojokerto",
+    "province": "Jawa Timur"
+  },
+  "students": [
+    {
+      "nis": "240001",
+      "nisn": "0087654321",
+      "name": "Ahmad Fauzi",
+      "gender": "L",
+      "status": "NAIK",
+      "previous_class": "X-1",
+      "new_class": "XI-STEM 1",
+      "major": "STEM",
+      "homeroom_teacher": "Drs. Budi Santoso",
+      "announcement_date": "2026-06-20"
+    },
+    {
+      "nis": "240002",
+      "nisn": "0087654322",
+      "name": "Siti Aisyah",
+      "gender": "P",
+      "status": "NAIK",
+      "previous_class": "X-2",
+      "new_class": "XI-SOSHUM 2",
+      "major": "SOSHUM",
+      "homeroom_teacher": "Dra. Rina Wulandari",
+      "announcement_date": "2026-06-20"
+    },
+    {
+      "nis": "240003",
+      "nisn": "0087654323",
+      "name": "Muhammad Rizky",
+      "gender": "L",
+      "status": "TIDAK NAIK",
+      "previous_class": "X-4",
+      "new_class": "-",
+      "major": "-",
+      "homeroom_teacher": "-",
+      "announcement_date": "2026-06-20"
+    }
+  ]
+}
