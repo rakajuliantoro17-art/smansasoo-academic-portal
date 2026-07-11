@@ -69,6 +69,25 @@ window.CONFIG = {
     SEARCH_PLACEHOLDER:
         "Masukkan NIS atau NISN",
 
+    // Substring (huruf besar) yang menandai status BELUM naik
+    // kelas, dicek terhadap kolom STATUS di sheet STUDENTS.
+    // Contoh yang cocok: "TIDAK NAIK", "Tidak Naik Kelas", dst.
+    STATUS_NOT_PROMOTED_KEYWORD: "TIDAK",
+
+    /* ==========================================
+       CELEBRATION (status: NAIK)
+    ========================================== */
+
+    // Set false untuk mematikan musik tanpa ubah kode lain.
+    ENABLE_CELEBRATION_AUDIO: true,
+
+    // WAJIB diisi file audio milik sekolah / royalty-free.
+    // Taruh file-nya di assets/audio/ lalu sesuaikan path ini.
+    // Selama file belum ada, browser akan diam-diam gagal
+    // memutar audio (tidak error ke pengguna).
+    CELEBRATION_AUDIO_URL:
+        "assets/audio/naik-kelas.mp3",
+
     /* ==========================================
        CACHE
     ========================================== */
@@ -114,7 +133,12 @@ window.CONFIG = {
             "Memuat data...",
 
         SUCCESS:
-            "Data berhasil ditemukan."
+            "Data berhasil ditemukan.",
+
+        NOT_PROMOTED_NOTE:
+            "Untuk informasi lebih lanjut mengenai hasil ini, " +
+            "silakan hubungi wali kelas atau bagian Kurikulum " +
+            "SMAN 1 Sooko."
 
     }
 
