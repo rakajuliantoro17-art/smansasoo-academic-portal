@@ -106,3 +106,17 @@ window.CONFIG = {
 ========================================== */
 
 Object.freeze(window.CONFIG);
+
+const CONFIG = {
+
+  APP_NAME: "SMANSASOO Academic Portal",
+
+  VERSION: "1.0.0",
+
+  API_URL: "https://script.google.com/macros/s/AKfycbxMrsLUcgmHtuqUlTL3Z6h0vpHOYCHq3kLIv7YOXe4M8NIRdQbFNjvaIS2gKNNfavWP9g/exec",
+
+  REQUEST_TIMEOUT: 10000,
+
+  CACHE_TIME: 300000
+
+};
