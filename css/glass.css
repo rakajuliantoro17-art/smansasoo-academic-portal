@@ -1,0 +1,490 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Glassmorphism Layer + Celebration Overlay
+Version : 1.2.0
+==========================================================
+File ini TIDAK menggantikan style.css/animation.css, hanya
+menambah:
+1. Background foto sekolah (blur + gradient) di seluruh
+   halaman, sesuai "VISUAL CONCEPT" di roadmap.
+2. Glassmorphism pada search-card/result-card/loading-box/
+   error-card (backdrop-filter blur, sesuai spesifikasi
+   roadmap: blur 25px, rgba(255,255,255,.15), dst).
+3. Overlay perayaan (flash, confetti, balon) untuk status
+   NAIK — diadaptasi dari referensi gaya SNBP/SNBT.
+4. Kartu netral (.result-neutral) untuk status TIDAK NAIK —
+   sengaja TIDAK dramatis, tidak pakai warna mencolok/animasi.
+
+Semua warna/spacing/radius memakai variabel dari variables.css
+supaya konsisten dengan sistem desain yang sudah ada.
+==========================================================
+*/
+
+/* ==============================
+   BACKGROUND LAYER
+============================== */
+
+body{
+
+    position:relative;
+
+    overflow-x:hidden;
+
+}
+
+.bg-layer{
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:-2;
+
+    background:url('assets/images/scc.jpg') center/cover no-repeat;
+
+    filter:blur(8px) brightness(.5) saturate(1.1);
+
+    transform:scale(1.08);
+
+}
+
+.bg-layer::after{
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+        180deg,
+        rgba(10,53,91,.55) 0%,
+        rgba(10,53,91,.85) 100%
+    );
+
+}
+
+/* ==============================
+   HEADER (teks putih di atas foto)
+============================== */
+
+.header h1{
+
+    color:var(--text-white);
+
+}
+
+.header h1 span{
+
+    color:var(--secondary-light);
+
+}
+
+.header p{
+
+    color:rgba(255,255,255,.85);
+
+}
+
+.header p strong{
+
+    color:#ffffff;
+
+}
+
+.logo{
+
+    filter:drop-shadow(0 4px 14px rgba(0,0,0,.35));
+
+}
+
+/* ==============================
+   GLASS CARDS
+   (search-card, result-card, loading-box, error-card)
+============================== */
+
+.search-card,
+.result-card,
+.loading-box,
+.error-card{
+
+    background:rgba(255,255,255,.15);
+
+    backdrop-filter:blur(25px);
+
+    -webkit-backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.2);
+
+    box-shadow:var(--shadow-lg);
+
+    color:var(--text-white);
+
+}
+
+.search-card h2,
+.result-title{
+
+    color:#ffffff;
+
+}
+
+.search-card p{
+
+    color:rgba(255,255,255,.8);
+
+}
+
+#searchForm input{
+
+    background:rgba(255,255,255,.15);
+
+    border:2px solid rgba(255,255,255,.25);
+
+    color:#ffffff;
+
+}
+
+#searchForm input::placeholder{
+
+    color:rgba(255,255,255,.6);
+
+}
+
+#searchForm input:focus{
+
+    border-color:var(--secondary-light);
+
+}
+
+#searchForm button{
+
+    background:var(--secondary);
+
+    color:var(--primary-dark);
+
+}
+
+.result-item{
+
+    border-bottom:1px solid rgba(255,255,255,.15);
+
+}
+
+.result-label{
+
+    color:rgba(255,255,255,.7);
+
+}
+
+.result-value{
+
+    color:#ffffff;
+
+}
+
+.loading-box p{
+
+    color:rgba(255,255,255,.85);
+
+}
+
+.error-card{
+
+    color:#ffffff;
+
+    background:rgba(198,40,40,.25);
+
+    border-color:rgba(255,255,255,.25);
+
+}
+
+/* ==============================
+   KARTU NETRAL (status: TIDAK NAIK)
+   Sengaja polos — tanpa warna mencolok/animasi ekstra.
+============================== */
+
+.result-neutral{
+
+    background:rgba(255,255,255,.1);
+
+}
+
+.result-neutral .status-note{
+
+    margin-top:20px;
+
+    padding:16px;
+
+    border-radius:var(--radius-md);
+
+    background:rgba(255,255,255,.08);
+
+    color:rgba(255,255,255,.85);
+
+    font-size:.9rem;
+
+    line-height:1.7;
+
+    text-align:left;
+
+}
+
+/* ==============================
+   FLASH
+============================== */
+
+.flash{
+
+    position:fixed;
+
+    inset:0;
+
+    background:#ffffff;
+
+    opacity:0;
+
+    z-index:var(--z-toast);
+
+    pointer-events:none;
+
+}
+
+.flash.show{
+
+    animation:flashPulse .5s ease;
+
+}
+
+@keyframes flashPulse{
+
+    0%{ opacity:1; }
+
+    100%{ opacity:0; }
+
+}
+
+/* ==============================
+   OVERLAY PERAYAAN (status: NAIK)
+============================== */
+
+.overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+    background:url('assets/images/scc.jpg') center/cover no-repeat;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transition:var(--transition-slow);
+
+    z-index:var(--z-overlay);
+
+}
+
+.overlay::before{
+
+    content:'';
+
+    position:absolute;
+
+    inset:0;
+
+    background:linear-gradient(
+        180deg,
+        rgba(15,76,129,.75),
+        rgba(10,53,91,.92)
+    );
+
+}
+
+.overlay.show{
+
+    opacity:1;
+
+    visibility:visible;
+
+}
+
+.result-box{
+
+    position:relative;
+
+    z-index:2;
+
+    width:100%;
+
+    max-width:480px;
+
+    background:rgba(255,255,255,.1);
+
+    backdrop-filter:blur(25px);
+
+    -webkit-backdrop-filter:blur(25px);
+
+    border:1px solid rgba(255,255,255,.25);
+
+    border-radius:var(--radius-xl);
+
+    padding:40px 30px;
+
+    text-align:center;
+
+    color:#ffffff;
+
+    transform:scale(.9);
+
+    opacity:0;
+
+    transition:var(--transition-slow);
+
+    box-shadow:var(--shadow-lg);
+
+}
+
+.overlay.show .result-box{
+
+    transform:scale(1);
+
+    opacity:1;
+
+}
+
+.result-box .headline{
+
+    font-size:clamp(28px,6vw,52px);
+
+    font-weight:800;
+
+    color:var(--secondary-light);
+
+    text-shadow:0 0 25px rgba(244,180,0,.5);
+
+}
+
+.result-box .subtext{
+
+    font-size:clamp(15px,3vw,20px);
+
+    margin-top:8px;
+
+    color:rgba(255,255,255,.9);
+
+    letter-spacing:.5px;
+
+}
+
+.result-box .student-name{
+
+    margin-top:18px;
+
+    font-size:clamp(18px,3.5vw,26px);
+
+    font-weight:700;
+
+}
+
+.result-box .student-detail{
+
+    margin-top:6px;
+
+    font-size:.95rem;
+
+    color:rgba(255,255,255,.8);
+
+}
+
+.result-box button{
+
+    margin-top:26px;
+
+    width:auto;
+
+    padding:12px 32px;
+
+    border-radius:var(--radius-pill);
+
+    border:1px solid rgba(255,255,255,.4);
+
+    background:rgba(255,255,255,.12);
+
+    color:#ffffff;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+/* ==============================
+   BALON
+============================== */
+
+#balloons{
+
+    position:fixed;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:var(--z-modal);
+
+}
+
+.balloon{
+
+    position:absolute;
+
+    bottom:-100px;
+
+    width:38px;
+
+    height:48px;
+
+    border-radius:50%;
+
+    opacity:.9;
+
+    animation:balloonRise 6s linear forwards;
+
+}
+
+@keyframes balloonRise{
+
+    from{ transform:translateY(0); }
+
+    to{ transform:translateY(-120vh); opacity:0; }
+
+}
+
+/* ==============================
+   CANVAS CONFETTI
+   (elemen <canvas> disuntikkan otomatis oleh library
+   canvas-confetti — kita cuma atur posisinya)
+============================== */
+
+canvas{
+
+    position:fixed !important;
+
+    inset:0;
+
+    pointer-events:none;
+
+    z-index:var(--z-modal) !important;
+
+}
