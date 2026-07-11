@@ -105,57 +105,14 @@
 
 
 
-        <!-- ================= LOADING ================= -->
+        <!-- ================= RESULT AREA =================
+             Satu container tunggal untuk loading / hasil / error.
+             Diisi dan ditampilkan sepenuhnya oleh js/ui.js
+             (class "hidden" dilepas/ditambah lewat JS, bukan statis). -->
 
-        <section id="loading" class="hidden">
+        <section class="container">
 
-            <div class="container">
-
-                <div class="loading-box">
-
-                    <div class="spinner"></div>
-
-                    <p>Mencari data...</p>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================= RESULT ================= -->
-
-        <section id="result" class="hidden">
-
-            <div class="container">
-
-                <div class="result-card">
-
-                    <!-- hasil akan ditampilkan oleh JavaScript -->
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================= ERROR ================= -->
-
-        <section id="error" class="hidden">
-
-            <div class="container">
-
-                <div class="error-card">
-
-                    Data tidak ditemukan.
-
-                </div>
-
-            </div>
+            <div id="result" class="hidden"></div>
 
         </section>
 
@@ -193,6 +150,10 @@
 
     <script src="js/config.js"></script>
 
+    <!-- UTILS -->
+
+    <script src="js/utils.js"></script>
+
     <!-- API -->
 
     <script src="js/api.js"></script>
@@ -201,7 +162,11 @@
 
     <script src="js/ui.js"></script>
 
-    <!-- APP -->
+    <!-- SEARCH -->
+
+    <script src="js/search.js"></script>
+
+    <!-- APP (bootstrap) -->
 
     <script src="js/app.js"></script>
 
