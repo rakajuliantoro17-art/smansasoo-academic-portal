@@ -31,6 +31,11 @@ body{
 
     overflow-x:hidden;
 
+    /* Background asli dari style.css sengaja ditransparankan
+       supaya .bg-layer di bawahnya tidak tertutup "kanvas"
+       warna body. */
+    background:transparent;
+
 }
 
 .bg-layer{
@@ -39,9 +44,9 @@ body{
 
     inset:0;
 
-    z-index:-2;
+    z-index:-1;
 
-    background:url('assets/images/scc.jpg') center/cover no-repeat;
+    background:url('../assets/images/scc.jpg') center/cover no-repeat;
 
     filter:blur(8px) brightness(.5) saturate(1.1);
 
@@ -283,7 +288,7 @@ body{
 
     padding:20px;
 
-    background:url('assets/images/scc.jpg') center/cover no-repeat;
+    background:url('../assets/images/scc.jpg') center/cover no-repeat;
 
     opacity:0;
 
