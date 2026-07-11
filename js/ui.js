@@ -2,7 +2,17 @@
 ==========================================================
 SMANSASOO Academic Portal
 UI Module
-Version : 1.0.0
+Version : 1.1.0
+==========================================================
+FIX (v1.1.0):
+- BUG KRITIS: sebelumnya #result punya class="hidden" di
+  index.html dan tidak pernah dilepas oleh JS manapun,
+  sehingga hasil pencarian tidak pernah terlihat walau
+  data sudah berhasil diambil. Sekarang setiap fungsi
+  show* melepas class "hidden" dari #result.
+- Ini menjadi satu-satunya modul yang menulis ke DOM untuk
+  hasil pencarian (app.js dan search.js tidak lagi punya
+  salinan fungsi showResult/showError/showLoading sendiri).
 ==========================================================
 */
 
@@ -18,106 +28,54 @@ window.UI = (() => {
 
         if (!result) return;
 
+        result.classList.remove("hidden");
+
         result.innerHTML = `
 
         <div class="result-card success slide-up">
 
             <h2 class="result-title">
-
-                🎉 Selamat!
-
+                Pengumuman Kenaikan Kelas
             </h2>
 
-            <p class="text-center mt-1">
-
-                Anda dinyatakan
-
-                <strong>${student.status}</strong>
-
-            </p>
-
             <div class="result-item">
-
-                <span class="result-label">
-                    Nama
-                </span>
-
-                <span class="result-value">
-                    ${student.name}
-                </span>
-
+                <span class="result-label">Nama</span>
+                <span class="result-value">${student.name}</span>
             </div>
 
             <div class="result-item">
-
-                <span class="result-label">
-                    NIS
-                </span>
-
-                <span class="result-value">
-                    ${student.nis}
-                </span>
-
+                <span class="result-label">NIS</span>
+                <span class="result-value">${student.nis}</span>
             </div>
 
             <div class="result-item">
-
-                <span class="result-label">
-                    NISN
-                </span>
-
-                <span class="result-value">
-                    ${student.nisn}
-                </span>
-
+                <span class="result-label">NISN</span>
+                <span class="result-value">${student.nisn}</span>
             </div>
 
             <div class="result-item">
-
-                <span class="result-label">
-                    Kelas Lama
-                </span>
-
-                <span class="result-value">
-                    ${student.previous_class}
-                </span>
-
+                <span class="result-label">Status</span>
+                <span class="result-value">${student.status}</span>
             </div>
 
             <div class="result-item">
-
-                <span class="result-label">
-                    Kelas Baru
-                </span>
-
-                <span class="result-value">
-                    ${student.new_class}
-                </span>
-
+                <span class="result-label">Kelas Lama</span>
+                <span class="result-value">${student.previous_class}</span>
             </div>
 
             <div class="result-item">
-
-                <span class="result-label">
-                    Kelompok Minat
-                </span>
-
-                <span class="result-value">
-                    ${student.major}
-                </span>
-
+                <span class="result-label">Kelas Baru</span>
+                <span class="result-value">${student.new_class}</span>
             </div>
 
             <div class="result-item">
+                <span class="result-label">Kelompok Minat</span>
+                <span class="result-value">${student.major}</span>
+            </div>
 
-                <span class="result-label">
-                    Wali Kelas
-                </span>
-
-                <span class="result-value">
-                    ${student.homeroom_teacher}
-                </span>
-
+            <div class="result-item">
+                <span class="result-label">Wali Kelas</span>
+                <span class="result-value">${student.homeroom_teacher}</span>
             </div>
 
         </div>
@@ -134,17 +92,15 @@ window.UI = (() => {
 
         if (!result) return;
 
+        result.classList.remove("hidden");
+
         result.innerHTML = `
 
         <div class="loading-box fade-in">
 
             <div class="spinner"></div>
 
-            <p>
-
-                ${CONFIG.MESSAGE.LOADING}
-
-            </p>
+            <p>${CONFIG.MESSAGE.LOADING}</p>
 
         </div>
 
@@ -160,6 +116,8 @@ window.UI = (() => {
 
         if (!result) return;
 
+        result.classList.remove("hidden");
+
         result.innerHTML = `
 
         <div class="error-card fade-in">
@@ -173,12 +131,14 @@ window.UI = (() => {
     }
 
     /* ==========================================
-       EMPTY
+       EMPTY / RESET
     ========================================== */
 
     function clear() {
 
         if (!result) return;
+
+        result.classList.add("hidden");
 
         result.innerHTML = "";
 
@@ -190,27 +150,27 @@ window.UI = (() => {
 
     function toast(message) {
 
-        let toast = document.createElement("div");
+        const el = document.createElement("div");
 
-        toast.className = "toast";
+        el.className = "toast";
 
-        toast.innerText = message;
+        el.innerText = message;
 
-        document.body.appendChild(toast);
+        document.body.appendChild(el);
 
         setTimeout(() => {
 
-            toast.classList.add("show");
+            el.classList.add("show");
 
         }, 50);
 
         setTimeout(() => {
 
-            toast.classList.remove("show");
+            el.classList.remove("show");
 
             setTimeout(() => {
 
-                toast.remove();
+                el.remove();
 
             }, 300);
 
