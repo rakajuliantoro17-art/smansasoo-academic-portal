@@ -2,7 +2,15 @@
 ==========================================================
 SMANSASOO Academic Portal
 Configuration File
-Version : 1.0.0
+Version : 1.1.0
+==========================================================
+FIX (v1.1.0):
+- Menghapus duplikat "const CONFIG" yang sebelumnya
+  bentrok dengan window.CONFIG dan tidak pernah dipakai.
+- API_BASE_URL sekarang diisi URL Apps Script yang sudah
+  di-deploy (bukan placeholder lagi).
+- Menambahkan API_ACTIONS agar nama action selalu konsisten
+  dengan Api.gs (student, status, settings, announcement, version).
 ==========================================================
 */
 
@@ -14,7 +22,7 @@ window.CONFIG = {
 
     APP_NAME: "SMANSASOO Academic Portal",
 
-    VERSION: "1.0.0",
+    VERSION: "1.1.0",
 
     SCHOOL_NAME: "SMAN 1 Sooko Mojokerto",
 
@@ -24,17 +32,28 @@ window.CONFIG = {
        ENVIRONMENT
     ========================================== */
 
-    ENVIRONMENT: "development",
+    ENVIRONMENT: "production",
     // development | production
 
-    USE_SAMPLE_DATA: true,
+    // Set true hanya untuk demo lokal tanpa koneksi API.
+    // Untuk pemakaian sungguhan HARUS false.
+    USE_SAMPLE_DATA: false,
 
     /* ==========================================
        API
     ========================================== */
 
     API_BASE_URL:
-        "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec",
+        "https://script.google.com/macros/s/AKfycbxMrsLUcgmHtuqUlTL3Z6h0vpHOYCHq3kLIv7YOXe4M8NIRdQbFNjvaIS2gKNNfavWP9g/exec",
+
+    // Nama action HARUS sama persis dengan switch(action) di Api.gs
+    API_ACTIONS: {
+        STUDENT: "student",
+        STATUS: "status",
+        SETTINGS: "settings",
+        ANNOUNCEMENT: "announcement",
+        VERSION: "version"
+    },
 
     SAMPLE_DATA_URL:
         "data/sample.json",
@@ -106,17 +125,5 @@ window.CONFIG = {
 ========================================== */
 
 Object.freeze(window.CONFIG);
-
-const CONFIG = {
-
-  APP_NAME: "SMANSASOO Academic Portal",
-
-  VERSION: "1.0.0",
-
-  API_URL: "https://script.google.com/macros/s/AKfycbxMrsLUcgmHtuqUlTL3Z6h0vpHOYCHq3kLIv7YOXe4M8NIRdQbFNjvaIS2gKNNfavWP9g/exec",
-
-  REQUEST_TIMEOUT: 10000,
-
-  CACHE_TIME: 300000
-
-};
+Object.freeze(window.CONFIG.API_ACTIONS);
+Object.freeze(window.CONFIG.MESSAGE);
