@@ -44,7 +44,7 @@ window.CONFIG = {
     ========================================== */
 
     API_BASE_URL:
-        "https://script.google.com/macros/s/AKfycbxMrsLUcgmHtuqUlTL3Z6h0vpHOYCHq3kLIv7YOXe4M8NIRdQbFNjvaIS2gKNNfavWP9g/exec",
+        "https://script.google.com/macros/s/AKfycbwAbjqiwBFp-xQAZVmcrybhC31FEDH054MS4_mSHgb2hjr15KnL4G-KGfiUhaB_52gsoA/exec",
 
     // Nama action HARUS sama persis dengan switch(action) di Api.gs
     API_ACTIONS: {
