@@ -2,42 +2,51 @@
 ==========================================================
 SMANSASOO Academic Portal
 API Service
-Version : 1.0.0
+Version : 1.1.0
+==========================================================
+FIX (v1.1.0):
+- Tidak lagi punya API_BASE_URL/USE_SAMPLE_DATA sendiri;
+  sekarang membaca dari window.CONFIG (satu sumber kebenaran).
+- Query diubah dari ?nis=/?nisn= menjadi ?action=student&keyword=
+  agar cocok dengan Api.gs (searchStudent membaca e.parameter.keyword).
+- checkAPI() sekarang memanggil ?action=status, bukan URL kosong.
+- Menambahkan timeout via AbortController (CONFIG.API_TIMEOUT).
 ==========================================================
 */
 
 /**
  * ==========================================
- * CONFIGURATION
- * ==========================================
- */
-
-// Ganti dengan URL Web App Google Apps Script setelah deploy
-const API_BASE_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
-
-// Gunakan sample.json jika API belum tersedia
-const USE_SAMPLE_DATA = true;
-
-// Lokasi file sample
-const SAMPLE_DATA_URL = "data/sample.json";
-
-/**
- * ==========================================
- * FETCH JSON
+ * FETCH JSON (dengan timeout)
  * ==========================================
  */
 
 async function fetchJSON(url) {
 
-    const response = await fetch(url, {
-        cache: "no-store"
-    });
+    const controller = new AbortController();
 
-    if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+    const timeout = setTimeout(
+        () => controller.abort(),
+        CONFIG.API_TIMEOUT
+    );
+
+    try {
+
+        const response = await fetch(url, {
+            cache: "no-store",
+            signal: controller.signal
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+        }
+
+        return await response.json();
+
+    } finally {
+
+        clearTimeout(timeout);
+
     }
-
-    return await response.json();
 
 }
 
@@ -54,12 +63,12 @@ async function searchStudent(keyword) {
     }
 
     // ===============================
-    // MODE SAMPLE
+    // MODE SAMPLE (offline/demo)
     // ===============================
 
-    if (USE_SAMPLE_DATA) {
+    if (CONFIG.USE_SAMPLE_DATA) {
 
-        const json = await fetchJSON(SAMPLE_DATA_URL);
+        const json = await fetchJSON(CONFIG.SAMPLE_DATA_URL);
 
         const student = json.students.find(item =>
 
@@ -73,10 +82,8 @@ async function searchStudent(keyword) {
             success: !!student,
 
             message: student
-                ? "Data ditemukan."
-                : "Data tidak ditemukan.",
-
-            version: json.version,
+                ? CONFIG.MESSAGE.SUCCESS
+                : CONFIG.MESSAGE.NOT_FOUND,
 
             data: student || null
 
@@ -85,22 +92,31 @@ async function searchStudent(keyword) {
     }
 
     // ===============================
-    // MODE API
+    // MODE API (Apps Script)
     // ===============================
 
-    const params = new URLSearchParams();
+    const params = new URLSearchParams({
 
-    if (/^\d{10}$/.test(keyword)) {
+        action: CONFIG.API_ACTIONS.STUDENT,
 
-        params.append("nisn", keyword);
+        keyword: keyword
 
-    } else {
+    });
 
-        params.append("nis", keyword);
+    const result = await fetchJSON(`${CONFIG.API_BASE_URL}?${params.toString()}`);
+
+    // Api.gs mengembalikan { success, data } saat sukses
+    // dan { success:false, message } saat gagal.
+    // Kita tambahkan fallback message supaya UI selalu punya teks.
+    if (!result.message) {
+
+        result.message = result.success
+            ? CONFIG.MESSAGE.SUCCESS
+            : CONFIG.MESSAGE.NOT_FOUND;
 
     }
 
-    return await fetchJSON(`${API_BASE_URL}?${params.toString()}`);
+    return result;
 
 }
 
@@ -112,7 +128,7 @@ async function searchStudent(keyword) {
 
 async function checkAPI() {
 
-    if (USE_SAMPLE_DATA) {
+    if (CONFIG.USE_SAMPLE_DATA) {
 
         return {
             success: true,
@@ -123,13 +139,19 @@ async function checkAPI() {
 
     try {
 
-        await fetchJSON(API_BASE_URL);
+        const params = new URLSearchParams({
+            action: CONFIG.API_ACTIONS.STATUS
+        });
+
+        const result = await fetchJSON(`${CONFIG.API_BASE_URL}?${params.toString()}`);
 
         return {
 
-            success: true,
+            success: !!result.success,
 
-            mode: "production"
+            mode: "production",
+
+            status: result.data || null
 
         };
 
