@@ -55,6 +55,11 @@ window.CONFIG = {
         VERSION: "version"
     },
 
+    // Catatan: modul Nilai (js/nilai-api.js) TIDAK memakai
+    // Apps Script lagi. Dia memanggil /api/nilai, Vercel
+    // Serverless Function di repo ini sendiri (lihat api/nilai.js),
+    // yang membaca Google Sheets langsung di sisi server.
+
     SAMPLE_DATA_URL:
         "data/sample.json",
 
