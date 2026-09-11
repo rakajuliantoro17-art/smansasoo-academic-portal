@@ -1,0 +1,230 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Nilai Page Stylesheet
+Version : 1.0.0
+==========================================================
+Dipakai HANYA oleh pages/nilai.html. Memakai token warna,
+radius, dan spacing yang sama dari css/variables.css supaya
+tetap konsisten dengan halaman kenaikan kelas.
+==========================================================
+*/
+
+.nilai-card{
+    background:var(--surface);
+    border-radius:var(--radius-lg);
+    padding:var(--space-xl);
+    margin-top:var(--space-lg);
+    box-shadow:var(--shadow-md);
+}
+
+.nilai-tabs{
+    display:flex;
+    gap:var(--space-sm);
+    margin-bottom:var(--space-lg);
+    flex-wrap:wrap;
+}
+
+.nilai-tab{
+    border:none;
+    background:var(--surface-alt);
+    color:var(--text-light);
+    padding:.5rem 1rem;
+    border-radius:var(--radius-pill);
+    font-weight:var(--weight-semibold);
+    font-size:var(--font-sm);
+    cursor:pointer;
+    transition:var(--transition-fast);
+}
+
+.nilai-tab.active{
+    background:var(--primary);
+    color:var(--text-white);
+}
+
+.nilai-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:var(--space-lg);
+    flex-wrap:wrap;
+    padding-bottom:var(--space-lg);
+    border-bottom:1px solid var(--border-light);
+    margin-bottom:var(--space-lg);
+}
+
+.nilai-badge{
+    display:inline-block;
+    background:var(--surface-alt);
+    color:var(--primary);
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    padding:.25rem .75rem;
+    border-radius:var(--radius-pill);
+    margin-right:var(--space-xs);
+}
+
+.nilai-badge-alt{
+    color:var(--secondary-dark);
+}
+
+.nilai-header h2{
+    margin-top:var(--space-sm);
+    font-size:var(--font-xl);
+    color:var(--text);
+}
+
+.nilai-nis{
+    color:var(--text-light);
+    font-size:var(--font-sm);
+    margin-top:var(--space-xs);
+}
+
+.nilai-raport-box{
+    background:var(--surface-alt);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
+    padding:var(--space-md) var(--space-lg);
+    text-align:center;
+}
+
+.nilai-raport-box span{
+    display:block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--text-light);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+}
+
+.nilai-raport-box strong{
+    display:block;
+    font-size:var(--font-2xl);
+    color:var(--success);
+    margin-top:var(--space-xs);
+}
+
+.nilai-progress{
+    margin-bottom:var(--space-lg);
+}
+
+.nilai-progress-label{
+    display:flex;
+    justify-content:space-between;
+    font-size:var(--font-sm);
+    color:var(--text-light);
+    margin-bottom:var(--space-sm);
+}
+
+.nilai-progress-label strong{
+    color:var(--primary);
+    font-size:var(--font-lg);
+}
+
+.nilai-progress-track{
+    background:var(--surface-alt);
+    border-radius:var(--radius-pill);
+    height:10px;
+    overflow:hidden;
+}
+
+.nilai-progress-fill{
+    background:var(--primary);
+    height:100%;
+    border-radius:var(--radius-pill);
+    transition:width var(--transition-slow);
+}
+
+.nilai-progress-note{
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+    margin-top:var(--space-sm);
+}
+
+.nilai-missing{
+    background:#FEF2F2;
+    border-left:4px solid var(--danger);
+    border-radius:0 var(--radius-md) var(--radius-md) 0;
+    padding:var(--space-md) var(--space-lg);
+    margin-bottom:var(--space-lg);
+}
+
+.nilai-missing h3{
+    font-size:var(--font-sm);
+    color:var(--danger);
+    margin-bottom:var(--space-sm);
+}
+
+.nilai-missing ul{
+    padding-left:1.1rem;
+    color:#B91C1C;
+    font-size:var(--font-sm);
+}
+
+.nilai-table-wrap h3{
+    font-size:var(--font-md);
+    color:var(--text);
+    margin-bottom:var(--space-md);
+}
+
+.nilai-table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:var(--font-sm);
+}
+
+.nilai-table thead th{
+    text-align:left;
+    padding:.6rem .8rem;
+    background:var(--surface-alt);
+    color:var(--text-light);
+    font-size:var(--font-xs);
+    text-transform:uppercase;
+    letter-spacing:.03em;
+}
+
+.nilai-table tbody td{
+    padding:.6rem .8rem;
+    border-bottom:1px solid var(--border-light);
+}
+
+.nilai-code{
+    font-family:monospace;
+    color:var(--text-muted);
+    font-size:var(--font-xs);
+}
+
+.nilai-empty{
+    color:var(--danger);
+    font-weight:var(--weight-bold);
+}
+
+.nilai-status{
+    display:inline-block;
+    padding:.2rem .6rem;
+    border-radius:var(--radius-pill);
+    font-size:var(--font-xs);
+    font-weight:var(--weight-semibold);
+}
+
+.nilai-status.done{
+    background:#DCFCE7;
+    color:#15803D;
+}
+
+.nilai-status.pending{
+    background:#FEE2E2;
+    color:#B91C1C;
+}
+
+@media (max-width: 640px){
+
+    .nilai-header{
+        flex-direction:column;
+    }
+
+    .nilai-table-wrap{
+        overflow-x:auto;
+    }
+
+}
