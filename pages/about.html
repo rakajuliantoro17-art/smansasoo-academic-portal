@@ -10,7 +10,22 @@
 
     <title>Tentang Portal | SMANSASOO Academic Portal</title>
 
+    <!-- ANTI-FLASH THEME INIT -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('smansasoo-theme');
+                var theme = saved || ((window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
     <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/theme.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/responsive.css">
     <link rel="stylesheet" href="../css/animation.css">
@@ -20,6 +35,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="../css/shell.css">
+    <link rel="stylesheet" href="../css/settings-drawer.css">
 
 </head>
 
@@ -304,6 +320,8 @@
 <script src="../js/config.js"></script>
 <script src="../js/utils.js"></script>
 <script src="../js/shell.js"></script>
+<script src="../js/theme.js"></script>
+<script src="../js/settings-drawer.js"></script>
 
 </body>
 
