@@ -1,34 +1,14 @@
 /*
 ==========================================================
-SMANSASOO Graduation Portal
-Search Module
-Version : 2.0.0
+SMANSASOO Academic Portal
+Search Module (Kenaikan Kelas)
+Version : 2.1.0
 ==========================================================
-
-Mengatur seluruh proses pencarian data kelulusan.
-
-Flow
-
-User
-   │
-Submit Form
-   │
-Validasi
-   │
-Loading
-   │
-API.searchStudent()
-   │
-┌──────────────┐
-│ Success      │
-│ showResult() │
-└──────────────┘
-        │
-┌──────────────┐
-│ Failed       │
-│ showError()  │
-└──────────────┘
-
+FIX (v2.1.0):
+- BUG: file ini sebelumnya ketiban isi persis js/kelulusan/search.js,
+  termasuk teks tombol hardcode "Lihat Hasil Kelulusan" yang
+  muncul di portal Kenaikan Kelas setelah pencarian selesai.
+  Dikembalikan ke teks yang sesuai ("Cari").
 ==========================================================
 */
 
@@ -117,9 +97,9 @@ window.Search = (() => {
 
         isSearching = true;
 
-        // Setelah tombol "Lihat Hasil Kelulusan" diklik (dan lolos
-        // validasi), ganti background halaman dari scc.jpg ke
-        // syari.png. Class ini dibaca oleh css/glass.css (.bg-layer).
+        // Setelah tombol "Cari" diklik (dan lolos validasi),
+        // ganti background halaman dari scc.jpg ke syari.png.
+        // Class ini dibaca oleh css/glass.css (.bg-layer).
         document.body.classList.add("celebration");
 
         const button = document.querySelector(
@@ -185,7 +165,7 @@ window.Search = (() => {
 
                 button.innerHTML =
 
-                    "Lihat Hasil Kelulusan";
+                    "Cari";
 
             }
 
