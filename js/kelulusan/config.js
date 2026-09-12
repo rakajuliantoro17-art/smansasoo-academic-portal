@@ -50,11 +50,11 @@ window.CONFIG = {
     // true = membaca data/sample.json
     // false = membaca Google Apps Script
 
-    // FIX SEMENTARA: API_BASE_URL (Apps Script lama) sudah tidak
-    // merespons (mengembalikan "Terjadi kesalahan pada server").
-    // Diaktifkan ke mode sample sampai backend permanen (Google
-    // Sheet lewat Vercel /api, seperti halaman Nilai) siap.
-    USE_SAMPLE_DATA: true,
+    // FIX: backend permanen sudah siap (/api/kelulusan, Vercel
+    // Serverless Function yang membaca langsung dari Google
+    // Sheets, sama seperti modul Nilai). Apps Script lama sudah
+    // tidak dipakai lagi, mode sample dimatikan.
+    USE_SAMPLE_DATA: false,
 
 
 
@@ -64,7 +64,7 @@ window.CONFIG = {
 
     API_BASE_URL:
 
-    "https://script.google.com/macros/s/AKfycbxZoDMyfKWKyJIVGRaRAYHJIUIE34_32w7-Khykp9em2IwqR5seG3Ph5JvI_EaW3BGVkQ/exec",
+    "/api/kelulusan",
 
     API_ACTIONS:{
 
