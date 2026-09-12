@@ -71,13 +71,15 @@
 
         <section class="container">
 
-            <div class="nilai-page-tabs">
+            <div class="nilai-page-tabs" id="nilaiPageTabs" role="tablist">
 
-                <button type="button" id="pageTabNIS" class="nilai-page-tab active">
+                <span class="nilai-page-tabs-pill" aria-hidden="true"></span>
+
+                <button type="button" id="pageTabNIS" class="nilai-page-tab active" role="tab" aria-selected="true">
                     Cari Per NIS
                 </button>
 
-                <button type="button" id="pageTabKelas" class="nilai-page-tab">
+                <button type="button" id="pageTabKelas" class="nilai-page-tab" role="tab" aria-selected="false">
                     Rata-Rata Kelas
                 </button>
 
