@@ -1,266 +1,113 @@
-/*
-==========================================================
-SMANSASOO Academic Portal
-Rapor Pendidikan Page Stylesheet
-Version : 1.0.0
-==========================================================
-Dipakai HANYA oleh pages/rapor.html. Mengikuti pola
-css/nilai.css: semua warna/spacing/radius diambil dari
-css/variables.css, bukan hardcode, supaya konsisten dengan
-shell dan halaman lain (lihat docs/UI-SHELL.md bagian 4-5).
-==========================================================
-*/
+<!DOCTYPE html>
+<html lang="id">
 
-/* ==========================================
-   RINGKASAN (metric cards atas)
-========================================== */
+<head>
 
-.rapor-summary{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
-    gap:var(--space-md);
-    margin-bottom:var(--space-lg);
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-.rapor-summary-card{
-    background:var(--surface);
-    border:1px solid var(--border-light);
-    border-radius:var(--radius-md);
-    padding:var(--space-md);
-    box-shadow:var(--shadow-sm);
-}
+    <title>Rapor Pendidikan | SMANSASOO Academic Portal</title>
 
-.rapor-summary-card span{
-    display:block;
-    font-size:var(--font-xs);
-    font-weight:var(--weight-bold);
-    color:var(--text-light);
-    text-transform:uppercase;
-    letter-spacing:.04em;
-}
+    <meta name="description"
+        content="Capaian Rapor Pendidikan SMAN 1 Sooko Mojokerto berdasarkan Asesmen Nasional.">
 
-.rapor-summary-card strong{
-    display:block;
-    font-size:var(--font-2xl);
-    margin-top:var(--space-xs);
-    color:var(--text);
-}
+    <link rel="icon" href="../assets/logo/favicon.ico">
 
-.rapor-summary-note{
-    display:block;
-    margin-top:var(--space-xs);
-    font-size:var(--font-xs);
-    color:var(--text-muted);
-}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-/* ==========================================
-   GRID KARTU INDIKATOR
-========================================== */
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
-.rapor-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
-    gap:var(--space-md);
-}
+    <!-- CSS wajib di setiap halaman -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/shell.css">
 
-.rapor-card{
-    background:var(--surface);
-    border:1px solid var(--border-light);
-    border-radius:var(--radius-lg);
-    box-shadow:var(--shadow-sm);
-    overflow:hidden;
-    transition:var(--transition-fast);
-}
+    <!-- CSS khusus halaman ini -->
+    <link rel="stylesheet" href="../css/rapor.css">
 
-.rapor-card:hover{
-    box-shadow:var(--shadow-md);
-}
+</head>
 
-.rapor-card-head{
-    width:100%;
-    text-align:left;
-    background:none;
-    border:none;
-    padding:var(--space-lg);
-    cursor:pointer;
-    font-family:inherit;
-}
+<body data-page="rapor">
 
-.rapor-card-kode{
-    display:inline-block;
-    font-size:var(--font-xs);
-    font-weight:var(--weight-bold);
-    color:var(--text-light);
-    letter-spacing:.04em;
-    margin-bottom:var(--space-xs);
-}
+    <!-- ================= SHELL: NAV ================= -->
 
-.rapor-card-nama{
-    font-size:var(--font-md);
-    font-weight:var(--weight-semibold);
-    color:var(--text);
-    line-height:1.35;
-}
+    <div id="shellNav"></div>
 
-.rapor-card-metrics{
-    display:flex;
-    align-items:flex-end;
-    gap:var(--space-lg);
-    margin-top:var(--space-md);
-}
+    <!-- ================= HEADER ================= -->
 
-.rapor-card-skor{
-    font-size:var(--font-2xl);
-    font-weight:var(--weight-extrabold);
-    color:var(--text);
-    line-height:1;
-}
+    <header class="header">
 
-.rapor-card-skor small{
-    font-size:var(--font-sm);
-    font-weight:var(--weight-regular);
-    color:var(--text-light);
-}
+        <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko" class="logo">
 
-.rapor-card-delta{
-    font-size:var(--font-md);
-    font-weight:var(--weight-bold);
-}
+        <h1>
+            Rapor
+            <span>Pendidikan</span>
+        </h1>
 
-.rapor-card-delta.up{ color:var(--success); }
-.rapor-card-delta.down{ color:var(--danger); }
-.rapor-card-delta.flat{ color:var(--text-muted); }
+        <p>Capaian Asesmen Nasional SMAN 1 Sooko Mojokerto.</p>
 
-.rapor-card-sub-count{
-    margin-left:auto;
-    font-size:var(--font-xs);
-    color:var(--text-muted);
-    align-self:center;
-}
+    </header>
 
-/* Label capaian (pill), 3 status seperti Rapor Pendidikan asli */
+    <!-- ================= KONTEN ================= -->
 
-.rapor-label{
-    display:inline-block;
-    font-size:var(--font-xs);
-    font-weight:var(--weight-semibold);
-    padding:.15rem .65rem;
-    border-radius:var(--radius-pill);
-    margin-top:var(--space-xs);
-}
+    <main>
 
-.rapor-label.baik{
-    background:rgba(34,197,94,.12);
-    color:var(--success);
-    border:1px solid rgba(34,197,94,.35);
-}
+        <section class="container">
 
-.rapor-label.sedang{
-    background:rgba(245,158,11,.12);
-    color:var(--warning);
-    border:1px solid rgba(245,158,11,.35);
-}
+            <div id="raporLoading" class="loading-box">
+                <div class="spinner"></div>
+                <p>Memuat data Rapor Pendidikan...</p>
+            </div>
 
-.rapor-label.kurang{
-    background:rgba(239,68,68,.12);
-    color:var(--danger);
-    border:1px solid rgba(239,68,68,.35);
-}
+            <div id="raporError" class="error-card hidden"></div>
 
-/* Progress bar skor, pola sama dengan .nilai-progress-track */
+            <div id="raporContent" class="hidden">
 
-.rapor-progress-track{
-    margin-top:var(--space-md);
-    height:6px;
-    border-radius:var(--radius-pill);
-    background:var(--border-light);
-    overflow:hidden;
-}
+                <div class="rapor-toolbar">
 
-.rapor-progress-fill{
-    height:100%;
-    border-radius:var(--radius-pill);
-    background:var(--success);
-    transition:width var(--transition);
-}
+                    <div id="raporProfile" class="rapor-profile"></div>
 
-/* ==========================================
-   DETAIL SUB-INDIKATOR (expand/collapse)
-========================================== */
+                    <label class="rapor-year-picker">
+                        <span>Tahun Data</span>
+                        <select id="raporYearSelect" aria-label="Pilih tahun data Rapor Pendidikan"></select>
+                    </label>
 
-.rapor-card-body{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height var(--transition);
-    border-top:1px solid var(--border-light);
-}
+                </div>
 
-.rapor-card.open .rapor-card-body{
-    max-height:2000px;
-}
+                <div id="raporSummary" class="rapor-summary"></div>
 
-.rapor-card-body-inner{
-    padding:var(--space-md) var(--space-lg) var(--space-lg);
-    display:flex;
-    flex-direction:column;
-    gap:var(--space-md);
-}
+                <div id="raporGrid" class="rapor-grid"></div>
 
-.rapor-sub-item{
-    padding-bottom:var(--space-md);
-    border-bottom:1px solid var(--border-light);
-}
+                <p id="raporMeta" class="rapor-source-note"></p>
 
-.rapor-sub-item:last-child{
-    border-bottom:none;
-    padding-bottom:0;
-}
+            </div>
 
-.rapor-sub-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:baseline;
-    gap:var(--space-sm);
-}
+        </section>
 
-.rapor-sub-nama{
-    font-size:var(--font-sm);
-    font-weight:var(--weight-semibold);
-    color:var(--text);
-}
+    </main>
 
-.rapor-sub-skor{
-    font-size:var(--font-sm);
-    font-weight:var(--weight-bold);
-    color:var(--text);
-    white-space:nowrap;
-}
+    <!-- ================= SHELL: FOOTER ================= -->
 
-.rapor-sub-definisi{
-    margin-top:var(--space-xs);
-    font-size:var(--font-xs);
-    color:var(--text-light);
-    line-height:1.5;
-}
+    <div id="shellFooter"></div>
 
-.rapor-sub-meta{
-    margin-top:var(--space-xs);
-    font-size:var(--font-xs);
-    color:var(--text-muted);
-}
+    <!-- CONFIG (wajib, dipakai Shell untuk nama sekolah & versi) -->
+    <script src="../js/config.js"></script>
 
-.rapor-card-toggle-icon{
-    display:inline-block;
-    transition:transform var(--transition-fast);
-}
+    <!-- UTILS (wajib) -->
+    <script src="../js/utils.js"></script>
 
-.rapor-card.open .rapor-card-toggle-icon{
-    transform:rotate(180deg);
-}
+    <!-- SHELL (wajib, render nav + footer) -->
+    <script src="../js/shell.js"></script>
 
-.rapor-source-note{
-    margin-top:var(--space-xl);
-    text-align:center;
-    font-size:var(--font-xs);
-    color:var(--text-muted);
-}
+    <!-- Fitur Rapor Pendidikan -->
+    <script src="../js/rapor-data.js"></script>
+    <script src="../js/rapor-ui.js"></script>
+    <script src="../js/rapor-app.js"></script>
+
+</body>
+
+</html>
