@@ -33,17 +33,9 @@
 
     <link rel="stylesheet" href="css/glass.css">
 
-    <link rel="stylesheet" href="css/shell.css">
-
 </head>
 
-<body data-page="home">
-
-    <!-- ================= SHELL: NAV =================
-         Markup diisi js/shell.js supaya nav bar konsisten
-         di semua halaman (lihat docs/UI-SHELL.md). -->
-
-    <div id="shellNav"></div>
+<body>
 
     <!-- Lapisan background foto sekolah (blur + gradient),
          lihat css/glass.css -->
@@ -67,6 +59,10 @@
             <p>
                 Tahun Pelajaran
                 <strong>2026 / 2027</strong>
+            </p>
+
+            <p class="mt-1">
+                <a href="pages/kelulusan.html" class="link-primary">Cek Pengumuman Kelulusan &rarr;</a>
             </p>
 
         </div>
@@ -134,11 +130,29 @@
 
 
 
-    <!-- ================= SHELL: FOOTER =================
-         Markup diisi js/shell.js supaya footer konsisten
-         di semua halaman (lihat docs/UI-SHELL.md). -->
+    <!-- ================= FOOTER ================= -->
 
-    <div id="shellFooter"></div>
+    <footer>
+
+        <div class="container">
+
+            <p>
+
+                © 2026
+
+                SMAN 1 Sooko Mojokerto
+
+            </p>
+
+            <small>
+
+                Academic Portal Version 1.2
+
+            </small>
+
+        </div>
+
+    </footer>
 
 
 
@@ -174,10 +188,6 @@
     <!-- UTILS -->
 
     <script src="js/utils.js"></script>
-
-    <!-- SHELL (nav + footer, dipakai semua halaman) -->
-
-    <script src="js/shell.js"></script>
 
     <!-- API -->
 
