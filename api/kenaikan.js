@@ -17,24 +17,22 @@ ID-nya disimpan di Environment Variable Vercel
 (GOOGLE_SHEET_ID_KENAIKAN), bukan di kode.
 
 =====================================================
-KOLOM (sesuaikan angkanya kalau urutan sheet asli beda)
+KOLOM (dikonfirmasi dari header sheet asli)
 =====================================================
-Baris 1 = header, data mulai baris 2. Indeks di bawah ini
-0-based (kolom A = 0).
+Baris 1 = header, data mulai baris 2. Indeks 0-based.
+Header asli: NIS | NISN | NAMA | JENIS_KELAMIN | KELAS_LAMA |
+             STATUS | KELAS_BARU | KELOMPOK_MINAT | WALI_KELAS | CATATAN
 
-  0  No
-  1  NIS
-  2  NISN
-  3  Nama
-  4  Jenis Kelamin      (L / P)
-  5  Status             (NAIK / TIDAK NAIK)
-  6  Kelas Lama
-  7  Kelas Baru
-  8  Jurusan / Minat
-  9  Wali Kelas Baru
-
-Kalau urutan kolom di sheet kamu beda, tinggal ubah angka di
-objek COL di bawah ini, tidak perlu ubah logic lain.
+  0  NIS
+  1  NISN
+  2  NAMA
+  3  JENIS_KELAMIN      (laki / perempuan)
+  4  KELAS_LAMA
+  5  STATUS             (Naik / Tidak Naik)
+  6  KELAS_BARU
+  7  KELOMPOK_MINAT
+  8  WALI_KELAS
+  9  CATATAN
 ==========================================================
 */
 
@@ -45,15 +43,16 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID_KENAIKAN;
 const GID = "1777318860";
 
 const COL = {
-    NIS: 1,
-    NISN: 2,
-    NAMA: 3,
-    GENDER: 4,
+    NIS: 0,
+    NISN: 1,
+    NAMA: 2,
+    GENDER: 3,
+    KELAS_LAMA: 4,
     STATUS: 5,
-    KELAS_LAMA: 6,
-    KELAS_BARU: 7,
-    JURUSAN: 8,
-    WALI: 9
+    KELAS_BARU: 6,
+    JURUSAN: 7,
+    WALI: 8,
+    CATATAN: 9
 };
 
 const ACADEMIC_YEAR = "2026/2027";
@@ -81,6 +80,7 @@ function findStudent(rows, keyword) {
                 new_class: String(row[COL.KELAS_BARU] || "-").trim(),
                 major: String(row[COL.JURUSAN] || "-").trim(),
                 homeroom_teacher: String(row[COL.WALI] || "-").trim(),
+                note: String(row[COL.CATATAN] || "").trim(),
                 academic_year: ACADEMIC_YEAR
             };
 
