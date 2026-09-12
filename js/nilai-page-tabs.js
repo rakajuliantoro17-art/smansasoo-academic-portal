@@ -12,6 +12,7 @@ dropdown kelasnya diisi (lazy load).
 
 document.addEventListener("DOMContentLoaded", () => {
 
+    const tabsWrap = document.getElementById("nilaiPageTabs");
     const tabNIS = document.getElementById("pageTabNIS");
     const tabKelas = document.getElementById("pageTabKelas");
     const sectionNIS = document.getElementById("sectionNIS");
@@ -23,6 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tabNIS.classList.add("active");
         tabKelas.classList.remove("active");
+        tabNIS.setAttribute("aria-selected", "true");
+        tabKelas.setAttribute("aria-selected", "false");
+        if (tabsWrap) tabsWrap.classList.remove("is-kelas");
         sectionNIS.classList.remove("hidden");
         sectionKelas.classList.add("hidden");
 
@@ -32,6 +36,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         tabKelas.classList.add("active");
         tabNIS.classList.remove("active");
+        tabKelas.setAttribute("aria-selected", "true");
+        tabNIS.setAttribute("aria-selected", "false");
+        if (tabsWrap) tabsWrap.classList.add("is-kelas");
         sectionKelas.classList.remove("hidden");
         sectionNIS.classList.add("hidden");
 
