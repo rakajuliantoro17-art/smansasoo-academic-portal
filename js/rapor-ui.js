@@ -19,9 +19,11 @@ window.RaporUI = (() => {
         els.loading = document.getElementById("raporLoading");
         els.error = document.getElementById("raporError");
         els.content = document.getElementById("raporContent");
+        els.profile = document.getElementById("raporProfile");
         els.summary = document.getElementById("raporSummary");
         els.grid = document.getElementById("raporGrid");
         els.meta = document.getElementById("raporMeta");
+        els.yearSelect = document.getElementById("raporYearSelect");
 
     }
 
@@ -66,11 +68,57 @@ window.RaporUI = (() => {
 
     }
 
-    function labelPill(label) {
+    function statusBadge(label, definisi) {
 
         const key = Utils.trim(label).toLowerCase();
 
-        return `<span class="rapor-label ${key}">${Utils.escapeHTML(label)}</span>`;
+        return `
+
+        <span class="rapor-label ${key}">
+
+            <strong>${Utils.escapeHTML(label)}</strong>
+
+            ${definisi ? `<span class="rapor-label-desc">${Utils.escapeHTML(definisi)}</span>` : ""}
+
+        </span>
+
+        `;
+
+    }
+
+    /**
+     * Tabel kecil 2 baris: posisi dibanding sekolah lain,
+     * di tingkat provinsi & nasional. Datanya sudah ada di
+     * JSON (peringkat_provinsi / peringkat_nasional per
+     * indikator maupun sub-indikator), sebelumnya cuma
+     * ditulis sebagai satu baris teks -- sekarang jadi tabel
+     * supaya lebih mudah dipindai.
+     */
+    function rankingTableHTML(peringkatProvinsi, peringkatNasional) {
+
+        if (!peringkatProvinsi && !peringkatNasional) return "";
+
+        return `
+
+        <table class="rapor-rank-table">
+
+            <tbody>
+
+                <tr>
+                    <th>Peringkat Provinsi</th>
+                    <td>${Utils.escapeHTML(peringkatProvinsi || "-")}</td>
+                </tr>
+
+                <tr>
+                    <th>Peringkat Nasional</th>
+                    <td>${Utils.escapeHTML(peringkatNasional || "-")}</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+        `;
 
     }
 
@@ -87,10 +135,7 @@ window.RaporUI = (() => {
 
             ${sub.definisi_capaian ? `<p class="rapor-sub-definisi">${Utils.escapeHTML(sub.definisi_capaian)}</p>` : ""}
 
-            <p class="rapor-sub-meta">
-                Peringkat provinsi: ${Utils.escapeHTML(sub.peringkat_provinsi || "-")}
-                &middot; Peringkat nasional: ${Utils.escapeHTML(sub.peringkat_nasional || "-")}
-            </p>
+            ${rankingTableHTML(sub.peringkat_provinsi, sub.peringkat_nasional)}
 
         </div>
 
@@ -111,7 +156,7 @@ window.RaporUI = (() => {
                 <span class="rapor-card-kode">${Utils.escapeHTML(group.kode)}</span>
                 <div class="rapor-card-nama">${Utils.escapeHTML(group.nama)}</div>
 
-                ${labelPill(group.label)}
+                ${statusBadge(group.label, group.definisi_capaian)}
 
                 <div class="rapor-card-metrics">
 
@@ -137,7 +182,7 @@ window.RaporUI = (() => {
             <div class="rapor-card-body">
                 <div class="rapor-card-body-inner">
 
-                    ${group.definisi_capaian ? `<p class="rapor-sub-definisi">${Utils.escapeHTML(group.definisi_capaian)}</p>` : ""}
+                    ${rankingTableHTML(group.peringkat_provinsi, group.peringkat_nasional)}
 
                     ${group.sub.map(renderSubItem).join("")}
 
@@ -164,6 +209,67 @@ window.RaporUI = (() => {
 
     }
 
+    /* ==========================================
+       PROFIL SEKOLAH + LINGKARAN AKREDITASI
+    ========================================== */
+
+    function renderProfile(data) {
+
+        if (!els.profile) cacheEls();
+
+        if (!els.profile) return;
+
+        els.profile.innerHTML = `
+
+        <div class="rapor-profile-info">
+            <span class="rapor-profile-label">Rapor Pendidikan</span>
+            <strong class="rapor-profile-school">${Utils.escapeHTML(data.nama_sekolah)}</strong>
+            <span class="rapor-profile-npsn">NPSN ${Utils.escapeHTML(data.npsn)}</span>
+        </div>
+
+        ${data.akreditasi ? `
+
+        <div class="rapor-akreditasi" title="Akreditasi sekolah">
+            <span class="rapor-akreditasi-ring">${Utils.escapeHTML(data.akreditasi)}</span>
+            <span class="rapor-akreditasi-label">Akreditasi</span>
+        </div>
+
+        ` : ""}
+
+        `;
+
+    }
+
+    /* ==========================================
+       DROPDOWN TAHUN
+    ========================================== */
+
+    function renderYearSelect(years, selectedYear) {
+
+        if (!els.yearSelect) cacheEls();
+
+        if (!els.yearSelect) return;
+
+        els.yearSelect.innerHTML = years
+            .slice()
+            .sort((a, b) => b - a)
+            .map((year) => `<option value="${year}" ${year === selectedYear ? "selected" : ""}>${year}</option>`)
+            .join("");
+
+    }
+
+    function onYearChange(handler) {
+
+        if (!els.yearSelect) cacheEls();
+
+        els.yearSelect?.addEventListener("change", (event) => {
+
+            handler(Number(event.target.value));
+
+        });
+
+    }
+
     function showResult(data) {
 
         if (!els.loading) cacheEls();
@@ -172,6 +278,8 @@ window.RaporUI = (() => {
         els.error?.classList.add("hidden");
 
         const r = data.ringkasan;
+
+        renderProfile(data);
 
         if (els.summary) {
 
@@ -220,7 +328,9 @@ window.RaporUI = (() => {
 
         showLoading,
         showError,
-        showResult
+        showResult,
+        renderYearSelect,
+        onYearChange
 
     };
 
