@@ -1,200 +1,114 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cek Pengumuman Kelulusan — SMAN 1 Sooko Mojokerto</title>
+<meta name="description" content="Portal resmi pengumuman kelulusan SMAN 1 Sooko Mojokerto. Masukkan NIS atau NISN untuk melihat hasil kelulusan Anda.">
 
-    <title>SMAN 1 Sooko Mojokerto | Pengumuman Kenaikan Kelas</title>
+<meta name="theme-color" content="#071A35">
+<link rel="icon" href="../assets/favicon.ico">
+<link rel="apple-touch-icon" href="../assets/icons/icon.png">
 
-    <meta name="description"
-        content="Portal Pengumuman Kenaikan Kelas dan Pembagian Kelas Baru SMAN 1 Sooko Mojokerto">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <meta name="theme-color" content="#0F4C81">
+<!-- ==========================================================
+     CSS KHUSUS HALAMAN INI.
+     Sengaja TIDAK memakai ../css/variables.css, style.css, dst
+     milik situs utama (kenaikan kelas/nilai/rekap) -- halaman
+     Kelulusan punya set CSS-nya sendiri di css/kelulusan/,
+     supaya perubahan di salah satu tidak saling mempengaruhi.
+========================================================== -->
 
-    <!-- Favicon -->
-    <link rel="icon" href="assets/logo/favicon.ico">
-
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
-    <!-- CSS -->
-    <link rel="stylesheet" href="css/variables.css">
-
-    <link rel="stylesheet" href="css/style.css">
-
-    <link rel="stylesheet" href="css/responsive.css">
-
-    <link rel="stylesheet" href="css/glass.css">
-
-    <link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="../css/kelulusan/variables.css">
+<link rel="stylesheet" href="../css/kelulusan/style.css">
+<link rel="stylesheet" href="../css/kelulusan/glass.css">
+<link rel="stylesheet" href="../css/kelulusan/animation.css">
+<link rel="stylesheet" href="../css/kelulusan/responsive.css">
 
 </head>
+<body>
 
-<body data-page="home">
+<div class="bg-layer" id="bgLayer"></div>
 
-    <!-- ================= SHELL: NAV =================
-         Markup diisi js/shell.js supaya nav bar konsisten
-         di semua halaman (lihat docs/UI-SHELL.md). -->
-
-    <div id="shellNav"></div>
-
-    <!-- Lapisan background foto sekolah (blur + gradient),
-         lihat css/glass.css -->
-    <div class="bg-layer" aria-hidden="true"></div>
-
-    <!-- ================= HEADER ================= -->
+<div class="container">
 
     <header class="header">
 
-        <div class="container">
+        <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko Mojokerto" class="logo">
 
-            <img src="assets/logo/logo.png"
-                 alt="Logo SMAN 1 Sooko"
-                 class="logo">
+        <h1>SMAN 1 Sooko Mojokerto<span>Pengumuman Kelulusan</span></h1>
 
-            <h1>
-                Pengumuman
-                <span>Kenaikan Kelas</span>
-            </h1>
-
-            <p>
-                Tahun Pelajaran
-                <strong>2026 / 2027</strong>
-            </p>
-
-        </div>
+        <p>Masukkan NIS atau NISN untuk melihat hasil kelulusan Anda.</p>
 
     </header>
 
+    <section class="search-section">
 
+        <div class="search-card">
 
-    <!-- ================= SEARCH ================= -->
+            <span class="badge-year" id="badgeYear"></span>
+            <h2>Cek Hasil Kelulusan</h2>
 
-    <main>
+            <form id="searchForm" autocomplete="off">
 
-        <section class="search-section">
+                <input
+                    type="text"
+                    id="keyword"
+                    name="keyword"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    required
+                >
 
-            <div class="container">
+                <button type="submit">Lihat Hasil Kelulusan</button>
 
-                <div class="search-card">
+            </form>
 
-                    <h2>Cek Hasil</h2>
-
-                    <p>
-
-                        Masukkan NIS atau NISN untuk melihat hasil
-                        kenaikan kelas dan pembagian kelas baru.
-
-                    </p>
-
-                    <form id="searchForm">
-
-                        <input
-                            type="text"
-                            id="keyword"
-                            placeholder="Masukkan NIS / NISN"
-                            autocomplete="off"
-                            required>
-
-                        <button type="submit">
-
-                            Cari
-
-                        </button>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-
-        <!-- ================= RESULT AREA =================
-             Satu container tunggal untuk loading / hasil / error.
-             Diisi dan ditampilkan sepenuhnya oleh js/ui.js
-             (class "hidden" dilepas/ditambah lewat JS, bukan statis). -->
-
-        <section class="container">
-
-            <div id="result" class="hidden"></div>
-
-        </section>
-
-    </main>
-
-
-
-    <!-- ================= SHELL: FOOTER =================
-         Markup diisi js/shell.js supaya footer konsisten
-         di semua halaman (lihat docs/UI-SHELL.md). -->
-
-    <div id="shellFooter"></div>
-
-
-
-    <!-- ================= CELEBRATION LAYER =================
-         Flash, balon, dan overlay perayaan hanya dipakai untuk
-         status NAIK. Isinya diisi oleh js/ui.js saat dibutuhkan. -->
-
-    <div class="flash" id="flash" aria-hidden="true"></div>
-
-    <div id="balloons" aria-hidden="true"></div>
-
-    <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Hasil Pengumuman Kenaikan Kelas">
-
-        <div class="result-box" id="overlayBox">
-            <!-- diisi js/ui.js -->
         </div>
 
-    </div>
+        <div id="result" class="hidden"></div>
 
-    <!-- src diisi dinamis oleh js/ui.js (CONFIG.CELEBRATION_AUDIO_URL) -->
-    <audio id="celebrationSound" preload="none"></audio>
+    </section>
 
+    <footer>
 
+        SMAN 1 Sooko Mojokerto
 
-    <!-- CONFETTI LIBRARY -->
+        <small>&copy; 2026 SMANSASOO Graduation Portal</small>
 
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    </footer>
 
-    <!-- CONFIG -->
+</div>
 
-    <script src="js/config.js"></script>
+<div class="flash" id="flash"></div>
+<div id="balloons"></div>
 
-    <!-- UTILS -->
+<div class="overlay" id="overlay">
+    <div class="result-box" id="overlayBox"></div>
+</div>
 
-    <script src="js/utils.js"></script>
+<audio id="celebrationSound" preload="none"></audio>
 
-    <!-- API -->
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-    <script src="js/api.js"></script>
+<!-- ==========================================================
+     JS KHUSUS HALAMAN INI (namespace terpisah: window.CONFIG,
+     window.API, window.UI, dst di sini HANYA berlaku selama
+     halaman ini dimuat -- tidak bentrok dengan index.html /
+     nilai.html / rekap.html karena masing-masing halaman
+     dimuat di context browser yang berbeda).
+========================================================== -->
 
-    <!-- UI -->
-
-    <script src="js/ui.js"></script>
-
-    <!-- SEARCH -->
-
-    <script src="js/search.js"></script>
-
-    <!-- APP (bootstrap) -->
-
-    <script src="js/app.js"></script>
-
-    <!-- SHELL (nav + footer, dipakai semua halaman) -->
-
-    <script src="js/shell.js"></script>
+<script src="../js/kelulusan/config.js"></script>
+<script src="../js/kelulusan/utils.js"></script>
+<script src="../js/kelulusan/api.js"></script>
+<script src="../js/kelulusan/ui.js"></script>
+<script src="../js/kelulusan/search.js"></script>
+<script src="../js/kelulusan/app.js"></script>
 
 </body>
-
 </html>
