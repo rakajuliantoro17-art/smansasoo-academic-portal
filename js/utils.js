@@ -1,28 +1,33 @@
 /*
 ==========================================================
-SMANSASOO Academic Portal
+SMANSASOO Graduation Portal
 Utility Functions
-Version : 1.0.0
+Version : 2.0.0
+==========================================================
+
+Kumpulan fungsi utilitas yang digunakan oleh seluruh
+modul aplikasi.
+
 ==========================================================
 */
 
 window.Utils = (() => {
 
-    /* ==========================================
+    /* ==================================================
        SELECTOR
-    ========================================== */
+    ================================================== */
 
-    const $ = (selector) => document.querySelector(selector);
+    const $ = selector => document.querySelector(selector);
 
-    const $$ = (selector) => document.querySelectorAll(selector);
+    const $$ = selector => document.querySelectorAll(selector);
 
-    /* ==========================================
+    /* ==================================================
        STRING
-    ========================================== */
+    ================================================== */
 
     function trim(value) {
 
-        return String(value).trim();
+        return String(value ?? "").trim();
 
     }
 
@@ -36,9 +41,20 @@ window.Utils = (() => {
 
     }
 
-    /* ==========================================
+    function escapeHTML(text) {
+
+        return String(text ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+
+    }
+
+    /* ==================================================
        VALIDATION
-    ========================================== */
+    ================================================== */
 
     function isEmpty(value) {
 
@@ -64,9 +80,9 @@ window.Utils = (() => {
 
     }
 
-    /* ==========================================
-       DATE & TIME
-    ========================================== */
+    /* ==================================================
+       DATE
+    ================================================== */
 
     function getCurrentYear() {
 
@@ -76,9 +92,9 @@ window.Utils = (() => {
 
     function formatDate(dateString) {
 
-        const date = new Date(dateString);
+        if (!dateString) return "-";
 
-        return date.toLocaleDateString("id-ID", {
+        return new Date(dateString).toLocaleDateString("id-ID", {
 
             day: "2-digit",
 
@@ -90,9 +106,15 @@ window.Utils = (() => {
 
     }
 
-    /* ==========================================
-       DEBOUNCE
-    ========================================== */
+    /* ==================================================
+       ASYNC
+    ================================================== */
+
+    function sleep(ms) {
+
+        return new Promise(resolve => setTimeout(resolve, ms));
+
+    }
 
     function debounce(callback, delay = 300) {
 
@@ -112,19 +134,63 @@ window.Utils = (() => {
 
     }
 
-    /* ==========================================
+    /* ==================================================
+       AUDIO
+    ================================================== */
+
+    function playAudio(audio) {
+
+        if (!audio) return;
+
+        audio.currentTime = 0;
+
+        audio.play().catch(() => {});
+
+    }
+
+    function stopAudio(audio) {
+
+        if (!audio) return;
+
+        audio.pause();
+
+        audio.currentTime = 0;
+
+    }
+
+    /* ==================================================
        COPY
-    ========================================== */
+    ================================================== */
 
     async function copy(text) {
 
         try {
 
-            await navigator.clipboard.writeText(text);
+            if (navigator.clipboard) {
+
+                await navigator.clipboard.writeText(text);
+
+                return true;
+
+            }
+
+            const input = document.createElement("textarea");
+
+            input.value = text;
+
+            document.body.appendChild(input);
+
+            input.select();
+
+            document.execCommand("copy");
+
+            input.remove();
 
             return true;
 
-        } catch {
+        }
+
+        catch {
 
             return false;
 
@@ -132,31 +198,49 @@ window.Utils = (() => {
 
     }
 
-    /* ==========================================
+    /* ==================================================
        RANDOM ID
-    ========================================== */
+    ================================================== */
 
     function uuid() {
 
-        return crypto.randomUUID();
+        if (window.crypto?.randomUUID) {
+
+            return crypto.randomUUID();
+
+        }
+
+        return "id-" + Date.now() + "-" +
+
+            Math.random().toString(36).substring(2, 9);
 
     }
 
-    /* ==========================================
+    /* ==================================================
        STORAGE
-    ========================================== */
+    ================================================== */
 
     function save(key, value) {
 
-        localStorage.setItem(key, JSON.stringify(value));
+        localStorage.setItem(
+
+            key,
+
+            JSON.stringify(value)
+
+        );
 
     }
 
     function load(key) {
 
-        const data = localStorage.getItem(key);
+        const value = localStorage.getItem(key);
 
-        return data ? JSON.parse(data) : null;
+        return value
+
+            ? JSON.parse(value)
+
+            : null;
 
     }
 
@@ -166,23 +250,87 @@ window.Utils = (() => {
 
     }
 
-    /* ==========================================
+    function clearStorage() {
+
+        localStorage.clear();
+
+    }
+
+    /* ==================================================
+       DOM
+    ================================================== */
+
+    function fadeIn(element) {
+
+        if (!element) return;
+
+        element.classList.remove("hidden");
+
+        element.classList.add("fade-in");
+
+    }
+
+    function fadeOut(element) {
+
+        if (!element) return;
+
+        element.classList.add("hidden");
+
+    }
+
+    function toggleClass(element, className) {
+
+        if (!element) return;
+
+        element.classList.toggle(className);
+
+    }
+
+    function scrollToTop() {
+
+        window.scrollTo({
+
+            top: 0,
+
+            behavior: "smooth"
+
+        });
+
+    }
+
+    /* ==================================================
+       DEVICE
+    ================================================== */
+
+    function isMobile() {
+
+        return window.innerWidth <= 768;
+
+    }
+
+    /* ==================================================
        LOG
-    ========================================== */
+    ================================================== */
 
     function log(...args) {
 
         if (CONFIG.ENABLE_CONSOLE_LOG) {
 
-            console.log("[SMANSASOO]", ...args);
+            console.log(
+
+                `[${CONFIG.APP_NAME}]`,
+
+                ...args
+
+            );
 
         }
 
     }
 
-    /* ==========================================
+    /* ==================================================
        PUBLIC
-    ========================================== */
+    ================================================== */
 
     return {
 
@@ -193,6 +341,8 @@ window.Utils = (() => {
         trim,
 
         capitalize,
+
+        escapeHTML,
 
         isEmpty,
 
@@ -206,7 +356,13 @@ window.Utils = (() => {
 
         formatDate,
 
+        sleep,
+
         debounce,
+
+        playAudio,
+
+        stopAudio,
 
         copy,
 
@@ -217,6 +373,18 @@ window.Utils = (() => {
         load,
 
         remove,
+
+        clearStorage,
+
+        fadeIn,
+
+        fadeOut,
+
+        toggleClass,
+
+        scrollToTop,
+
+        isMobile,
 
         log
 

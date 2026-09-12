@@ -1,25 +1,45 @@
 /*
 ==========================================================
-SMANSASOO Academic Portal
+SMANSASOO Graduation Portal
 Search Module
-Version : 1.1.0
+Version : 2.0.0
 ==========================================================
-FIX (v1.1.0):
-- Sebelumnya file ini tidak pernah dimuat oleh index.html
-  sama sekali (dead code). Sekarang di-load dan jadi
-  satu-satunya controller pencarian.
-- Tidak lagi punya salinan showResult/showLoading/showError
-  sendiri — semua rendering didelegasikan ke window.UI
-  supaya hanya ada SATU implementasi tampilan.
+
+Mengatur seluruh proses pencarian data kelulusan.
+
+Flow
+
+User
+   │
+Submit Form
+   │
+Validasi
+   │
+Loading
+   │
+API.searchStudent()
+   │
+┌──────────────┐
+│ Success      │
+│ showResult() │
+└──────────────┘
+        │
+┌──────────────┐
+│ Failed       │
+│ showError()  │
+└──────────────┘
+
 ==========================================================
 */
 
 window.Search = (() => {
 
+    let isSearching = false;
+
     /**
-     * ==========================================
+     * ==================================================
      * INITIALIZE
-     * ==========================================
+     * ==================================================
      */
 
     function initialize() {
@@ -28,42 +48,56 @@ window.Search = (() => {
         const input = document.getElementById("keyword");
 
         if (!form || !input) {
+
             console.error("Search form tidak ditemukan.");
+
             return;
+
         }
 
         form.addEventListener("submit", handleSubmit);
+
+        input.placeholder = CONFIG.SEARCH_PLACEHOLDER;
 
         input.focus();
 
     }
 
     /**
-     * ==========================================
+     * ==================================================
      * HANDLE SUBMIT
-     * ==========================================
+     * ==================================================
      */
 
     async function handleSubmit(event) {
 
         event.preventDefault();
 
+        if (isSearching) return;
+
         const input = document.getElementById("keyword");
+
         const keyword = input.value.trim();
 
         UI.clear();
 
-        if (keyword === "") {
+        if (keyword.length === 0) {
 
-            UI.showError(CONFIG.MESSAGE.EMPTY_KEYWORD);
+            showInputError(
+                CONFIG.MESSAGE.EMPTY_KEYWORD,
+                input
+            );
 
-            input.classList.add("shake");
+            return;
 
-            setTimeout(() => {
-                input.classList.remove("shake");
-            }, 500);
+        }
 
-            input.focus();
+        if (keyword.length < CONFIG.SEARCH_MIN_LENGTH) {
+
+            showInputError(
+                "NIS atau NISN tidak valid.",
+                input
+            );
 
             return;
 
@@ -74,22 +108,50 @@ window.Search = (() => {
     }
 
     /**
-     * ==========================================
+     * ==================================================
      * SEARCH
-     * ==========================================
+     * ==================================================
      */
 
     async function search(keyword) {
+
+        isSearching = true;
+
+        // Setelah tombol "Lihat Hasil Kelulusan" diklik (dan lolos
+        // validasi), ganti background halaman dari scc.jpg ke
+        // syari.png. Class ini dibaca oleh css/glass.css (.bg-layer).
+        document.body.classList.add("celebration");
+
+        const button = document.querySelector(
+            "#searchForm button"
+        );
+
+        if (button) {
+
+            button.disabled = true;
+
+            button.innerHTML = "Memproses...";
+
+        }
 
         UI.showLoading();
 
         try {
 
-            const response = await API.searchStudent(keyword);
+            const response =
+                await API.searchStudent(keyword);
+
+            UI.clear();
 
             if (!response.success) {
 
-                UI.showError(response.message || CONFIG.MESSAGE.NOT_FOUND);
+                UI.showError(
+
+                    response.message ||
+
+                    CONFIG.MESSAGE.NOT_FOUND
+
+                );
 
                 return;
 
@@ -97,20 +159,66 @@ window.Search = (() => {
 
             UI.showResult(response.data);
 
-        } catch (error) {
+        }
 
-            Utils.log("Search error:", error);
+        catch (error) {
 
-            UI.showError(CONFIG.MESSAGE.SERVER_ERROR);
+            Utils.log(error);
+
+            UI.clear();
+
+            UI.showError(
+
+                CONFIG.MESSAGE.SERVER_ERROR
+
+            );
+
+        }
+
+        finally {
+
+            isSearching = false;
+
+            if (button) {
+
+                button.disabled = false;
+
+                button.innerHTML =
+
+                    "Lihat Hasil Kelulusan";
+
+            }
 
         }
 
     }
 
     /**
-     * ==========================================
+     * ==================================================
+     * INPUT ERROR
+     * ==================================================
+     */
+
+    function showInputError(message, input) {
+
+        UI.showError(message);
+
+        input.classList.add("shake");
+
+        input.focus();
+
+        setTimeout(() => {
+
+            input.classList.remove("shake");
+
+        }, 500);
+
+    }
+
+    /**
+     * ==================================================
      * PUBLIC
-     * ==========================================
+     * ==================================================
      */
 
     return {
