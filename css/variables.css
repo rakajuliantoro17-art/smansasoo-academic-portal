@@ -2,7 +2,34 @@
 ==========================================================
 SMANSASOO Academic Portal
 CSS Variables
-Version : 1.0.0
+Version : 1.1.0
+==========================================================
+FIX (v1.1.0):
+- BUG KRITIS: file ini sempat berisi potongan diff mentah
+  yang belum diterapkan (baris "+"/"-" literal). Custom
+  property WAJIB diawali "--" persis tanpa karakter lain di
+  depannya, jadi baris "+   --glass-tint-top:..." maupun
+  "-   --glass-tint-top:..." SAMA-SAMA dibuang browser
+  (nama property jadi tidak valid). Akibatnya
+  --glass-tint-top & --glass-tint-bottom TIDAK TERDEFINISI
+  SAMA SEKALI — bukan cuma balik ke nilai lama. Semua kartu
+  glass yang pakai var(--glass-tint-top) di background jadi
+  "invalid at computed-value time" dan computed ke
+  transparent di browser modern manapun (bukan fallback ke
+  rgba solid) — kartu kehilangan tint putihnya total.
+- Sekarang diterapkan yang sebenarnya dimaksud: tint
+  dinaikkan ke rgba(255,255,255,.40) / rgba(255,255,255,.16)
+  (dari .28/.06) supaya kartu glass lebih terbaca, tidak
+  tembus pandang berlebihan.
+- --z-celebration didefinisikan (tersedia untuk dipakai nanti
+  kalau dibutuhkan) TAPI SENGAJA TIDAK dipasang ke .overlay
+  di glass.css. Kalau dipasang, seluruh layer .overlay
+  (termasuk foto syari.png yang opaque) akan naik di atas
+  confetti/balon (z 1000) — efeknya confetti/balon jadi
+  TIDAK KELIHATAN SAMA SEKALI, bukan cuma di belakang kartu.
+  Atas keputusan pemilik project: confetti/balon tetap di
+  depan seperti kondisi sekarang (.overlay tetap pakai
+  var(--z-overlay), lihat glass.css).
 ==========================================================
 */
 
@@ -150,13 +177,34 @@ Version : 1.0.0
     ========================================== */
 
     --z-dropdown:100;
-
     --z-sticky:500;
-
     --z-overlay:900;
-
     --z-modal:1000;
-
     --z-toast:1100;
+
+    /* Tersedia untuk dipakai nanti, TIDAK dipasang ke
+       .overlay saat ini (lihat catatan FIX di atas). */
+    --z-celebration:1050;
+
+    /* ==========================================
+       LIQUID GLASS (iOS26-style material)
+    ========================================== */
+
+    --glass-blur:34px;
+    --glass-saturate:180%;
+    --glass-tint-top:rgba(255,255,255,.40);
+    --glass-tint-bottom:rgba(255,255,255,.16);
+    --glass-border:rgba(255,255,255,.38);
+    --glass-highlight:rgba(255,255,255,.55);
+    --glass-radius:28px;
+    --glass-radius-sm:20px;
+
+    /* ==========================================
+       MOTION (iOS spring curves)
+    ========================================== */
+
+    --ease-spring:cubic-bezier(.34,1.56,.64,1);
+
+    --ease-ios:cubic-bezier(.4,0,.2,1);
 
 }

@@ -45,7 +45,7 @@ Version : 1.0.0
 }
 
 .slide-up{
-    animation:slideUp .5s ease;
+    animation:slideUp .55s var(--ease-spring, ease);
 }
 
 /* ==========================================
@@ -67,7 +67,7 @@ Version : 1.0.0
 }
 
 .zoom-in{
-    animation:zoomIn .35s ease;
+    animation:zoomIn .4s var(--ease-spring, ease);
 }
 
 /* ==========================================

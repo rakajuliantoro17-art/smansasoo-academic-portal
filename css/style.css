@@ -2,7 +2,40 @@
 ==========================================================
 SMANSASOO Academic Portal
 Main Stylesheet
-Version : 1.0.0
+Version : 1.1.0
+==========================================================
+FIX (v1.1.0):
+- BUG KRITIS: sama seperti kasus glass.css sebelumnya, file
+  ini berisi potongan diff mentah yang belum diterapkan
+  (baris "+" literal di dalam CSS). Baris seperti
+  "+    display:flex;" adalah deklarasi TIDAK VALID (nama
+  properti jadi "+    display"), jadi browser membuangnya
+  diam-diam. Efeknya: body/.container/.search-section tetap
+  memakai layout lama, sama sekali TIDAK jadi flex column —
+  search-card tidak pernah benar-benar center secara
+  vertikal di viewport, cuma nempel di atas seperti biasa.
+- Ada juga DUPLIKAT ".container" (versi lama tanpa flex,
+  sisa dari sebelum di-diff) — dihapus, digabung jadi satu
+  definisi ".container" yang bersih.
+- Sekarang diterapkan dengan benar: body & .container jadi
+  flex column (mengisi tinggi viewport via 100dvh, dengan
+  fallback 100vh untuk browser lama), .search-section jadi
+  flex:1 yang men-center search-card/#result secara vertikal
+  DAN horizontal di ruang yang tersisa antara header & footer
+  — header tetap di atas, footer tetap di bawah, kartu di
+  tengah, apapun tinggi kontennya.
+- justify-content:safe center dipakai (progressive
+  enhancement, sama pola dengan overlay di glass.css):
+  browser lama abaikan baris ini & tetap pakai center biasa;
+  browser modern upgrade supaya kalau konten (mis. kartu
+  hasil yang panjang) lebih tinggi dari viewport pendek,
+  bagian atas TIDAK terpotong — rata atas + tetap bisa
+  discroll, bukan center-lalu-clip.
+- .search-section > .search-card / #result diberi width:100%
+  supaya begitu parent-nya jadi flex, kartu tidak menyusut
+  ikut lebar kontennya sendiri (default flex item adalah
+  shrink-to-fit) — tetap mengikuti lebar/max-width yang sudah
+  diatur di responsive.css seperti sebelumnya.
 ==========================================================
 */
 
@@ -31,6 +64,10 @@ body{
     line-height:1.6;
 
     min-height:100vh;
+    min-height:100dvh;
+
+    display:flex;
+    flex-direction:column;
 
 }
 
@@ -43,6 +80,10 @@ body{
     width:min(92%,1100px);
 
     margin:auto;
+
+    flex:1;
+    display:flex;
+    flex-direction:column;
 
 }
 
@@ -99,6 +140,21 @@ body{
 .search-section{
 
     padding:20px;
+
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    justify-content:safe center;
+    width:100%;
+
+}
+
+.search-section > .search-card,
+.search-section > #result{
+
+    width:100%;
 
 }
 
