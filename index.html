@@ -33,9 +33,17 @@
 
     <link rel="stylesheet" href="css/glass.css">
 
+    <link rel="stylesheet" href="css/shell.css">
+
 </head>
 
-<body>
+<body data-page="home">
+
+    <!-- ================= SHELL: NAV =================
+         Markup diisi js/shell.js supaya nav bar konsisten
+         di semua halaman (lihat docs/UI-SHELL.md). -->
+
+    <div id="shellNav"></div>
 
     <!-- Lapisan background foto sekolah (blur + gradient),
          lihat css/glass.css -->
@@ -126,31 +134,11 @@
 
 
 
-    <!-- ================= FOOTER ================= -->
+    <!-- ================= SHELL: FOOTER =================
+         Markup diisi js/shell.js supaya footer konsisten
+         di semua halaman (lihat docs/UI-SHELL.md). -->
 
-    <footer>
-
-        <div class="container">
-
-            <p>
-
-                © 2026
-
-                SMAN 1 Sooko Mojokerto
-
-            </p>
-
-            <small>
-
-                Academic Portal Version 1.2
-                &middot;
-                <a href="pages/nilai.html">Cek Nilai Matematika</a>
-
-            </small>
-
-        </div>
-
-    </footer>
+    <div id="shellFooter"></div>
 
 
 
@@ -186,6 +174,10 @@
     <!-- UTILS -->
 
     <script src="js/utils.js"></script>
+
+    <!-- SHELL (nav + footer, dipakai semua halaman) -->
+
+    <script src="js/shell.js"></script>
 
     <!-- API -->
 

@@ -93,6 +93,17 @@ Contoh struktur data:
 
 ---
 
+## 🧩 UI Shell (konsistensi tampilan)
+
+Nav bar dan footer di semua halaman dirender dari satu sumber:
+`js/shell.js` + `css/shell.css`. Tambah menu baru cukup di satu tempat,
+dan setiap halaman baru tinggal menyalin `pages/_template.html`.
+
+Panduan lengkap (design tokens, komponen yang sudah ada, cara menambah
+halaman/fitur baru): lihat **`docs/UI-SHELL.md`**.
+
+---
+
 ## 📐 Modul Nilai (tanpa Apps Script)
 
 Selain modul kenaikan kelas di atas, portal ini juga punya modul **Cek Nilai

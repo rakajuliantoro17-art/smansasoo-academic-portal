@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- 1. GANTI judul halaman -->
+    <title>Judul Halaman | SMANSASOO Academic Portal</title>
+
+    <link rel="icon" href="../assets/logo/favicon.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS wajib di setiap halaman -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/shell.css">
+
+    <!-- 2. Tambahkan CSS khusus fitur ini di sini kalau perlu,
+         contoh: <link rel="stylesheet" href="../css/nilai.css"> -->
+
+</head>
+
+<!-- 3. GANTI data-page dengan key unik, lalu daftarkan di
+        NAV_LINKS pada js/shell.js supaya muncul di menu -->
+<body data-page="ganti-ini">
+
+    <!-- ================= SHELL: NAV ================= -->
+
+    <div id="shellNav"></div>
+
+    <!-- ================= HEADER (opsional) =================
+         Boleh dihapus kalau halaman tidak butuh hero title. -->
+
+    <header class="header">
+
+        <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko" class="logo">
+
+        <h1>
+            Judul
+            <span>Halaman</span>
+        </h1>
+
+        <p>Deskripsi singkat halaman ini.</p>
+
+    </header>
+
+    <!-- ================= KONTEN ================= -->
+
+    <main>
+
+        <section class="container">
+
+            <!-- 4. Isi halaman di sini. Pakai komponen yang sudah
+                 ada supaya konsisten, contoh:
+
+                 <div class="search-card"> ... </div>   -> css/style.css
+                 <div class="result-card"> ... </div>   -> css/style.css
+                 <div class="nilai-card"> ... </div>    -> css/nilai.css
+
+                 Jangan pakai warna/spacing hardcode; pakai
+                 var(--primary), var(--space-lg), dst dari
+                 css/variables.css. -->
+
+        </section>
+
+    </main>
+
+    <!-- ================= SHELL: FOOTER ================= -->
+
+    <div id="shellFooter"></div>
+
+    <!-- CONFIG (wajib, dipakai Shell untuk nama sekolah & versi) -->
+    <script src="../js/config.js"></script>
+
+    <!-- UTILS (wajib) -->
+    <script src="../js/utils.js"></script>
+
+    <!-- SHELL (wajib, render nav + footer) -->
+    <script src="../js/shell.js"></script>
+
+    <!-- 5. Script khusus fitur ini ditambahkan di sini -->
+
+</body>
+
+</html>

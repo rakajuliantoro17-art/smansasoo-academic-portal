@@ -1,0 +1,173 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Shell Stylesheet (Nav + Footer)
+Version : 1.0.0
+==========================================================
+Dipakai oleh markup yang dirender js/shell.js. Memakai
+token yang sama dari css/variables.css supaya nav & footer
+otomatis konsisten dengan halaman manapun yang memuatnya,
+sekarang atau nanti.
+==========================================================
+*/
+
+/* ==========================================
+   NAV BAR
+========================================== */
+
+.shell-nav{
+    background:var(--surface);
+    border-bottom:1px solid var(--border-light);
+    position:sticky;
+    top:0;
+    z-index:var(--z-sticky);
+}
+
+.shell-nav-inner{
+    max-width:var(--container-width);
+    margin:0 auto;
+    padding:.75rem var(--space-lg);
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:var(--space-md);
+}
+
+.shell-brand{
+    display:flex;
+    align-items:center;
+    gap:var(--space-sm);
+    text-decoration:none;
+    color:var(--primary);
+    font-weight:var(--weight-bold);
+    font-size:var(--font-sm);
+}
+
+.shell-brand-logo{
+    width:32px;
+    height:32px;
+    object-fit:contain;
+}
+
+.shell-nav-links{
+    display:flex;
+    align-items:center;
+    gap:var(--space-lg);
+}
+
+.shell-nav-link{
+    text-decoration:none;
+    color:var(--text-light);
+    font-weight:var(--weight-semibold);
+    font-size:var(--font-sm);
+    padding:.4rem .2rem;
+    border-bottom:2px solid transparent;
+    transition:var(--transition-fast);
+}
+
+.shell-nav-link:hover{
+    color:var(--primary);
+}
+
+.shell-nav-link.active{
+    color:var(--primary);
+    border-bottom-color:var(--primary);
+}
+
+.shell-nav-toggle{
+    display:none;
+    flex-direction:column;
+    gap:4px;
+    background:none;
+    border:none;
+    padding:.4rem;
+    cursor:pointer;
+}
+
+.shell-nav-toggle span{
+    width:22px;
+    height:2px;
+    background:var(--text);
+    border-radius:2px;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.shell-footer{
+    margin-top:var(--space-2xl);
+    padding:var(--space-xl) 0;
+    text-align:center;
+    color:var(--text-light);
+    font-size:var(--font-sm);
+    border-top:1px solid var(--border-light);
+}
+
+.shell-footer-links{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:var(--space-md);
+    margin-bottom:var(--space-sm);
+}
+
+.shell-footer-links a{
+    color:var(--text-light);
+    text-decoration:none;
+    font-weight:var(--weight-semibold);
+    font-size:var(--font-xs);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+.shell-footer-links a:hover{
+    color:var(--primary);
+}
+
+.shell-footer-inner small{
+    display:block;
+    margin-top:var(--space-xs);
+    color:var(--text-muted);
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 640px){
+
+    .shell-nav-toggle{
+        display:flex;
+    }
+
+    .shell-nav-links{
+        position:absolute;
+        top:100%;
+        left:0;
+        right:0;
+        background:var(--surface);
+        flex-direction:column;
+        align-items:flex-start;
+        gap:0;
+        padding:var(--space-sm) var(--space-lg);
+        border-bottom:1px solid var(--border-light);
+        box-shadow:var(--shadow-sm);
+        display:none;
+    }
+
+    .shell-nav-links.open{
+        display:flex;
+    }
+
+    .shell-nav-link{
+        width:100%;
+        padding:.75rem 0;
+        border-bottom:1px solid var(--border-light);
+    }
+
+    .shell-nav-inner{
+        position:relative;
+    }
+
+}

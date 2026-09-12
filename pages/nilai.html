@@ -29,10 +29,15 @@
     <link rel="stylesheet" href="../css/glass.css">
     <link rel="stylesheet" href="../css/animation.css">
     <link rel="stylesheet" href="../css/nilai.css">
+    <link rel="stylesheet" href="../css/shell.css">
 
 </head>
 
-<body>
+<body data-page="nilai">
+
+    <!-- ================= SHELL: NAV ================= -->
+
+    <div id="shellNav"></div>
 
     <div class="bg-layer" aria-hidden="true"></div>
 
@@ -152,30 +157,18 @@
 
     </main>
 
-    <!-- ================= FOOTER ================= -->
+    <!-- ================= SHELL: FOOTER ================= -->
 
-    <footer>
-
-        <div class="container">
-
-            <p>
-                &copy; 2026
-                SMAN 1 Sooko Mojokerto
-            </p>
-
-            <small>
-                Modul Nilai &middot; Academic Portal
-            </small>
-
-        </div>
-
-    </footer>
+    <div id="shellFooter"></div>
 
     <!-- CONFIG -->
     <script src="../js/config.js"></script>
 
     <!-- UTILS -->
     <script src="../js/utils.js"></script>
+
+    <!-- SHELL (nav + footer, dipakai semua halaman) -->
+    <script src="../js/shell.js"></script>
 
     <!-- NILAI: CARI PER NIS -->
     <script src="../js/nilai-api.js"></script>
