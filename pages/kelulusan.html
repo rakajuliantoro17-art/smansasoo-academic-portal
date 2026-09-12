@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Cek Pengumuman Kelulusan — SMAN 1 Sooko Mojokerto</title>
+<meta name="description" content="Portal resmi pengumuman kelulusan SMAN 1 Sooko Mojokerto. Masukkan NIS atau NISN untuk melihat hasil kelulusan Anda.">
+
+<meta name="theme-color" content="#071A35">
+<link rel="icon" href="../assets/favicon.ico">
+<link rel="apple-touch-icon" href="../assets/icons/icon.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<!-- ==========================================================
+     CSS KHUSUS HALAMAN INI.
+     Sengaja TIDAK memakai ../css/variables.css, style.css, dst
+     milik situs utama (kenaikan kelas/nilai/rekap) -- halaman
+     Kelulusan punya set CSS-nya sendiri di css/kelulusan/,
+     supaya perubahan di salah satu tidak saling mempengaruhi.
+========================================================== -->
+
+<link rel="stylesheet" href="../css/kelulusan/variables.css">
+<link rel="stylesheet" href="../css/kelulusan/style.css">
+<link rel="stylesheet" href="../css/kelulusan/glass.css">
+<link rel="stylesheet" href="../css/kelulusan/animation.css">
+<link rel="stylesheet" href="../css/kelulusan/responsive.css">
+
+</head>
+<body>
+
+<div class="bg-layer" id="bgLayer"></div>
+
+<div class="container">
+
+    <header class="header">
+
+        <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko Mojokerto" class="logo">
+
+        <h1>SMAN 1 Sooko Mojokerto<span>Pengumuman Kelulusan</span></h1>
+
+        <p>Masukkan NIS atau NISN untuk melihat hasil kelulusan Anda.</p>
+
+        <p class="mt-1">
+            <a href="../index.html" class="link-primary">&larr; Kembali ke Pengumuman Kenaikan Kelas</a>
+        </p>
+
+    </header>
+
+    <section class="search-section">
+
+        <div class="search-card">
+
+            <span class="badge-year" id="badgeYear"></span>
+            <h2>Cek Hasil Kelulusan</h2>
+
+            <form id="searchForm" autocomplete="off">
+
+                <input
+                    type="text"
+                    id="keyword"
+                    name="keyword"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    required
+                >
+
+                <button type="submit">Lihat Hasil Kelulusan</button>
+
+            </form>
+
+        </div>
+
+        <div id="result" class="hidden"></div>
+
+    </section>
+
+    <footer>
+
+        SMAN 1 Sooko Mojokerto
+
+        <small>&copy; 2026 SMANSASOO Graduation Portal</small>
+
+    </footer>
+
+</div>
+
+<div class="flash" id="flash"></div>
+<div id="balloons"></div>
+
+<div class="overlay" id="overlay">
+    <div class="result-box" id="overlayBox"></div>
+</div>
+
+<audio id="celebrationSound" preload="none"></audio>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<!-- ==========================================================
+     JS KHUSUS HALAMAN INI (namespace terpisah: window.CONFIG,
+     window.API, window.UI, dst di sini HANYA berlaku selama
+     halaman ini dimuat -- tidak bentrok dengan index.html /
+     nilai.html / rekap.html karena masing-masing halaman
+     dimuat di context browser yang berbeda).
+========================================================== -->
+
+<script src="../js/kelulusan/config.js"></script>
+<script src="../js/kelulusan/utils.js"></script>
+<script src="../js/kelulusan/api.js"></script>
+<script src="../js/kelulusan/ui.js"></script>
+<script src="../js/kelulusan/search.js"></script>
+<script src="../js/kelulusan/app.js"></script>
+
+</body>
+</html>
