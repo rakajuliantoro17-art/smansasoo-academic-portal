@@ -50,7 +50,11 @@ window.CONFIG = {
     // true = membaca data/sample.json
     // false = membaca Google Apps Script
 
-    USE_SAMPLE_DATA: false,
+    // FIX SEMENTARA: API_BASE_URL (Apps Script lama) sudah tidak
+    // merespons (mengembalikan "Terjadi kesalahan pada server").
+    // Diaktifkan ke mode sample sampai backend permanen (Google
+    // Sheet lewat Vercel /api, seperti halaman Nilai) siap.
+    USE_SAMPLE_DATA: true,
 
 
 
