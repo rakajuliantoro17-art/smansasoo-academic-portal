@@ -1,33 +1,19 @@
 /*
 ==========================================================
-SMANSASOO Graduation Portal
-UI Module
-Version : 2.1.0
+SMANSASOO Academic Portal
+UI Module (Kenaikan Kelas)
+Version : 2.2.0
 ==========================================================
-FIX (v2.1.0):
-- BUG KRITIS: seluruh modul ini sebelumnya fork mentah dari
-  project Kenaikan Kelas — merujuk ke key CONFIG yang TIDAK
-  ADA di config.js Kelulusan (STATUS_NOT_PROMOTED_KEYWORD,
-  MESSAGE.NOT_PROMOTED_NOTE, ENABLE_CELEBRATION_AUDIO,
-  CELEBRATION_AUDIO_URL). Semua diganti ke key yang benar-
-  benar ada: STATUS_PASS, MESSAGE.NOT_PASS_MESSAGE,
-  ENABLE_AUDIO, AUDIO_URL.
-- Field siswa diganti dari skema Kenaikan Kelas
-  (previous_class/new_class/major/homeroom_teacher) ke
-  skema Kelulusan sesuai StudentService.gs FIELD_MAP:
-  graduation_number, graduation_date, note.
-- isPromoted() -> isPassed(): sekarang exact match terhadap
-  CONFIG.STATUS_PASS ("LULUS"), bukan substring check
-  terhadap keyword yang tidak ada.
-- graduation_number & graduation_date memang boleh kosong
-  (SK belum terbit) — kalau kosong, baris terkait di kartu
-  hasil disembunyikan sepenuhnya alih-alih menampilkan "-"
-  yang membingungkan siswa.
-- Tanggal ditampilkan lewat Utils.formatDate() (dari
-  utils.js) supaya rapi ("5 Mei 2026"), bukan string ISO
-  mentah yang dikirim Apps Script.
-- Semua data siswa tetap lewat escapeHTML() sebelum masuk
-  innerHTML (pola anti-XSS dari audit awal, tidak diubah).
+FIX (v2.2.0):
+- BUG KRITIS: file ini sebelumnya ketiban isi js/kelulusan/ui.js
+  persis 100% (sama seperti bug di js/config.js), sehingga
+  index.html (kenaikan kelas) ikut menampilkan overlay
+  "DINYATAKAN LULUS" dan field graduation_number/graduation_date
+  milik modul Kelulusan, alih-alih "DINYATAKAN NAIK KELAS" dan
+  field kenaikan kelas (previous_class, new_class, major,
+  homeroom_teacher, note).
+- Sudah dipisah lagi jadi dua file independen: file ini untuk
+  Kenaikan Kelas, js/kelulusan/ui.js untuk Kelulusan.
 ==========================================================
 */
 
@@ -71,9 +57,9 @@ window.UI = (() => {
 
         result.classList.remove("hidden");
 
-        if (isPassed(student.status)) {
+        if (isPromoted(student.status)) {
 
-            renderPassedSummary(student);
+            renderPromotedSummary(student);
 
             celebrate(student);
 
@@ -85,7 +71,7 @@ window.UI = (() => {
 
     }
 
-    function isPassed(status) {
+    function isPromoted(status) {
 
         return String(status || "")
             .trim()
@@ -103,21 +89,31 @@ window.UI = (() => {
             ? "result-card result-neutral fade-in"
             : "result-card success slide-up";
 
-        const skRows = opts.neutral
+        const detailRows = opts.neutral
             ? ""
             : `
 
-            ${student.graduation_number ? `
             <div class="result-item">
-                <span class="result-label">Nomor SKL</span>
-                <span class="result-value">${escapeHTML(student.graduation_number)}</span>
+                <span class="result-label">Kelas Lama</span>
+                <span class="result-value">${escapeHTML(student.previous_class)}</span>
+            </div>
+
+            <div class="result-item">
+                <span class="result-label">Kelas Baru</span>
+                <span class="result-value">${escapeHTML(student.new_class)}</span>
+            </div>
+
+            ${student.major ? `
+            <div class="result-item">
+                <span class="result-label">Kelompok Minat</span>
+                <span class="result-value">${escapeHTML(student.major)}</span>
             </div>
             ` : ""}
 
-            ${student.graduation_date ? `
+            ${student.homeroom_teacher ? `
             <div class="result-item">
-                <span class="result-label">Tanggal Kelulusan</span>
-                <span class="result-value">${escapeHTML(Utils.formatDate(student.graduation_date))}</span>
+                <span class="result-label">Wali Kelas Baru</span>
+                <span class="result-value">${escapeHTML(student.homeroom_teacher)}</span>
             </div>
             ` : ""}
 
@@ -125,7 +121,7 @@ window.UI = (() => {
 
         const note = opts.neutral
             ? `<p class="status-note">${escapeHTML(CONFIG.MESSAGE.NOT_PASS_MESSAGE)}</p>`
-            : "";
+            : (student.note ? `<p class="status-note">${escapeHTML(student.note)}</p>` : "");
 
         return `
 
@@ -153,7 +149,7 @@ window.UI = (() => {
                 <span class="result-value">${escapeHTML(student.status)}</span>
             </div>
 
-            ${skRows}
+            ${detailRows}
 
             ${note}
 
@@ -164,10 +160,10 @@ window.UI = (() => {
     }
 
     /* ==========================================
-       LULUS — kartu ringkas di halaman
+       NAIK — kartu ringkas di halaman
     ========================================== */
 
-    function renderPassedSummary(student) {
+    function renderPromotedSummary(student) {
 
         result.innerHTML = studentCardHTML(student, {
             title: CONFIG.ANNOUNCEMENT_TITLE,
@@ -177,7 +173,7 @@ window.UI = (() => {
     }
 
     /* ==========================================
-       LULUS — overlay perayaan
+       NAIK — overlay perayaan
     ========================================== */
 
     function celebrate(student) {
@@ -192,9 +188,9 @@ window.UI = (() => {
 
             <div class="student-name">${escapeHTML(student.name)}</div>
 
-            <div class="subtext">DINYATAKAN LULUS</div>
+            <div class="subtext">DINYATAKAN NAIK KELAS</div>
 
-            <div class="subtext">DARI ${escapeHTML(CONFIG.SCHOOL_NAME)}</div>
+            <div class="subtext">DI ${escapeHTML(CONFIG.SCHOOL_NAME)}</div>
 
             <button id="btnCloseOverlay" type="button">Tutup</button>
 
@@ -354,7 +350,7 @@ window.UI = (() => {
     }
 
     /* ==========================================
-       TIDAK LULUS — netral, tanpa animasi
+       TIDAK NAIK — netral, tanpa animasi
     ========================================== */
 
     function renderNeutralResult(student) {
