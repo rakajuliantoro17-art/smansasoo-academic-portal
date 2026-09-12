@@ -1,113 +1,565 @@
-<!DOCTYPE html>
-<html lang="id">
+/*
+==========================================================
+SMANSASOO Academic Portal
+Rapor Pendidikan Page Stylesheet
+Version : 3.0.0
+==========================================================
+CATATAN PEMULIHAN:
+File ini sempat KETIMPA HTML secara tidak sengaja (commit
+lain menaruh isi pages/rapor.html ke sini), jadi seluruh CSS
+lama hilang total dan halaman Rapor Pendidikan sempat tanpa
+styling. Versi ini memulihkan seluruh style v1.0.0 (ringkasan,
+grid kartu, label status, progress bar, detail sub-indikator)
+DITAMBAH fitur yang sempat dibangun di sesi sebelumnya
+(toolbar profil+akreditasi, dropdown tahun, badge deskriptif,
+tabel peringkat) yang juga sudah hilang dari file ini akibat
+kerusakan yang sama.
 
-<head>
+CHANGELOG (v3.0.0):
+- Poles visual "modern, formal, sedikit glassmorphism":
+  * Wash gradient lembut di background halaman (bukan foto,
+    beda dari gaya glass.css di halaman kelulusan yang dramatis
+    -- di sini secukupnya saja karena ini halaman data resmi).
+  * Toolbar, kartu ringkasan, dan kartu indikator memakai kaca
+    tipis (frosted glass): latar putih tembus pandang + blur,
+    TAPI teks tetap gelap (beda dari glass.css yang teksnya
+    putih di atas foto gelap) -- supaya tetap formal & mudah
+    dibaca sebagai halaman data.
+  * Aksen garis warna di atas tiap kartu indikator sesuai status
+    (Baik/Sedang/Kurang), dipakai untuk pemindaian cepat.
+  * Lingkaran akreditasi digambar ulang dengan conic-gradient
+    supaya terlihat seperti "segel" resmi, bukan lingkaran polos.
+- Semua warna/spacing/radius tetap dari css/variables.css.
+  Blur & saturate dikecilkan sedikit dari token --glass-blur/
+  --glass-saturate (yang dipakai glass.css untuk efek dramatis)
+  karena permintaannya "glassmorphism sedikit" -- bukan penuh.
+==========================================================
+*/
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+/* ==========================================
+   WASH BACKGROUND (dasar buat efek kaca)
+   Cuma aktif di halaman ini (data-page="rapor"),
+   supaya halaman lain tidak ikut berubah.
+========================================== */
 
-    <title>Rapor Pendidikan | SMANSASOO Academic Portal</title>
+body[data-page="rapor"]{
 
-    <meta name="description"
-        content="Capaian Rapor Pendidikan SMAN 1 Sooko Mojokerto berdasarkan Asesmen Nasional.">
+    position:relative;
 
-    <link rel="icon" href="../assets/logo/favicon.ico">
+}
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+body[data-page="rapor"]::before{
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    content:"";
 
-    <!-- CSS wajib di setiap halaman -->
-    <link rel="stylesheet" href="../css/variables.css">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/responsive.css">
-    <link rel="stylesheet" href="../css/animation.css">
-    <link rel="stylesheet" href="../css/shell.css">
+    position:fixed;
 
-    <!-- CSS khusus halaman ini -->
-    <link rel="stylesheet" href="../css/rapor.css">
+    inset:0;
 
-</head>
+    z-index:-1;
 
-<body data-page="rapor">
+    background:
+        radial-gradient(1100px 600px at 8% -10%, rgba(15,76,129,.10) 0%, transparent 60%),
+        radial-gradient(900px 500px at 100% 0%, rgba(244,180,0,.08) 0%, transparent 55%),
+        var(--background);
 
-    <!-- ================= SHELL: NAV ================= -->
+}
 
-    <div id="shellNav"></div>
+/* ==========================================
+   TOOLBAR (profil sekolah + dropdown tahun)
+========================================== */
 
-    <!-- ================= HEADER ================= -->
+.rapor-toolbar{
+    position:relative;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:var(--space-md);
+    margin-bottom:var(--space-lg);
+    padding:var(--space-lg);
+    border-radius:var(--radius-xl);
+    background:rgba(255,255,255,.6);
+    border:1px solid rgba(255,255,255,.6);
+    box-shadow:
+        var(--shadow-md),
+        inset 0 1px 0 rgba(255,255,255,.7);
+}
 
-    <header class="header">
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
-        <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko" class="logo">
+    .rapor-toolbar{
+        background:linear-gradient(160deg, rgba(255,255,255,.68) 0%, rgba(255,255,255,.42) 100%);
+        -webkit-backdrop-filter:blur(18px) saturate(160%);
+        backdrop-filter:blur(18px) saturate(160%);
+    }
 
-        <h1>
-            Rapor
-            <span>Pendidikan</span>
-        </h1>
+}
 
-        <p>Capaian Asesmen Nasional SMAN 1 Sooko Mojokerto.</p>
+.rapor-profile{
+    display:flex;
+    align-items:center;
+    gap:var(--space-md);
+}
 
-    </header>
+.rapor-profile-info{
+    display:flex;
+    flex-direction:column;
+}
 
-    <!-- ================= KONTEN ================= -->
+.rapor-profile-label{
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--primary);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+}
 
-    <main>
+.rapor-profile-school{
+    font-size:var(--font-lg);
+    font-weight:var(--weight-bold);
+    color:var(--text);
+    margin-top:.15rem;
+    letter-spacing:-.01em;
+}
 
-        <section class="container">
+.rapor-profile-npsn{
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+    margin-top:.15rem;
+    letter-spacing:.02em;
+}
 
-            <div id="raporLoading" class="loading-box">
-                <div class="spinner"></div>
-                <p>Memuat data Rapor Pendidikan...</p>
-            </div>
+/* Lingkaran skor akreditasi — gaya "segel resmi" */
 
-            <div id="raporError" class="error-card hidden"></div>
+.rapor-akreditasi{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.35rem;
+    flex-shrink:0;
+}
 
-            <div id="raporContent" class="hidden">
+.rapor-akreditasi-ring{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    font-size:var(--font-xl);
+    font-weight:var(--weight-extrabold);
+    color:var(--primary-dark);
+    background:
+        radial-gradient(circle at center, var(--surface) 62%, transparent 63%),
+        conic-gradient(from -90deg, var(--secondary) 0deg, var(--success) 180deg, var(--secondary) 360deg);
+    box-shadow:var(--shadow-sm);
+}
 
-                <div class="rapor-toolbar">
+.rapor-akreditasi-label{
+    font-size:var(--font-xs);
+    font-weight:var(--weight-semibold);
+    color:var(--text-light);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+}
 
-                    <div id="raporProfile" class="rapor-profile"></div>
+/* Dropdown tahun */
 
-                    <label class="rapor-year-picker">
-                        <span>Tahun Data</span>
-                        <select id="raporYearSelect" aria-label="Pilih tahun data Rapor Pendidikan"></select>
-                    </label>
+.rapor-year-picker{
+    display:flex;
+    flex-direction:column;
+    gap:.35rem;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--text-light);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+}
 
-                </div>
+.rapor-year-picker select{
+    padding:.6rem 1rem;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--text);
+    font-family:inherit;
+    font-size:var(--font-sm);
+    font-weight:var(--weight-semibold);
+    text-transform:none;
+    letter-spacing:normal;
+    cursor:pointer;
+    transition:var(--transition-fast);
+}
 
-                <div id="raporSummary" class="rapor-summary"></div>
+.rapor-year-picker select:hover{
+    border-color:var(--primary-light);
+}
 
-                <div id="raporGrid" class="rapor-grid"></div>
+.rapor-year-picker select:focus{
+    outline:none;
+    border-color:var(--primary);
+    box-shadow:0 0 0 3px rgba(15,76,129,.15);
+}
 
-                <p id="raporMeta" class="rapor-source-note"></p>
+/* ==========================================
+   RINGKASAN (metric cards atas)
+========================================== */
 
-            </div>
+.rapor-summary{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+    gap:var(--space-md);
+    margin-bottom:var(--space-lg);
+}
 
-        </section>
+.rapor-summary-card{
+    position:relative;
+    background:rgba(255,255,255,.55);
+    border:1px solid rgba(255,255,255,.6);
+    border-radius:var(--radius-lg);
+    padding:var(--space-md) var(--space-lg);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+}
 
-    </main>
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
-    <!-- ================= SHELL: FOOTER ================= -->
+    .rapor-summary-card{
+        background:linear-gradient(160deg, rgba(255,255,255,.62) 0%, rgba(255,255,255,.32) 100%);
+        -webkit-backdrop-filter:blur(14px) saturate(150%);
+        backdrop-filter:blur(14px) saturate(150%);
+    }
 
-    <div id="shellFooter"></div>
+}
 
-    <!-- CONFIG (wajib, dipakai Shell untuk nama sekolah & versi) -->
-    <script src="../js/config.js"></script>
+.rapor-summary-card span{
+    display:block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--text-light);
+    text-transform:uppercase;
+    letter-spacing:.06em;
+}
 
-    <!-- UTILS (wajib) -->
-    <script src="../js/utils.js"></script>
+.rapor-summary-card strong{
+    display:block;
+    font-size:var(--font-2xl);
+    font-weight:var(--weight-extrabold);
+    margin-top:.3rem;
+    color:var(--text);
+    letter-spacing:-.02em;
+}
 
-    <!-- SHELL (wajib, render nav + footer) -->
-    <script src="../js/shell.js"></script>
+.rapor-summary-note{
+    display:block;
+    margin-top:.3rem;
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+}
 
-    <!-- Fitur Rapor Pendidikan -->
-    <script src="../js/rapor-data.js"></script>
-    <script src="../js/rapor-ui.js"></script>
-    <script src="../js/rapor-app.js"></script>
+/* ==========================================
+   GRID KARTU INDIKATOR
+========================================== */
 
-</body>
+.rapor-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+    gap:var(--space-md);
+}
 
-</html>
+.rapor-card{
+    position:relative;
+    background:rgba(255,255,255,.6);
+    border:1px solid rgba(255,255,255,.65);
+    border-top:3px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+    transition:
+        transform .25s var(--ease-ios, ease),
+        box-shadow .25s var(--ease-ios, ease);
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+
+    .rapor-card{
+        background:linear-gradient(165deg, rgba(255,255,255,.66) 0%, rgba(255,255,255,.34) 100%);
+        -webkit-backdrop-filter:blur(16px) saturate(150%);
+        backdrop-filter:blur(16px) saturate(150%);
+    }
+
+}
+
+/* Aksen garis atas sesuai status -- pemindaian cepat tanpa
+   perlu buka kartunya. Browser lama yang tidak dukung :has()
+   cukup jatuh balik ke border netral di atas, tidak error. */
+
+.rapor-card:has(.rapor-label.baik){ border-top-color:var(--success); }
+.rapor-card:has(.rapor-label.sedang){ border-top-color:var(--warning); }
+.rapor-card:has(.rapor-label.kurang){ border-top-color:var(--danger); }
+
+.rapor-card:hover{
+    transform:translateY(-3px);
+    box-shadow:var(--shadow-md);
+}
+
+.rapor-card-head{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    padding:var(--space-lg);
+    cursor:pointer;
+    font-family:inherit;
+}
+
+.rapor-card-kode{
+    display:inline-block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--primary);
+    letter-spacing:.08em;
+    margin-bottom:.3rem;
+}
+
+.rapor-card-nama{
+    font-size:var(--font-md);
+    font-weight:var(--weight-bold);
+    color:var(--text);
+    line-height:1.35;
+    letter-spacing:-.01em;
+}
+
+.rapor-card-metrics{
+    display:flex;
+    align-items:flex-end;
+    gap:var(--space-lg);
+    margin-top:var(--space-md);
+}
+
+.rapor-card-skor{
+    font-size:var(--font-2xl);
+    font-weight:var(--weight-extrabold);
+    color:var(--text);
+    line-height:1;
+    letter-spacing:-.02em;
+}
+
+.rapor-card-skor small{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-regular);
+    color:var(--text-light);
+}
+
+.rapor-card-delta{
+    font-size:var(--font-md);
+    font-weight:var(--weight-bold);
+}
+
+.rapor-card-delta.up{ color:var(--success); }
+.rapor-card-delta.down{ color:var(--danger); }
+.rapor-card-delta.flat{ color:var(--text-muted); }
+
+.rapor-card-sub-count{
+    margin-left:auto;
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+    align-self:center;
+}
+
+/* Progress bar skor */
+
+.rapor-progress-track{
+    margin-top:var(--space-md);
+    height:6px;
+    border-radius:var(--radius-pill);
+    background:rgba(0,0,0,.06);
+    overflow:hidden;
+}
+
+.rapor-progress-fill{
+    height:100%;
+    border-radius:var(--radius-pill);
+    background:var(--success);
+    transition:width var(--transition);
+}
+
+.rapor-card-toggle-icon{
+    display:inline-block;
+    transition:transform var(--transition-fast);
+}
+
+.rapor-card.open .rapor-card-toggle-icon{
+    transform:rotate(180deg);
+}
+
+/* ==========================================
+   BADGE STATUS DESKRIPTIF
+   Bukan cuma label pendek "Baik"/"Sedang"/"Kurang" --
+   sekalian memuat kalimat definisi capaiannya, mengikuti
+   gaya situs Rapor Pendidikan asli, dibungkus kotak "insight"
+   bertinta warna status.
+========================================== */
+
+.rapor-label{
+    display:flex;
+    flex-direction:column;
+    gap:.25rem;
+    font-size:var(--font-xs);
+    padding:.65rem .85rem;
+    border-radius:var(--radius-md);
+    margin-top:.6rem;
+    text-align:left;
+    border:1px solid transparent;
+}
+
+.rapor-label strong{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-bold);
+    letter-spacing:.02em;
+}
+
+.rapor-label-desc{
+    font-weight:var(--weight-regular);
+    line-height:1.55;
+    opacity:.92;
+}
+
+.rapor-label.baik{
+    background:rgba(34,197,94,.10);
+    color:#15803D;
+    border-color:rgba(34,197,94,.3);
+}
+
+.rapor-label.sedang{
+    background:rgba(245,158,11,.10);
+    color:#92400E;
+    border-color:rgba(245,158,11,.3);
+}
+
+.rapor-label.kurang{
+    background:rgba(239,68,68,.10);
+    color:#B91C1C;
+    border-color:rgba(239,68,68,.3);
+}
+
+/* ==========================================
+   DETAIL SUB-INDIKATOR (expand/collapse)
+========================================== */
+
+.rapor-card-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height var(--transition);
+    border-top:1px solid rgba(0,0,0,.06);
+}
+
+.rapor-card.open .rapor-card-body{
+    max-height:3000px;
+}
+
+.rapor-card-body-inner{
+    padding:var(--space-md) var(--space-lg) var(--space-lg);
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-md);
+}
+
+.rapor-sub-item{
+    padding-bottom:var(--space-md);
+    border-bottom:1px solid rgba(0,0,0,.06);
+}
+
+.rapor-sub-item:last-child{
+    border-bottom:none;
+    padding-bottom:0;
+}
+
+.rapor-sub-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:var(--space-sm);
+}
+
+.rapor-sub-nama{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-semibold);
+    color:var(--text);
+}
+
+.rapor-sub-skor{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-bold);
+    color:var(--text);
+    white-space:nowrap;
+}
+
+.rapor-sub-definisi{
+    margin-top:.35rem;
+    font-size:var(--font-xs);
+    color:var(--text-light);
+    line-height:1.55;
+}
+
+/* ==========================================
+   TABEL PERINGKAT (provinsi / nasional)
+========================================== */
+
+.rapor-rank-table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:.6rem;
+    font-size:var(--font-xs);
+    background:rgba(0,0,0,.02);
+    border-radius:var(--radius-md);
+    overflow:hidden;
+}
+
+.rapor-rank-table th,
+.rapor-rank-table td{
+    padding:.55rem .8rem;
+    text-align:left;
+    border-bottom:1px solid rgba(0,0,0,.06);
+}
+
+.rapor-rank-table tr:last-child th,
+.rapor-rank-table tr:last-child td{
+    border-bottom:none;
+}
+
+.rapor-rank-table th{
+    font-weight:var(--weight-semibold);
+    color:var(--text-light);
+    width:45%;
+}
+
+.rapor-rank-table td{
+    color:var(--text);
+    font-weight:var(--weight-semibold);
+}
+
+.rapor-source-note{
+    margin-top:var(--space-xl);
+    text-align:center;
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width: 640px){
+
+    .rapor-toolbar{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .rapor-profile{
+        justify-content:space-between;
+    }
+
+}
