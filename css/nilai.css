@@ -18,6 +18,98 @@ tetap konsisten dengan halaman kenaikan kelas.
     box-shadow:var(--shadow-md);
 }
 
+/* ==========================================
+   PAGE-LEVEL TABS (Cari Per NIS / Rata-Rata Kelas)
+========================================== */
+
+.nilai-page-tabs{
+    display:flex;
+    gap:var(--space-sm);
+    background:var(--surface-alt);
+    padding:.35rem;
+    border-radius:var(--radius-pill);
+    width:fit-content;
+    margin:0 auto var(--space-lg);
+}
+
+.nilai-page-tab{
+    border:none;
+    background:transparent;
+    color:var(--text-light);
+    padding:.55rem 1.25rem;
+    border-radius:var(--radius-pill);
+    font-weight:var(--weight-semibold);
+    font-size:var(--font-sm);
+    cursor:pointer;
+    transition:var(--transition-fast);
+}
+
+.nilai-page-tab.active{
+    background:var(--primary);
+    color:var(--text-white);
+    box-shadow:var(--shadow-sm);
+}
+
+/* ==========================================
+   KELAS FILTER BAR
+========================================== */
+
+.kelas-filter-bar{
+    display:flex;
+    flex-wrap:wrap;
+    gap:var(--space-sm);
+    align-items:center;
+}
+
+.kelas-filter-bar select{
+    padding:.6rem .9rem;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border-light);
+    font-weight:var(--weight-semibold);
+    font-size:var(--font-sm);
+    color:var(--text);
+    background:var(--surface);
+}
+
+/* ==========================================
+   KELAS METRIC CARDS
+========================================== */
+
+.kelas-metrics{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:var(--space-md);
+    margin-bottom:var(--space-lg);
+}
+
+.kelas-metric{
+    background:var(--surface-alt);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
+    padding:var(--space-md);
+    text-align:center;
+}
+
+.kelas-metric span{
+    display:block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--text-light);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+.kelas-metric strong{
+    display:block;
+    font-size:var(--font-xl);
+    margin-top:var(--space-xs);
+    color:var(--text);
+}
+
+.kelas-metric-success{ color:var(--success); }
+.kelas-metric-primary{ color:var(--primary); }
+.kelas-metric-warning{ color:var(--warning, #D97706); }
+
 .nilai-tabs{
     display:flex;
     gap:var(--space-sm);

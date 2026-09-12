@@ -1,83 +1,205 @@
-# SMANSASOO Academic Portal
+# 🎓 SMANSASOO Academic Portal
 
-Portal rekap nilai Matematika Wajib & Lanjutan Kelas XI — migrasi dari Google Apps Script (`Code.gs` + `Index.html`) ke **Next.js**, deploy di **Vercel**, tanpa dependensi Apps Script lagi.
+Portal Pengumuman Akademik SMAN 1 Sooko Mojokerto.
 
-Data tetap diambil dari Google Spreadsheet yang sudah kamu publish ke web (pubhtml), tapi lewat endpoint CSV publik — tidak butuh API key.
+---
 
-## 1. Struktur Project
+## 📌 Tentang Project
 
-```
-lib/sheetService.js     -> port dari Code.gs (searchStudentByNIS, getClassList, getClassSummary)
-pages/api/search-nis.js -> API route pengganti google.script.run.searchStudentByNIS
-pages/api/class-list.js -> API route pengganti google.script.run.getClassList
-pages/api/class-summary.js -> API route pengganti google.script.run.getClassSummary
-pages/index.js           -> UI React, port dari Index.html
-```
+SMANSASOO Academic Portal merupakan aplikasi web berbasis HTML, CSS, dan JavaScript yang digunakan sebagai portal resmi pengumuman akademik SMAN 1 Sooko Mojokerto.
 
-## 2. Dapatkan GID Tiap Tab Sheet
+Project ini dirancang agar dapat digunakan setiap tahun tanpa perlu membangun ulang aplikasi. Data akademik dikelola melalui Google Spreadsheet dan diakses menggunakan Google Apps Script sebagai REST API.
 
-Spreadsheet kamu punya 3 tab: "NIlai Math Wajib Kelas XI", "Nilai Math Lanjutan Kelas XI", "Nilai Input Raport". Tiap tab punya `gid` unik yang dibutuhkan untuk export CSV.
+Website di-host menggunakan Vercel dan seluruh source code dikelola melalui GitHub.
 
-1. Buka link pubhtml spreadsheet kamu.
-2. Klik ke tab sheet yang dimaksud (misal "NIlai Math Wajib Kelas XI").
-3. Lihat URL berubah jadi: `...pubhtml?gid=123456789&single=true`
-4. Salin angka setelah `gid=` itu.
-5. Ulangi untuk 3 tab tersebut.
+---
 
-> **Penting**: pastikan spreadsheet tetap dalam status "Published to web" (File → Share → Publish to web). Kalau publish-nya dimatikan, endpoint CSV akan gagal diakses.
+## 🎯 Tujuan
 
-## 3. Setup Environment Variables
+- Pengumuman Kenaikan Kelas
+- Pembagian Kelas Baru
+- Pengumuman Kelulusan
+- Pengumuman MPLS
+- Informasi Akademik
 
-Salin `.env.example` menjadi `.env.local`, lalu isi:
+---
 
-```bash
-cp .env.example .env.local
-```
+## 🚀 Teknologi
 
-```env
-SHEET_PUB_ID=2PACX-1vQoeeD-Cm-YmbA7pXEmYX-nutIj0F3XWWxWqfBbVHpPN2-A8zQpzjZPYx6Rz9Dep4-6IhGG7p4npGLp
-SHEET_GID_WAJIB=<gid tab Nilai Math Wajib Kelas XI>
-SHEET_GID_LANJUTAN=<gid tab Nilai Math Lanjutan Kelas XI>
-SHEET_GID_RAPORT=<gid tab Nilai Input Raport>
-```
+| Teknologi | Keterangan |
+|-----------|------------|
+| HTML5 | Struktur Website |
+| CSS3 | Tampilan |
+| JavaScript ES6 | Interaksi |
+| Google Apps Script | REST API |
+| Google Spreadsheet | Database |
+| GitHub | Version Control |
+| Vercel | Hosting |
 
-`SHEET_PUB_ID` sudah diisi otomatis sesuai link yang kamu berikan — tinggal isi 3 nilai GID-nya.
+---
 
-## 4. Jalankan Lokal
+## 📁 Struktur Project
 
-```bash
-npm install
-npm run dev
-```
-
-Buka `http://localhost:3000`.
-
-## 5. Push ke GitHub
-
-Kalau repo `smansasoo-academic-portal` sudah ada, tinggal replace isinya dengan folder ini lalu:
-
-```bash
-git add .
-git commit -m "Migrate from Apps Script to Next.js + Vercel"
-git push origin main
+```text
+smansasoo-academic-portal/
+│
+├── assets/
+├── css/
+├── docs/
+├── js/
+├── pages/
+│
+├── index.html
+├── vercel.json
+├── sw.js
+├── README.md
+├── LICENSE
+└── .gitignore
 ```
 
-## 6. Deploy ke Vercel
+---
 
-1. Buka [vercel.com](https://vercel.com) → **Add New Project** → import repo GitHub `smansasoo-academic-portal`.
-2. Vercel otomatis mendeteksi ini sebagai project Next.js — tidak perlu ubah build command.
-3. Di bagian **Environment Variables**, tambahkan 4 variabel yang sama seperti di `.env.local`:
-   - `SHEET_PUB_ID`
-   - `SHEET_GID_WAJIB`
-   - `SHEET_GID_LANJUTAN`
-   - `SHEET_GID_RAPORT`
-4. Klik **Deploy**.
+## ⚙️ Arsitektur
 
-Setiap kali kamu push ke `main`, Vercel akan auto-redeploy.
+```text
+User
+ │
+ ▼
+Vercel
+ │
+ ▼
+Google Apps Script API
+ │
+ ▼
+Google Spreadsheet
+```
 
-## 7. Catatan Penting
+---
 
-- **Delay update data**: endpoint CSV publik Google di-cache oleh Google, biasanya update dalam beberapa menit setelah kamu edit sheet. Kalau butuh lebih real-time, bisa upgrade ke Google Sheets API v4 dengan API key nanti.
-- **Cache internal**: `lib/sheetService.js` menyimpan cache sederhana 60 detik di memori server supaya tidak fetch CSV berkali-kali pada request beruntun. Bisa disesuaikan lewat `CACHE_TTL_MS`.
-- **Struktur kolom sheet**: kode ini mengasumsikan urutan kolom sheet kamu sama persis seperti versi Apps Script (kolom index 0–18). Kalau kamu ubah urutan/tambah kolom di sheet, sesuaikan juga index-nya di `lib/sheetService.js`.
-- **Styling**: masih pakai Tailwind lewat CDN script (sama seperti `Index.html` asli) supaya migrasinya cepat dan visualnya identik. Kalau nanti mau setup Tailwind build proper (PostCSS), tinggal install `tailwindcss` + config, lalu hapus script CDN di `pages/_document.js`.
+## 🌐 Deployment
+
+Repository GitHub akan otomatis terhubung dengan Vercel sehingga setiap perubahan pada branch **main** akan langsung dideploy.
+
+---
+
+## 📊 Database
+
+Seluruh data disimpan pada Google Spreadsheet.
+
+Contoh struktur data:
+
+| Tahun | NIS | NISN | Nama | Status | Kelas Lama | Kelas Baru | Minat | Wali |
+|------|------|------|------|------|------|------|------|------|
+
+---
+
+## 📐 Modul Nilai (tanpa Apps Script)
+
+Selain modul kenaikan kelas di atas, portal ini juga punya modul **Cek Nilai
+Matematika** (`pages/nilai.html`) yang sudah sepenuhnya pindah dari Apps
+Script ke Vercel Serverless Function (folder `/api`). Modul ini membaca
+Google Spreadsheet langsung dari server, jadi ID spreadsheet tidak pernah
+kelihatan di browser maupun di source code GitHub.
+
+### Setup
+
+1. Buka spreadsheet-nya, klik **Share** → ubah ke **"Anyone with the link
+   - Viewer"** (bukan "Publish to web").
+2. Salin ID spreadsheet dari URL-nya:
+   `https://docs.google.com/spreadsheets/d/`**`ID_SPREADSHEET`**`/edit`
+3. Di **Vercel Dashboard → Project → Settings → Environment Variables**,
+   tambahkan:
+
+   | Key | Value |
+   |-----|-------|
+   | `GOOGLE_SHEET_ID` | ID spreadsheet dari langkah 2 |
+
+4. Redeploy project. Endpoint `/api/nilai`, `/api/kelas-list`, dan
+   `/api/kelas-summary` akan otomatis aktif — lihat `docs/API.md` untuk
+   detail masing-masing endpoint.
+
+> ⚠️ Vercel hanya membaca serverless function dari folder **`/api`** di
+> root project. Jangan pindahkan file-file di `/api` ke folder lain
+> (mis. `functions/api/`) karena tidak akan ke-deploy.
+
+---
+
+## 🔌 API
+
+Google Apps Script digunakan sebagai REST API.
+
+Contoh request:
+
+```text
+GET
+/api?nis=123456
+```
+
+Contoh response:
+
+```json
+{
+  "success": true,
+  "data": {
+    "nama": "Ahmad",
+    "status": "Naik",
+    "kelasBaru": "XI-5"
+  }
+}
+```
+
+---
+
+# 🛣️ Roadmap
+
+## Version 1.0
+
+- [x] HTML Structure
+- [x] GitHub Repository
+- [x] Vercel Deployment
+- [x] Google Spreadsheet
+- [x] Google Apps Script API
+- [ ] Search NIS/NISN
+- [ ] Result Card
+- [ ] Responsive Design
+
+---
+
+## Version 1.5
+
+- Countdown
+- Informasi Sekolah
+- FAQ
+- Responsive Improvement
+- Progressive Web App (PWA)
+- Offline Page
+
+---
+
+## Version 2.0
+
+- Multi Tahun Ajaran
+- Multi Pengumuman
+- Konfigurasi Portal
+- Statistik Pengunjung
+- Dashboard Admin
+- Download PDF
+- QR Verification
+
+---
+
+## 👨‍💻 Developer
+
+SMAN 1 Sooko Mojokerto
+
+IT Team
+
+Academic Portal Project
+
+---
+
+## 📄 License
+
+MIT License
+
+Copyright © 2026 SMAN 1 Sooko Mojokerto
