@@ -1,135 +1,212 @@
 /*
 ==========================================================
-SMANSASOO Graduation Portal
-Application Bootstrap
-Version : 2.2.0
+SMANSASOO Academic Portal
+Search Module (Kenaikan Kelas)
+Version : 2.1.0
 ==========================================================
-
-Main Entry Point
-
-Fungsi:
-- Memulai aplikasi
-- Memuat konfigurasi
-- Mengisi badge tahun ajaran secara otomatis
-- Registrasi Service Worker
-- Melakukan Health Check API
-- Menginisialisasi Search Module
-
-Semua logika aplikasi berada pada module lain.
-
-FIX (v2.2.0):
-- Menambahkan pengisian otomatis #badgeYear dari
-  CONFIG.ACADEMIC_YEAR saat halaman dimuat. Sebelumnya teks
-  "Tahun Ajaran 2026/2027" hardcode di index.html — sekarang
-  cukup ganti CONFIG.ACADEMIC_YEAR di config.js setiap tahun
-  ajaran baru, index.html tidak perlu disentuh lagi.
+FIX (v2.1.0):
+- BUG: file ini sebelumnya ketiban isi persis js/kelulusan/search.js,
+  termasuk teks tombol hardcode "Lihat Hasil Kelulusan" yang
+  muncul di portal Kenaikan Kelas setelah pencarian selesai.
+  Dikembalikan ke teks yang sesuai ("Cari").
 ==========================================================
 */
 
-"use strict";
+window.Search = (() => {
 
-/* ==========================================
-   APPLICATION
-========================================== */
+    let isSearching = false;
 
-const App = {
+    /**
+     * ==================================================
+     * INITIALIZE
+     * ==================================================
+     */
 
-    async initialize() {
+    function initialize() {
 
-        console.info("====================================");
-        console.info(CONFIG.APP_NAME);
-        console.info(`Version : ${CONFIG.VERSION}`);
-        console.info("Initializing...");
-        console.info("====================================");
+        const form = document.getElementById("searchForm");
+        const input = document.getElementById("keyword");
+
+        if (!form || !input) {
+
+            console.error("Search form tidak ditemukan.");
+
+            return;
+
+        }
+
+        form.addEventListener("submit", handleSubmit);
+
+        input.placeholder = CONFIG.SEARCH_PLACEHOLDER;
+
+        input.focus();
+
+    }
+
+    /**
+     * ==================================================
+     * HANDLE SUBMIT
+     * ==================================================
+     */
+
+    async function handleSubmit(event) {
+
+        event.preventDefault();
+
+        if (isSearching) return;
+
+        const input = document.getElementById("keyword");
+
+        const keyword = input.value.trim();
+
+        UI.clear();
+
+        if (keyword.length === 0) {
+
+            showInputError(
+                CONFIG.MESSAGE.EMPTY_KEYWORD,
+                input
+            );
+
+            return;
+
+        }
+
+        if (keyword.length < CONFIG.SEARCH_MIN_LENGTH) {
+
+            showInputError(
+                "NIS atau NISN tidak valid.",
+                input
+            );
+
+            return;
+
+        }
+
+        await search(keyword);
+
+    }
+
+    /**
+     * ==================================================
+     * SEARCH
+     * ==================================================
+     */
+
+    async function search(keyword) {
+
+        isSearching = true;
+
+        // Setelah tombol "Cari" diklik (dan lolos validasi),
+        // ganti background halaman dari scc.jpg ke syari.png.
+        // Class ini dibaca oleh css/glass.css (.bg-layer).
+        document.body.classList.add("celebration");
+
+        const button = document.querySelector(
+            "#searchForm button"
+        );
+
+        if (button) {
+
+            button.disabled = true;
+
+            button.innerHTML = "Memproses...";
+
+        }
+
+        UI.showLoading();
 
         try {
 
-            // Badge Tahun Ajaran (dinamis dari config.js)
-            const badgeYear = document.getElementById("badgeYear");
+            const response =
+                await API.searchStudent(keyword);
 
-            if (badgeYear) {
+            UI.clear();
 
-                badgeYear.textContent = `Tahun Ajaran ${CONFIG.ACADEMIC_YEAR}`;
+            if (!response.success) {
 
-            }
+                UI.showError(
 
-            // Service Worker (sw.js ada di root repo, di-share
-            // dengan seluruh halaman situs, bukan cuma halaman
-            // ini — path disesuaikan karena file ini dipanggil
-            // dari pages/kelulusan.html, bukan dari root).
-            if ("serviceWorker" in navigator) {
+                    response.message ||
 
-                window.addEventListener("load", () => {
+                    CONFIG.MESSAGE.NOT_FOUND
 
-                    navigator.serviceWorker
-                        .register("../sw.js")
-                        .then(() => {
+                );
 
-                            console.info("Service Worker Registered");
-
-                        })
-                        .catch((error) => {
-
-                            console.warn("Service Worker Failed", error);
-
-                        });
-
-                });
+                return;
 
             }
 
-            // API Health Check
-            if (window.API) {
+            UI.showResult(response.data);
 
-                API.checkAPI()
-                    .then(result => {
+        }
 
-                        if (CONFIG.ENABLE_CONSOLE_LOG) {
+        catch (error) {
 
-                            console.info("API Status :", result);
+            Utils.log(error);
 
-                        }
+            UI.clear();
 
-                    })
-                    .catch(error => {
+            UI.showError(
 
-                        console.warn("API Error :", error);
+                CONFIG.MESSAGE.SERVER_ERROR
 
-                    });
+            );
+
+        }
+
+        finally {
+
+            isSearching = false;
+
+            if (button) {
+
+                button.disabled = false;
+
+                button.innerHTML =
+
+                    "Cari";
 
             }
-
-            // Search Module
-            if (window.Search) {
-
-                Search.initialize();
-
-            }
-
-            console.info("Application Ready");
-
-        } catch (error) {
-
-            console.error("Application Error :", error);
 
         }
 
     }
 
-};
+    /**
+     * ==================================================
+     * INPUT ERROR
+     * ==================================================
+     */
 
-/* ==========================================
-   START APPLICATION
-========================================== */
+    function showInputError(message, input) {
 
-document.addEventListener("DOMContentLoaded", () => {
+        UI.showError(message);
 
-    App.initialize();
+        input.classList.add("shake");
 
-});
+        input.focus();
 
-/* ==========================================
-   EXPORT
-========================================== */
+        setTimeout(() => {
 
-window.App = App;
+            input.classList.remove("shake");
+
+        }, 500);
+
+    }
+
+    /**
+     * ==================================================
+     * PUBLIC
+     * ==================================================
+     */
+
+    return {
+
+        initialize,
+
+        search
+
+    };
+
+})();
