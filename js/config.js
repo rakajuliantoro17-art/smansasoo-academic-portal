@@ -1,127 +1,178 @@
 /*
 ==========================================================
 SMANSASOO Academic Portal
-Configuration File
-Version : 1.1.0
+Configuration (Kenaikan Kelas)
+Version : 2.3.0
 ==========================================================
-FIX (v1.1.0):
-- Menghapus duplikat "const CONFIG" yang sebelumnya
-  bentrok dengan window.CONFIG dan tidak pernah dipakai.
-- API_BASE_URL sekarang diisi URL Apps Script yang sudah
-  di-deploy (bukan placeholder lagi).
-- Menambahkan API_ACTIONS agar nama action selalu konsisten
-  dengan Api.gs (student, status, settings, announcement, version).
+
+Portal Pengumuman Kenaikan Kelas
+SMAN 1 Sooko Mojokerto
+
+FIX (v2.3.0):
+- File ini sebelumnya ke-timpa (copy-paste) isi
+  js/kelulusan/config.js secara tidak sengaja, sehingga
+  index.html (kenaikan kelas) ikut memakai identitas dan
+  status "LULUS/TIDAK LULUS" milik modul Kelulusan, dan ikut
+  terjebak USE_SAMPLE_DATA:true dari perbaikan sementara di
+  modul itu. Sudah dipisah lagi jadi dua file independen:
+  file ini untuk Kenaikan Kelas, js/kelulusan/config.js
+  untuk Kelulusan.
+- API_BASE_URL dipindah dari Apps Script ke /api/kenaikan
+  (Vercel Serverless Function, lihat api/kenaikan.js), yang
+  membaca langsung dari Google Sheets, konsisten dengan
+  modul Nilai dan Kelulusan.
+- USE_SAMPLE_DATA dikembalikan ke false karena backend
+  permanen sudah aktif.
+- Path aset (logo, ikon, background, sample data) dibuat
+  absolut ("/assets/...", "/data/...") supaya tetap benar
+  dipanggil dari halaman mana pun, bukan cuma dari root.
 ==========================================================
 */
 
 window.CONFIG = {
 
-    /* ==========================================
+    /* ======================================================
        APPLICATION
-    ========================================== */
+    ====================================================== */
 
     APP_NAME: "SMANSASOO Academic Portal",
 
-    VERSION: "1.1.0",
+    VERSION: "2.3.0",
 
     SCHOOL_NAME: "SMAN 1 Sooko Mojokerto",
 
     ACADEMIC_YEAR: "2026/2027",
 
-    /* ==========================================
+    ANNOUNCEMENT_TITLE:
+        "Pengumuman Kenaikan Kelas",
+
+    ANNOUNCEMENT_YEAR:
+        "2026",
+
+    /* ======================================================
        ENVIRONMENT
-    ========================================== */
+    ====================================================== */
 
     ENVIRONMENT: "production",
-    // development | production
 
-    // Set true hanya untuk demo lokal tanpa koneksi API.
-    // Untuk pemakaian sungguhan HARUS false.
+    // true = membaca data/sample.json
+    // false = membaca /api/kenaikan (Vercel, baca Google Sheets)
+
     USE_SAMPLE_DATA: false,
 
-    /* ==========================================
+    /* ======================================================
        API
-    ========================================== */
+    ====================================================== */
 
     API_BASE_URL:
-        "https://script.google.com/macros/s/AKfycbwAbjqiwBFp-xQAZVmcrybhC31FEDH054MS4_mSHgb2hjr15KnL4G-KGfiUhaB_52gsoA/exec",
+        "/api/kenaikan",
 
-    // Nama action HARUS sama persis dengan switch(action) di Api.gs
     API_ACTIONS: {
+
         STUDENT: "student",
+
         STATUS: "status",
+
         SETTINGS: "settings",
-        ANNOUNCEMENT: "announcement",
+
         VERSION: "version"
+
     },
 
-    // Catatan: modul Nilai (js/nilai-api.js) TIDAK memakai
-    // Apps Script lagi. Dia memanggil /api/nilai, Vercel
-    // Serverless Function di repo ini sendiri (lihat api/nilai.js),
-    // yang membaca Google Sheets langsung di sisi server.
-
     SAMPLE_DATA_URL:
-        "data/sample.json",
+        "/data/sample.json",
 
     API_TIMEOUT: 10000,
 
-    /* ==========================================
+    /* ======================================================
        SEARCH
-    ========================================== */
+    ====================================================== */
 
     SEARCH_MIN_LENGTH: 4,
 
     SEARCH_PLACEHOLDER:
         "Masukkan NIS atau NISN",
 
-    // Substring (huruf besar) yang menandai status BELUM naik
-    // kelas, dicek terhadap kolom STATUS di sheet STUDENTS.
-    // Contoh yang cocok: "TIDAK NAIK", "Tidak Naik Kelas", dst.
-    STATUS_NOT_PROMOTED_KEYWORD: "TIDAK",
+    /* ======================================================
+       RESULT STATUS
+    ====================================================== */
 
-    /* ==========================================
-       CELEBRATION (status: NAIK)
-    ========================================== */
+    STATUS_PASS: "NAIK",
 
-    // Set false untuk mematikan musik tanpa ubah kode lain.
-    ENABLE_CELEBRATION_AUDIO: true,
+    STATUS_NOT_PASS: "TIDAK NAIK",
 
-    // WAJIB diisi file audio milik sekolah / royalty-free.
-    // Taruh file-nya di assets/audio/ lalu sesuaikan path ini.
-    // Selama file belum ada, browser akan diam-diam gagal
-    // memutar audio (tidak error ke pengguna).
-    CELEBRATION_AUDIO_URL:
-        "assets/audio/naik-kelas.mp3",
+    /* ======================================================
+       VISUAL
+    ====================================================== */
 
-    /* ==========================================
+    BACKGROUND_IMAGE:
+        "/assets/images/scc.jpg",
+
+    LOGO:
+        "/assets/logo/logo.png",
+
+    ICON:
+        "/assets/icons/icon.png",
+
+    FAVICON:
+        "/assets/favicon.ico",
+
+    /* ======================================================
+       CELEBRATION
+    ====================================================== */
+
+    ENABLE_CELEBRATION: true,
+
+    ENABLE_CONFETTI: true,
+
+    ENABLE_BALLOON: true,
+
+    ENABLE_FLASH: true,
+
+    ENABLE_AUDIO: true,
+
+    AUDIO_URL:
+        "/assets/audio/naik-kelas.mp3",
+
+    CONFETTI_PARTICLE: 180,
+
+    CONFETTI_SPREAD: 120,
+
+    BALLOON_COUNT: 16,
+
+    /* ======================================================
+       LOADING
+    ====================================================== */
+
+    ENABLE_LOADING: true,
+
+    LOADING_DELAY: 1800,
+
+    /* ======================================================
        CACHE
-    ========================================== */
+    ====================================================== */
 
     ENABLE_CACHE: false,
 
     CACHE_DURATION: 300000,
 
-    /* ==========================================
+    /* ======================================================
        PWA
-    ========================================== */
+    ====================================================== */
 
     ENABLE_PWA: true,
 
     ENABLE_OFFLINE: false,
 
-    /* ==========================================
-       UI
-    ========================================== */
+    /* ======================================================
+       DEBUG
+    ====================================================== */
 
-    ENABLE_ANIMATION: true,
+    ENABLE_CONSOLE_LOG: false,
 
-    ENABLE_LOADING: true,
-
-    ENABLE_CONSOLE_LOG: true,
-
-    /* ==========================================
+    /* ======================================================
        MESSAGE
-    ========================================== */
+    ====================================================== */
 
     MESSAGE: {
 
@@ -135,24 +186,27 @@ window.CONFIG = {
             "Terjadi kesalahan pada server.",
 
         LOADING:
-            "Memuat data...",
+            "Sedang memproses data...",
 
         SUCCESS:
             "Data berhasil ditemukan.",
 
-        NOT_PROMOTED_NOTE:
-            "Untuk informasi lebih lanjut mengenai hasil ini, " +
-            "silakan hubungi wali kelas atau bagian Kurikulum " +
-            "SMAN 1 Sooko."
+        PASS_MESSAGE:
+            "Selamat! Anda dinyatakan NAIK KELAS.",
+
+        NOT_PASS_MESSAGE:
+            "Silakan menghubungi wali kelas untuk informasi lebih lanjut."
 
     }
 
 };
 
-/* ==========================================
+/* ======================================================
    READ ONLY
-========================================== */
+====================================================== */
 
 Object.freeze(window.CONFIG);
+
 Object.freeze(window.CONFIG.API_ACTIONS);
+
 Object.freeze(window.CONFIG.MESSAGE);
