@@ -1,0 +1,61 @@
+{
+  "_readme": "File ini diupdate MANUAL oleh admin setiap ada prestasi baru / perubahan peringkat di SIMT Puspresnas. Data SIMT tidak bisa ditarik otomatis oleh server (API internal mereka terenkripsi & tidak publik), jadi angka di sini adalah snapshot yang diinput manual dari https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727",
+
+  "last_updated": "2026-09-12",
+
+  "npsn": "20502727",
+
+  "source_urls": {
+    "detail_sekolah": "https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727",
+    "peringkat_nasional": "https://simt.kemendikdasmen.go.id/prestasi-sekolah?jenjang_pendidikan=SMA"
+  },
+
+  "ranking": {
+    "posisi": 1623,
+    "dari_total": null,
+    "jenjang": "SMA",
+    "cakupan": "Nasional",
+    "catatan": "Peringkat bersifat perkiraan (~1623), cek angka pasti & terbaru langsung di link SIMT di atas."
+  },
+
+  "kategori": [
+    { "nama": "Olahraga", "jumlah": 4 },
+    { "nama": "Riset dan Inovasi", "jumlah": 33 },
+    { "nama": "Seni Budaya", "jumlah": 6 }
+  ],
+
+  "per_tahun": [
+    { "tahun": "2021", "jumlah": 3 },
+    { "tahun": "2022", "jumlah": 3 },
+    { "tahun": "2023", "jumlah": 2 },
+    { "tahun": "2024", "jumlah": 21 },
+    { "tahun": "2025", "jumlah": 15 }
+  ],
+
+  "total_prestasi": 44,
+
+  "siswa_berprestasi": [
+    { "nama": "Nagita Keyla Ramadani", "jumlah_prestasi": 3 },
+    { "nama": "Muhammad Faris Abdullah", "jumlah_prestasi": 3 },
+    { "nama": "Rendi Andria Gita Putra", "jumlah_prestasi": 3 },
+    { "nama": "Kirania Siti Anisa", "jumlah_prestasi": 2 },
+    { "nama": "Ariana Paramitha Hayuningtyas", "jumlah_prestasi": 2 },
+    { "nama": "Aiyesa Yolanda Agatha", "jumlah_prestasi": 1 },
+    { "nama": "Affriza Maulana Putra Raharja", "jumlah_prestasi": 1 },
+    { "nama": "Aurel Natasya Putri", "jumlah_prestasi": 1 },
+    { "nama": "Muhammad Faris Firmansyah", "jumlah_prestasi": 1 },
+    { "nama": "Enggar Galih Ade Puspita", "jumlah_prestasi": 1 },
+    { "nama": "Muhammad Rafli Ali Mashuri", "jumlah_prestasi": 1 },
+    { "nama": "Mochammad Dava Ibra Rifqi", "jumlah_prestasi": 1 },
+    { "nama": "Reimoura Makayla Gadis Prayogo", "jumlah_prestasi": 1 },
+    { "nama": "Susilo Ade Satria Prayoga", "jumlah_prestasi": 1 },
+    { "nama": "Galang Dzaki Hazim", "jumlah_prestasi": 1 },
+    { "nama": "Mariyam Ulfa Wijayanti", "jumlah_prestasi": 1 },
+    { "nama": "Awan Nararya Hartoyo", "jumlah_prestasi": 1 },
+    { "nama": "Alya Yusfi Naftalena", "jumlah_prestasi": 1 },
+    { "nama": "Surya Candra Mahardika", "jumlah_prestasi": 1 },
+    { "nama": "Lia Nurul Azizah", "jumlah_prestasi": 1 }
+  ],
+
+  "siswa_berprestasi_note": "Baru 20 dari 43 total siswa berprestasi yang sempat tersalin (halaman 1 dari paginasi SIMT). Tambahkan sisanya manual di sini kalau perlu, atau biarkan link 'Lihat Selengkapnya' yang mengarah ke SIMT."
+}
