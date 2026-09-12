@@ -29,8 +29,18 @@
 <link rel="stylesheet" href="../css/kelulusan/animation.css">
 <link rel="stylesheet" href="../css/kelulusan/responsive.css">
 
+<!-- Shell (nav + footer bersama, lihat docs/UI-SHELL.md).
+     Aman dipakai di sini karena css/kelulusan/variables.css
+     mendefinisikan token nama yang sama (--primary, --surface,
+     dst) yang dipakai css/shell.css, jadi nav/footer otomatis
+     ikut tema gelap halaman ini, bukan tema biru situs utama. -->
+<link rel="stylesheet" href="../css/shell.css">
+
 </head>
-<body>
+<body data-page="kelulusan">
+
+<!-- Shell: nav bar bersama (diisi js/shell.js, lihat docs/UI-SHELL.md) -->
+<div id="shellNav"></div>
 
 <div class="bg-layer" id="bgLayer"></div>
 
@@ -74,15 +84,10 @@
 
     </section>
 
-    <footer>
-
-        SMAN 1 Sooko Mojokerto
-
-        <small>&copy; 2026 SMANSASOO Graduation Portal</small>
-
-    </footer>
-
 </div>
+
+<!-- Shell: footer bersama (diisi js/shell.js, lihat docs/UI-SHELL.md) -->
+<div id="shellFooter"></div>
 
 <div class="flash" id="flash"></div>
 <div id="balloons"></div>
@@ -105,6 +110,15 @@
 
 <script src="../js/kelulusan/config.js"></script>
 <script src="../js/kelulusan/utils.js"></script>
+
+<!-- Shell (nav + footer bersama). Dimuat setelah config+utils
+     di atas karena shell.js butuh window.CONFIG.SCHOOL_NAME/
+     APP_NAME/VERSION dan Utils.getCurrentYear -- keduanya
+     sudah disediakan oleh config.js & utils.js versi Kelulusan
+     di atas, jadi TIDAK perlu memuat js/config.js atau
+     js/utils.js (versi Kenaikan Kelas) di halaman ini. -->
+<script src="../js/shell.js"></script>
+
 <script src="../js/kelulusan/api.js"></script>
 <script src="../js/kelulusan/ui.js"></script>
 <script src="../js/kelulusan/search.js"></script>
