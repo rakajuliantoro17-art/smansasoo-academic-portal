@@ -107,7 +107,7 @@ prestasi, tabel per tahun, dan daftar siswa berprestasi.
 
         root.innerHTML = `
 
-        <div class="prestasi-card prestasi-school-card">
+        <div class="prestasi-card prestasi-school-card" id="sekolah">
 
             <img src="../assets/logo/logo.png" alt="Logo sekolah">
 
@@ -118,7 +118,7 @@ prestasi, tabel per tahun, dan daftar siswa berprestasi.
 
         </div>
 
-        <div class="prestasi-card prestasi-rank-card">
+        <div class="prestasi-card prestasi-rank-card" id="peringkat">
 
             <div>
                 <p class="rank-label">Peringkat Nasional &middot; Jenjang ${escapeHTML(data.ranking?.jenjang)}</p>
@@ -132,7 +132,7 @@ prestasi, tabel per tahun, dan daftar siswa berprestasi.
 
         </div>
 
-        <div class="prestasi-card">
+        <div class="prestasi-card" id="kategori">
 
             <p class="prestasi-section-title">Peserta Didik Berprestasi</p>
             <p class="prestasi-section-sub">Statistik prestasi per kategori &middot; Total ${escapeHTML(data.total_prestasi)} prestasi</p>
@@ -143,7 +143,7 @@ prestasi, tabel per tahun, dan daftar siswa berprestasi.
 
         </div>
 
-        <div class="prestasi-card">
+        <div class="prestasi-card" id="per-tahun">
 
             <p class="prestasi-section-title">Sebaran Prestasi per Tahun</p>
             <p class="prestasi-section-sub">Jumlah prestasi yang tercatat tiap tahun ajaran</p>
@@ -169,7 +169,7 @@ prestasi, tabel per tahun, dan daftar siswa berprestasi.
 
         </div>
 
-        <div class="prestasi-card">
+        <div class="prestasi-card" id="siswa">
 
             <p class="prestasi-section-title">Peserta Didik Berprestasi</p>
             <p class="prestasi-section-sub">${escapeHTML((data.siswa_berprestasi || []).length)} dari ${escapeHTML(data.total_prestasi)}+ pencatatan yang ditampilkan di sini</p>
@@ -208,6 +208,48 @@ prestasi, tabel per tahun, dan daftar siswa berprestasi.
         </p>
 
         `;
+
+        initScrollspy();
+
+    }
+
+    /**
+     * Scrollspy sederhana: highlight link "Di Halaman Ini" di
+     * sidebar sesuai section yang sedang terlihat di viewport.
+     */
+
+    function initScrollspy() {
+
+        const sections = Array.from(document.querySelectorAll(
+            "#sekolah, #peringkat, #kategori, #per-tahun, #siswa"
+        ));
+
+        const links = document.querySelectorAll("#sectionNav a");
+
+        if (!sections.length || !links.length || !("IntersectionObserver" in window)) {
+            return;
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+
+            entries.forEach((entry) => {
+
+                if (!entry.isIntersecting) return;
+
+                links.forEach((link) => {
+
+                    link.classList.toggle(
+                        "active",
+                        link.dataset.section === entry.target.id
+                    );
+
+                });
+
+            });
+
+        }, { rootMargin: "-40% 0px -50% 0px" });
+
+        sections.forEach((section) => observer.observe(section));
 
     }
 
