@@ -44,6 +44,21 @@ window.RekapSearch = (() => {
 
         }
 
+        const keywordInput = document.getElementById("rekapKeyword");
+
+        if (keywordInput) {
+
+            // Polish kecil: cegah user mengetik selain angka di NIS,
+            // supaya nggak perlu tunggu response server buat tahu
+            // formatnya salah.
+            keywordInput.addEventListener("input", () => {
+
+                keywordInput.value = keywordInput.value.replace(/[^0-9]/g, "");
+
+            });
+
+        }
+
         if (summaryForm) {
 
             summaryForm.addEventListener("submit", handleSummarySubmit);
@@ -70,8 +85,21 @@ window.RekapSearch = (() => {
         const studentForm = document.getElementById("rekapStudentForm");
         const summaryForm = document.getElementById("rekapSummaryForm");
 
-        if (studentTabBtn) studentTabBtn.classList.toggle("active", mode === "student");
-        if (summaryTabBtn) summaryTabBtn.classList.toggle("active", mode === "summary");
+        const segmented = document.querySelector(".rekap-segmented");
+
+        if (studentTabBtn) {
+            studentTabBtn.classList.toggle("active", mode === "student");
+            studentTabBtn.setAttribute("aria-selected", mode === "student" ? "true" : "false");
+        }
+
+        if (summaryTabBtn) {
+            summaryTabBtn.classList.toggle("active", mode === "summary");
+            summaryTabBtn.setAttribute("aria-selected", mode === "summary" ? "true" : "false");
+        }
+
+        if (segmented) {
+            segmented.classList.toggle("is-summary", mode === "summary");
+        }
 
         if (studentForm) studentForm.classList.toggle("hidden", mode !== "student");
         if (summaryForm) summaryForm.classList.toggle("hidden", mode !== "summary");
