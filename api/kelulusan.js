@@ -18,19 +18,20 @@ ID-nya disimpan di Environment Variable Vercel
 (GOOGLE_SHEET_ID_KELULUSAN), bukan di kode.
 
 =====================================================
-KOLOM (sesuaikan angkanya kalau urutan sheet asli beda)
+KOLOM (dikonfirmasi dari header sheet asli)
 =====================================================
 Baris 1 = header, data mulai baris 2. Indeks 0-based.
+Header asli: NIS | NISN | NAMA | JENIS_KELAMIN | STATUS |
+             NOMOR_SKL | TANGGAL_KELULUSAN | CATATAN
 
-  0  No
-  1  NIS
-  2  NISN
-  3  Nama
-  4  Jenis Kelamin      (L / P)
-  5  Status             (LULUS / TIDAK LULUS)
-  6  Nomor Ijazah
-  7  Tanggal Kelulusan
-  8  Catatan
+  0  NIS
+  1  NISN
+  2  NAMA
+  3  JENIS_KELAMIN      (laki / perempuan)
+  4  STATUS             (lulus / tidak lulus)
+  5  NOMOR_SKL
+  6  TANGGAL_KELULUSAN
+  7  CATATAN
 ==========================================================
 */
 
@@ -41,14 +42,14 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID_KELULUSAN;
 const GID = "217620338";
 
 const COL = {
-    NIS: 1,
-    NISN: 2,
-    NAMA: 3,
-    GENDER: 4,
-    STATUS: 5,
-    NOMOR_IJAZAH: 6,
-    TANGGAL: 7,
-    CATATAN: 8
+    NIS: 0,
+    NISN: 1,
+    NAMA: 2,
+    GENDER: 3,
+    STATUS: 4,
+    NOMOR_IJAZAH: 5,
+    TANGGAL: 6,
+    CATATAN: 7
 };
 
 function findStudent(rows, keyword) {
