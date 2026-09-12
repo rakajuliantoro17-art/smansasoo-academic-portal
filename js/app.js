@@ -1,212 +1,134 @@
 /*
 ==========================================================
 SMANSASOO Academic Portal
-Search Module (Kenaikan Kelas)
-Version : 2.1.0
+Application Bootstrap (Kenaikan Kelas)
+Version : 2.3.0
 ==========================================================
-FIX (v2.1.0):
-- BUG: file ini sebelumnya ketiban isi persis js/kelulusan/search.js,
-  termasuk teks tombol hardcode "Lihat Hasil Kelulusan" yang
-  muncul di portal Kenaikan Kelas setelah pencarian selesai.
-  Dikembalikan ke teks yang sesuai ("Cari").
+
+Main Entry Point
+
+Fungsi:
+- Memulai aplikasi
+- Memuat konfigurasi
+- Mengisi badge tahun ajaran secara otomatis
+- Registrasi Service Worker
+- Melakukan Health Check API
+- Menginisialisasi Search Module
+
+Semua logika aplikasi berada pada module lain.
+
+FIX (v2.3.0):
+- BUG: path Service Worker sebelumnya "../sw.js" (ketiban dari
+  js/kelulusan/app.js, yang benar untuk halaman di dalam
+  /pages/). File ini dipanggil dari index.html di ROOT repo,
+  jadi path yang benar adalah "sw.js" tanpa "../".
 ==========================================================
 */
 
-window.Search = (() => {
+"use strict";
 
-    let isSearching = false;
+/* ==========================================
+   APPLICATION
+========================================== */
 
-    /**
-     * ==================================================
-     * INITIALIZE
-     * ==================================================
-     */
+const App = {
 
-    function initialize() {
+    async initialize() {
 
-        const form = document.getElementById("searchForm");
-        const input = document.getElementById("keyword");
-
-        if (!form || !input) {
-
-            console.error("Search form tidak ditemukan.");
-
-            return;
-
-        }
-
-        form.addEventListener("submit", handleSubmit);
-
-        input.placeholder = CONFIG.SEARCH_PLACEHOLDER;
-
-        input.focus();
-
-    }
-
-    /**
-     * ==================================================
-     * HANDLE SUBMIT
-     * ==================================================
-     */
-
-    async function handleSubmit(event) {
-
-        event.preventDefault();
-
-        if (isSearching) return;
-
-        const input = document.getElementById("keyword");
-
-        const keyword = input.value.trim();
-
-        UI.clear();
-
-        if (keyword.length === 0) {
-
-            showInputError(
-                CONFIG.MESSAGE.EMPTY_KEYWORD,
-                input
-            );
-
-            return;
-
-        }
-
-        if (keyword.length < CONFIG.SEARCH_MIN_LENGTH) {
-
-            showInputError(
-                "NIS atau NISN tidak valid.",
-                input
-            );
-
-            return;
-
-        }
-
-        await search(keyword);
-
-    }
-
-    /**
-     * ==================================================
-     * SEARCH
-     * ==================================================
-     */
-
-    async function search(keyword) {
-
-        isSearching = true;
-
-        // Setelah tombol "Cari" diklik (dan lolos validasi),
-        // ganti background halaman dari scc.jpg ke syari.png.
-        // Class ini dibaca oleh css/glass.css (.bg-layer).
-        document.body.classList.add("celebration");
-
-        const button = document.querySelector(
-            "#searchForm button"
-        );
-
-        if (button) {
-
-            button.disabled = true;
-
-            button.innerHTML = "Memproses...";
-
-        }
-
-        UI.showLoading();
+        console.info("====================================");
+        console.info(CONFIG.APP_NAME);
+        console.info(`Version : ${CONFIG.VERSION}`);
+        console.info("Initializing...");
+        console.info("====================================");
 
         try {
 
-            const response =
-                await API.searchStudent(keyword);
+            // Badge Tahun Ajaran (dinamis dari config.js)
+            const badgeYear = document.getElementById("badgeYear");
 
-            UI.clear();
+            if (badgeYear) {
 
-            if (!response.success) {
-
-                UI.showError(
-
-                    response.message ||
-
-                    CONFIG.MESSAGE.NOT_FOUND
-
-                );
-
-                return;
+                badgeYear.textContent = `Tahun Ajaran ${CONFIG.ACADEMIC_YEAR}`;
 
             }
 
-            UI.showResult(response.data);
+            // Service Worker (sw.js ada di root repo, di-share
+            // dengan seluruh halaman situs). File ini dipanggil
+            // dari index.html di root, jadi pathnya "sw.js"
+            // tanpa "../".
+            if ("serviceWorker" in navigator) {
 
-        }
+                window.addEventListener("load", () => {
 
-        catch (error) {
+                    navigator.serviceWorker
+                        .register("sw.js")
+                        .then(() => {
 
-            Utils.log(error);
+                            console.info("Service Worker Registered");
 
-            UI.clear();
+                        })
+                        .catch((error) => {
 
-            UI.showError(
+                            console.warn("Service Worker Failed", error);
 
-                CONFIG.MESSAGE.SERVER_ERROR
+                        });
 
-            );
-
-        }
-
-        finally {
-
-            isSearching = false;
-
-            if (button) {
-
-                button.disabled = false;
-
-                button.innerHTML =
-
-                    "Cari";
+                });
 
             }
+
+            // API Health Check
+            if (window.API) {
+
+                API.checkAPI()
+                    .then(result => {
+
+                        if (CONFIG.ENABLE_CONSOLE_LOG) {
+
+                            console.info("API Status :", result);
+
+                        }
+
+                    })
+                    .catch(error => {
+
+                        console.warn("API Error :", error);
+
+                    });
+
+            }
+
+            // Search Module
+            if (window.Search) {
+
+                Search.initialize();
+
+            }
+
+            console.info("Application Ready");
+
+        } catch (error) {
+
+            console.error("Application Error :", error);
 
         }
 
     }
 
-    /**
-     * ==================================================
-     * INPUT ERROR
-     * ==================================================
-     */
+};
 
-    function showInputError(message, input) {
+/* ==========================================
+   START APPLICATION
+========================================== */
 
-        UI.showError(message);
+document.addEventListener("DOMContentLoaded", () => {
 
-        input.classList.add("shake");
+    App.initialize();
 
-        input.focus();
+});
 
-        setTimeout(() => {
+/* ==========================================
+   EXPORT
+========================================== */
 
-            input.classList.remove("shake");
-
-        }, 500);
-
-    }
-
-    /**
-     * ==================================================
-     * PUBLIC
-     * ==================================================
-     */
-
-    return {
-
-        initialize,
-
-        search
-
-    };
-
-})();
+window.App = App;
