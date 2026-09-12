@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Rekap Nilai Matematika | SMAN 1 Sooko Mojokerto</title>
+
+    <meta name="description"
+        content="Rekap nilai per siswa dan rekap rata-rata per kelas untuk Matematika Wajib &amp; Lanjutan, SMAN 1 Sooko Mojokerto">
+
+    <meta name="theme-color" content="#0F4C81">
+
+    <!-- ==========================================
+         ANTI-FLASH THEME INIT
+         Dijalankan sebelum CSS/body dirender supaya tidak
+         ada kedipan warna salah saat halaman baru dibuka.
+    ========================================== -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('smansasoo-theme');
+                var theme = saved || ((window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/logo/favicon.ico">
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/variables.css">
+
+    <link rel="stylesheet" href="../css/theme.css">
+
+    <link rel="stylesheet" href="../css/style.css">
+
+    <link rel="stylesheet" href="../css/responsive.css">
+
+    <link rel="stylesheet" href="../css/nilai.css">
+
+    <link rel="stylesheet" href="../css/rekap.css">
+
+</head>
+
+<body class="rekap-page">
+
+    <!-- ================= TOP BAR ================= -->
+
+    <div class="rekap-topbar">
+
+        <div class="rekap-topbar-brand">
+
+            <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko">
+
+            <div class="rekap-topbar-brand-text">
+                <strong>Rekap Nilai Matematika</strong>
+                <span>SMAN 1 Sooko Mojokerto</span>
+            </div>
+
+        </div>
+
+        <div class="rekap-topbar-actions">
+
+            <a href="nilai.html" class="rekap-topbar-back">&larr; Cek Nilai</a>
+
+            <button
+                type="button"
+                class="theme-toggle"
+                id="themeToggleBtn"
+                aria-label="Ganti mode gelap/terang"
+                aria-pressed="false">
+
+                <span class="theme-toggle-track">
+                    <span class="theme-toggle-icon" aria-hidden="true">☀️</span>
+                    <span class="theme-toggle-icon" aria-hidden="true">🌙</span>
+                </span>
+
+                <span class="theme-toggle-thumb" aria-hidden="true"></span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- ================= HERO ================= -->
+
+    <div class="rekap-hero">
+
+        <h1>Rekap Nilai <span>Matematika</span></h1>
+
+        <p>Cek nilai per siswa, atau lihat rekap rata-rata satu kelas &middot; Wajib &amp; Lanjutan Kelas XI</p>
+
+    </div>
+
+    <!-- ================= MAIN SHELL ================= -->
+
+    <main class="rekap-shell">
+
+        <!-- ===== PANEL KONTROL (kiri di desktop, atas di mobile) ===== -->
+
+        <section class="rekap-panel">
+
+            <h2>Pilih Mode Rekap</h2>
+
+            <p class="rekap-panel-desc">
+                Cek nilai satu siswa berdasarkan NIS, atau lihat rekap rata-rata
+                nilai per kelas.
+            </p>
+
+            <div class="rekap-segmented" role="tablist">
+
+                <button
+                    type="button"
+                    id="rekapTabStudent"
+                    class="rekap-seg-btn active"
+                    role="tab"
+                    aria-selected="true">
+                    Per Siswa
+                </button>
+
+                <button
+                    type="button"
+                    id="rekapTabSummary"
+                    class="rekap-seg-btn"
+                    role="tab"
+                    aria-selected="false">
+                    Rekap Kelas
+                </button>
+
+            </div>
+
+            <!-- FORM: CEK PER SISWA -->
+
+            <form id="rekapStudentForm">
+
+                <div class="rekap-field">
+
+                    <label for="rekapKeyword">NIS Siswa</label>
+
+                    <input
+                        type="text"
+                        id="rekapKeyword"
+                        placeholder="Masukkan NIS"
+                        autocomplete="off"
+                        required>
+
+                </div>
+
+                <button type="submit" class="rekap-submit-btn">Cari Nilai</button>
+
+                <p class="rekap-hint">
+                    Menampilkan progress kelengkapan nilai, komponen yang belum
+                    diisi, dan rincian tugas/UH/UTS/SAS untuk Matematika Wajib
+                    dan Lanjutan.
+                </p>
+
+            </form>
+
+            <!-- FORM: REKAP KELAS -->
+
+            <form id="rekapSummaryForm" class="hidden">
+
+                <div class="rekap-field-row">
+
+                    <div class="rekap-field">
+
+                        <label for="rekapKelas">Kelas</label>
+
+                        <select id="rekapKelas">
+                            <option value="SEMUA">Semua Kelas</option>
+                        </select>
+
+                    </div>
+
+                    <div class="rekap-field">
+
+                        <label for="rekapMapel">Mata Pelajaran</label>
+
+                        <select id="rekapMapel">
+                            <option value="WAJIB">Matematika Wajib</option>
+                            <option value="LANJUTAN">Matematika Lanjutan</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <button type="submit" class="rekap-submit-btn">Tampilkan Rekap</button>
+
+                <p class="rekap-hint">
+                    Menampilkan rata-rata nilai raport, UTS, SAS, dan progress
+                    kelengkapan nilai untuk kelas yang dipilih.
+                </p>
+
+            </form>
+
+        </section>
+
+        <!-- ===== AREA HASIL (kanan di desktop, bawah di mobile) ===== -->
+
+        <section class="rekap-results">
+
+            <div id="rekapResult" class="hidden"></div>
+
+            <div class="rekap-empty-state" id="rekapEmptyState">
+
+                <span class="rekap-empty-icon" aria-hidden="true">📊</span>
+
+                <strong>Belum ada data ditampilkan</strong>
+
+                <span>Masukkan NIS atau pilih kelas di panel kiri untuk mulai melihat rekap.</span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="rekap-footer">
+        © 2026 SMAN 1 Sooko Mojokerto &middot; Modul Rekap Nilai &middot; Academic Portal
+    </footer>
+
+    <!-- CONFIG -->
+    <script src="../js/config.js"></script>
+
+    <!-- UTILS -->
+    <script src="../js/utils.js"></script>
+
+    <!-- THEME -->
+    <script src="../js/theme.js"></script>
+
+    <!-- REKAP API -->
+    <script src="../js/rekap-api.js"></script>
+
+    <!-- REKAP UI -->
+    <script src="../js/rekap-ui.js"></script>
+
+    <!-- REKAP SEARCH (bootstrap sendiri di dalamnya) -->
+    <script src="../js/rekap-search.js"></script>
+
+    <script>
+        // Hubungkan tombol toggle tema + sembunyikan empty-state
+        // begitu ada hasil yang dirender.
+        document.addEventListener('DOMContentLoaded', function () {
+
+            Theme.initToggle('themeToggleBtn');
+
+            var resultEl = document.getElementById('rekapResult');
+            var emptyEl = document.getElementById('rekapEmptyState');
+
+            if (resultEl && emptyEl) {
+
+                var observer = new MutationObserver(function () {
+                    var hasContent = !resultEl.classList.contains('hidden');
+                    emptyEl.style.display = hasContent ? 'none' : '';
+                });
+
+                observer.observe(resultEl, { attributes: true, attributeFilter: ['class'] });
+
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>
