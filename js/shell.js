@@ -46,6 +46,7 @@ window.Shell = (() => {
     const NAV_LINKS = [
         { key: "home", label: "Beranda", href: "/index.html" },
         { key: "nilai", label: "Cek Nilai", href: "/pages/nilai.html" },
+        { key: "kelulusan", label: "Kelulusan", href: "/pages/kelulusan.html" },
         { key: "about", label: "Tentang", href: "/pages/about.html" },
         { key: "privacy", label: "Privasi", href: "/pages/privacy.html" }
     ];
