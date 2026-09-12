@@ -20,34 +20,57 @@ tetap konsisten dengan halaman kenaikan kelas.
 
 /* ==========================================
    PAGE-LEVEL TABS (Cari Per NIS / Rata-Rata Kelas)
+   Segmented control ala iOS, pill-nya geser dengan
+   animasi -- pola yang sama dipakai di rekap.css
+   (.rekap-segmented) supaya kedua halaman konsisten.
 ========================================== */
 
 .nilai-page-tabs{
-    display:flex;
-    gap:var(--space-sm);
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px;
     background:var(--surface-alt);
-    padding:.35rem;
+    padding:4px;
     border-radius:var(--radius-pill);
-    width:fit-content;
+    max-width:360px;
     margin:0 auto var(--space-lg);
 }
 
+.nilai-page-tabs-pill{
+    position:absolute;
+    top:4px;
+    left:4px;
+    width:calc(50% - 6px);
+    height:calc(100% - 8px);
+    background:var(--surface);
+    border-radius:var(--radius-pill);
+    box-shadow:var(--shadow-sm);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);
+    z-index:0;
+}
+
+.nilai-page-tabs.is-kelas .nilai-page-tabs-pill{
+    transform:translateX(calc(100% + 6px));
+}
+
 .nilai-page-tab{
+    position:relative;
+    z-index:1;
     border:none;
     background:transparent;
     color:var(--text-light);
-    padding:.55rem 1.25rem;
+    padding:.55rem .75rem;
     border-radius:var(--radius-pill);
+    font-family:inherit;
     font-weight:var(--weight-semibold);
     font-size:var(--font-sm);
     cursor:pointer;
-    transition:var(--transition-fast);
+    transition:color var(--transition-fast);
 }
 
 .nilai-page-tab.active{
-    background:var(--primary);
-    color:var(--text-white);
-    box-shadow:var(--shadow-sm);
+    color:var(--primary);
 }
 
 /* ==========================================
@@ -317,6 +340,33 @@ tetap konsisten dengan halaman kenaikan kelas.
 
     .nilai-table-wrap{
         overflow-x:auto;
+    }
+
+}
+
+/* ==========================================
+   LAYAR BESAR
+   .nilai-card sengaja tidak dibatasi sesempit
+   .result-card (halaman Kenaikan Kelas) karena
+   isinya tabel 5 kolom -- tapi tetap dibatasi
+   supaya tidak melebar penuh sampai tepi layar
+   di desktop lebar / Full HD.
+========================================== */
+
+@media (min-width: 992px){
+
+    .nilai-card{
+        max-width:900px;
+        margin-left:auto;
+        margin-right:auto;
+    }
+
+}
+
+@media (min-width: 1600px){
+
+    .nilai-card{
+        max-width:1000px;
     }
 
 }
