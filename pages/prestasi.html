@@ -19,45 +19,135 @@
 </head>
 <body class="prestasi-page">
 
-    <div class="prestasi-topbar">
+    <!-- ================= NAVBAR ================= -->
 
-        <div class="prestasi-topbar-brand">
+    <nav class="app-navbar">
 
-            <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko">
+        <div class="app-navbar-left">
 
-            <strong>SMAN 1 Sooko Mojokerto</strong>
+            <button type="button" class="app-hamburger" id="sidebarToggle" aria-label="Buka menu">☰</button>
 
-        </div>
-
-        <a href="../index.html" class="prestasi-topbar-back">&larr; Kembali ke Beranda</a>
-
-    </div>
-
-    <div class="prestasi-hero">
-
-        <h1>Prestasi Terkurasi Puspresnas</h1>
-
-        <p>Peta persebaran prestasi peserta didik, berdasarkan data SIMT Kemendikdasmen</p>
-
-    </div>
-
-    <main class="prestasi-shell">
-
-        <div id="prestasiRoot">
-
-            <div class="prestasi-loading">Memuat data prestasi...</div>
+            <a href="../index.html" class="app-navbar-brand">
+                <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko">
+                <strong>SMAN 1 Sooko Mojokerto</strong>
+            </a>
 
         </div>
 
-    </main>
+        <div class="app-navbar-links">
+            <a href="../index.html">Beranda</a>
+            <a href="nilai.html">Nilai</a>
+            <a href="rekap.html">Rekap</a>
+            <a href="kelulusan.html">Kelulusan</a>
+            <a href="prestasi.html" class="active">Prestasi</a>
+        </div>
 
-    <footer class="prestasi-footer">
-        Data ditampilkan berdasarkan pencatatan manual dari
-        <a href="https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727" target="_blank" rel="noopener">SIMT Puspresnas</a>
-        &middot; NPSN 20502727
-    </footer>
+    </nav>
+
+    <!-- Overlay: klik di luar sidebar (mobile) untuk menutup -->
+    <div class="app-sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="app-layout">
+
+        <!-- ================= SIDEBAR ================= -->
+
+        <aside class="app-sidebar" id="appSidebar">
+
+            <p class="app-sidebar-title">Menu Situs</p>
+
+            <nav>
+                <a href="../index.html"><span class="icon">🏠</span> Beranda</a>
+                <a href="nilai.html"><span class="icon">📝</span> Nilai</a>
+                <a href="rekap.html"><span class="icon">📊</span> Rekap Kelas</a>
+                <a href="kelulusan.html"><span class="icon">🎓</span> Kelulusan</a>
+                <a href="prestasi.html" class="active"><span class="icon">🏆</span> Prestasi</a>
+            </nav>
+
+            <p class="app-sidebar-title">Di Halaman Ini</p>
+
+            <nav id="sectionNav">
+                <a href="#sekolah" data-section="sekolah"><span class="icon">🏫</span> Ringkasan Sekolah</a>
+                <a href="#peringkat" data-section="peringkat"><span class="icon">🥇</span> Peringkat Nasional</a>
+                <a href="#kategori" data-section="kategori"><span class="icon">📂</span> Kategori Prestasi</a>
+                <a href="#per-tahun" data-section="per-tahun"><span class="icon">📅</span> Per Tahun</a>
+                <a href="#siswa" data-section="siswa"><span class="icon">👤</span> Siswa Berprestasi</a>
+            </nav>
+
+            <div class="app-sidebar-external">
+                <a href="https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727" target="_blank" rel="noopener">
+                    Buka Data Resmi di SIMT &rarr;
+                </a>
+            </div>
+
+        </aside>
+
+        <!-- ================= KONTEN ================= -->
+
+        <div class="app-content">
+
+            <div class="prestasi-hero">
+
+                <h1>Prestasi Terkurasi Puspresnas</h1>
+
+                <p>Peta persebaran prestasi peserta didik, berdasarkan data SIMT Kemendikdasmen</p>
+
+            </div>
+
+            <main class="prestasi-shell-inner">
+
+                <div id="prestasiRoot">
+
+                    <div class="prestasi-loading">Memuat data prestasi...</div>
+
+                </div>
+
+            </main>
+
+            <footer class="prestasi-footer">
+                Data ditampilkan berdasarkan pencatatan manual dari
+                <a href="https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727" target="_blank" rel="noopener">SIMT Puspresnas</a>
+                &middot; NPSN 20502727
+            </footer>
+
+        </div>
+
+    </div>
 
     <script src="../js/prestasi.js"></script>
+
+    <script>
+        // Toggle sidebar drawer (mobile)
+        (function () {
+
+            var toggle = document.getElementById('sidebarToggle');
+            var overlay = document.getElementById('sidebarOverlay');
+
+            function closeSidebar() {
+                document.body.classList.remove('sidebar-open');
+            }
+
+            if (toggle) {
+
+                toggle.addEventListener('click', function () {
+                    document.body.classList.toggle('sidebar-open');
+                });
+
+            }
+
+            if (overlay) {
+
+                overlay.addEventListener('click', closeSidebar);
+
+            }
+
+            document.querySelectorAll('#sectionNav a').forEach(function (link) {
+
+                link.addEventListener('click', closeSidebar);
+
+            });
+
+        })();
+    </script>
 
 </body>
 </html>
