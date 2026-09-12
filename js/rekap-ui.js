@@ -18,6 +18,19 @@ window.RekapUI = (() => {
     let subjects = [];
     let activeIndex = 0;
 
+    // State untuk tabel rekap kelas (search + sort), dipisah dari
+    // data mentah supaya bisa difilter/diurutkan ulang tanpa fetch
+    // ulang ke server.
+    let currentSummary = null;
+    let sortKey = null;
+    let sortDir = 1; // 1 = ascending, -1 = descending
+    let searchTerm = "";
+
+    // Ambang batas untuk highlight (bisa disesuaikan kalau KKM beda).
+    const PROGRESS_LOW = 50;
+    const PROGRESS_MID = 80;
+    const RAPORT_LOW = 75;
+
     /* ==========================================
        ESCAPE (anti-XSS, sama seperti ui.js)
     ========================================== */
@@ -86,6 +99,12 @@ window.RekapUI = (() => {
         result.classList.add("hidden");
 
         result.innerHTML = "";
+
+        currentSummary = null;
+
+        sortKey = null;
+
+        searchTerm = "";
 
     }
 
@@ -276,6 +295,11 @@ window.RekapUI = (() => {
 
         if (!result) return;
 
+        currentSummary = summary;
+        sortKey = null;
+        sortDir = 1;
+        searchTerm = "";
+
         result.classList.remove("hidden");
 
         result.innerHTML = `
@@ -312,11 +336,147 @@ window.RekapUI = (() => {
 
             </div>
 
-            ${classStudentTableHTML(summary.students)}
+            ${summary.students && summary.students.length ? `
+
+            <div class="rekap-legend">
+                <span><i class="dot-low"></i> Progress di bawah ${PROGRESS_LOW}%</span>
+                <span><i class="dot-mid"></i> Progress ${PROGRESS_LOW}-${PROGRESS_MID - 1}%</span>
+                <span><i class="dot-raport"></i> Nilai raport di bawah ${RAPORT_LOW}</span>
+            </div>
+
+            <div class="rekap-table-toolbar">
+
+                <input
+                    type="text"
+                    id="rekapTableSearch"
+                    class="rekap-table-search"
+                    placeholder="Cari nama atau NIS...">
+
+                <span class="rekap-table-count" id="rekapTableCount"></span>
+
+            </div>
+
+            ` : ""}
+
+            <div id="rekapTableContainer"></div>
 
         </div>
 
         `;
+
+        renderClassTable();
+
+        const searchInput = document.getElementById("rekapTableSearch");
+
+        if (searchInput) {
+
+            searchInput.addEventListener("input", () => {
+
+                searchTerm = searchInput.value.trim().toLowerCase();
+
+                renderClassTable();
+
+            });
+
+        }
+
+    }
+
+    /**
+     * Render ulang HANYA bagian tabel (dipanggil saat pertama kali
+     * showClassSummary, atau setelah search/sort berubah) supaya
+     * kartu statistik & input pencarian tidak ikut ke-reset.
+     */
+
+    function renderClassTable() {
+
+        const container = document.getElementById("rekapTableContainer");
+
+        if (!container || !currentSummary) return;
+
+        let students = currentSummary.students || [];
+
+        if (searchTerm) {
+
+            students = students.filter((s) => {
+
+                const nama = String(s.nama || "").toLowerCase();
+                const nis = String(s.nis || "").toLowerCase();
+
+                return nama.includes(searchTerm) || nis.includes(searchTerm);
+
+            });
+
+        }
+
+        if (sortKey) {
+
+            students = [...students].sort((a, b) => {
+
+                const va = sortValue(a, sortKey);
+                const vb = sortValue(b, sortKey);
+
+                if (va < vb) return -1 * sortDir;
+                if (va > vb) return 1 * sortDir;
+
+                return 0;
+
+            });
+
+        }
+
+        const countLabel = document.getElementById("rekapTableCount");
+
+        if (countLabel) {
+
+            const total = (currentSummary.students || []).length;
+
+            countLabel.textContent = searchTerm
+                ? `${students.length} dari ${total} siswa`
+                : `${total} siswa`;
+
+        }
+
+        container.innerHTML = classStudentTableHTML(students);
+
+        // Delegasi klik untuk header yang bisa di-sort.
+
+        container.querySelectorAll("[data-sort-key]").forEach((th) => {
+
+            th.addEventListener("click", () => {
+
+                const key = th.dataset.sortKey;
+
+                if (sortKey === key) {
+                    sortDir = sortDir * -1;
+                } else {
+                    sortKey = key;
+                    sortDir = 1;
+                }
+
+                renderClassTable();
+
+            });
+
+        });
+
+    }
+
+    function sortValue(student, key) {
+
+        if (key === "raport" || key === "uts" || key === "sas") {
+
+            const num = parseFloat(student[key]);
+
+            return isNaN(num) ? -1 : num;
+
+        }
+
+        if (key === "progress") {
+            return Number(student.progress) || 0;
+        }
+
+        return String(student[key] || "").toLowerCase();
 
     }
 
@@ -324,45 +484,69 @@ window.RekapUI = (() => {
 
         if (!students || !students.length) {
 
-            return `<p class="rekap-empty-note">Tidak ada data siswa untuk kelas ini.</p>`;
+            return `<p class="rekap-table-noresult">Tidak ada siswa yang cocok.</p>`;
 
         }
+
+        const columns = [
+            { key: "nis", label: "NIS" },
+            { key: "nama", label: "Nama" },
+            { key: "kelas", label: "Kelas" },
+            { key: "raport", label: "Raport" },
+            { key: "uts", label: "UTS" },
+            { key: "sas", label: "SAS" },
+            { key: "progress", label: "Progress" }
+        ];
 
         return `
 
         <div class="nilai-table-wrap">
 
-            <h3>Daftar Siswa</h3>
-
             <table class="nilai-table">
 
                 <thead>
                     <tr>
-                        <th>NIS</th>
-                        <th>Nama</th>
-                        <th>Kelas</th>
-                        <th>Raport</th>
-                        <th>UTS</th>
-                        <th>SAS</th>
-                        <th>Progress</th>
+                        ${columns.map((col) => `
+
+                            <th
+                                data-sort-key="${col.key}"
+                                class="${sortKey === col.key ? "sort-active" : ""}">
+                                ${col.label}
+                                <span class="sort-arrow">${sortArrow(col.key)}</span>
+                            </th>
+
+                        `).join("")}
                     </tr>
                 </thead>
 
                 <tbody>
 
-                    ${students.map((s) => `
+                    ${students.map((s) => {
 
-                        <tr>
+                        const progress = Number(s.progress) || 0;
+
+                        const rowClass = progress < PROGRESS_LOW
+                            ? "rekap-row-low"
+                            : (progress < PROGRESS_MID ? "rekap-row-mid" : "");
+
+                        const raportNum = parseFloat(s.raport);
+                        const raportLow = !isNaN(raportNum) && raportNum < RAPORT_LOW;
+
+                        return `
+
+                        <tr class="${rowClass}">
                             <td class="nilai-code">${escapeHTML(s.nis)}</td>
                             <td>${escapeHTML(s.nama)}</td>
                             <td>${escapeHTML(s.kelas)}</td>
-                            <td>${escapeHTML(s.raport)}</td>
+                            <td class="${raportLow ? "rekap-cell-low" : ""}">${escapeHTML(s.raport)}</td>
                             <td>${escapeHTML(s.uts)}</td>
                             <td>${escapeHTML(s.sas)}</td>
-                            <td>${s.progress}%</td>
+                            <td>${progress}%</td>
                         </tr>
 
-                    `).join("")}
+                        `;
+
+                    }).join("")}
 
                 </tbody>
 
@@ -371,6 +555,14 @@ window.RekapUI = (() => {
         </div>
 
         `;
+
+    }
+
+    function sortArrow(key) {
+
+        if (sortKey !== key) return "↕";
+
+        return sortDir === 1 ? "↑" : "↓";
 
     }
 
