@@ -1,17 +1,24 @@
 /*
 ==========================================================
 SMANSASOO Academic Portal
-Prestasi Page Stylesheet
-Version : 1.0.0
+Prestasi Page Stylesheet (Shell: Navbar + Sidebar)
+Version : 2.0.0
 ==========================================================
-Tampilan diadopsi dari halaman "Detail Prestasi Sekolah" di
-SIMT Puspresnas (simt.kemendikdasmen.go.id): hero gradient
-biru, kartu putih dengan shadow, kartu kategori dengan kotak
-ikon, dan tabel daftar siswa berprestasi.
+Layout:
 
-Data yang ditampilkan TIDAK ditarik live dari SIMT (lihat
-catatan di data/prestasi.json) -- halaman ini murni styling
-baru di atas data statis yang diupdate manual.
+  ┌─────────────────────────────────────────────┐
+  │              app-navbar (sticky)             │
+  ├───────────────┬───────────────────────────────┤
+  │  app-sidebar   │        app-content            │
+  │  (sticky,      │  (kartu-kartu prestasi,       │
+  │   desktop)     │   sama seperti sebelumnya)    │
+  └───────────────┴───────────────────────────────┘
+
+Di mobile, sidebar jadi drawer yang dibuka lewat tombol
+hamburger di navbar (overlay dari kiri).
+
+Kartu di dalam app-content (.prestasi-card dkk) TIDAK berubah
+dari versi sebelumnya -- hanya dibungkus shell baru.
 ==========================================================
 */
 
@@ -25,6 +32,8 @@ baru di atas data statis yang diupdate manual.
     --prestasi-text-light:#667085;
     --prestasi-border:#E4E7EC;
     --prestasi-radius:12px;
+    --prestasi-navbar-h:64px;
+    --prestasi-sidebar-w:250px;
 
 }
 
@@ -41,60 +50,302 @@ body.prestasi-page{
 
 }
 
-.prestasi-topbar{
+/* ==========================================
+   NAVBAR (atas, sticky, link antar fitur situs)
+========================================== */
 
-    background:linear-gradient(135deg,var(--prestasi-primary),var(--prestasi-primary-dark));
+.app-navbar{
 
-    padding:1rem clamp(1rem,4vw,2.5rem);
+    position:sticky;
+    top:0;
+    z-index:30;
+
+    height:var(--prestasi-navbar-h);
 
     display:flex;
     align-items:center;
     justify-content:space-between;
     gap:1rem;
 
-    position:sticky;
-    top:0;
-    z-index:10;
+    padding:0 clamp(1rem,3vw,2rem);
+
+    background:linear-gradient(135deg,var(--prestasi-primary),var(--prestasi-primary-dark));
+
+    color:#fff;
 
 }
 
-.prestasi-topbar-brand{
+.app-navbar-left{
 
     display:flex;
     align-items:center;
     gap:.75rem;
+
+    min-width:0;
+
+}
+
+.app-hamburger{
+
+    display:none;
+
+    width:36px;
+    height:36px;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(255,255,255,.12);
+    border:none;
+    border-radius:8px;
+
+    color:#fff;
+    font-size:1.1rem;
+
+    cursor:pointer;
+
+    flex-shrink:0;
+
+}
+
+.app-navbar-brand{
+
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+
+    text-decoration:none;
     color:#fff;
 
+    min-width:0;
+
 }
 
-.prestasi-topbar-brand img{
+.app-navbar-brand img{
 
-    width:32px;
-    height:32px;
+    width:30px;
+    height:30px;
     object-fit:contain;
+    flex-shrink:0;
 
 }
 
-.prestasi-topbar-brand strong{
+.app-navbar-brand strong{
 
-    font-size:.95rem;
+    font-size:.9rem;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
 
 }
 
-.prestasi-topbar-back{
+.app-navbar-links{
 
-    color:rgba(255,255,255,.85);
+    display:flex;
+    align-items:center;
+    gap:1.5rem;
+
+}
+
+.app-navbar-links a{
+
+    color:rgba(255,255,255,.8);
     text-decoration:none;
     font-size:.85rem;
+    font-weight:500;
     white-space:nowrap;
 
 }
 
-.prestasi-topbar-back:hover{
+.app-navbar-links a:hover,
+.app-navbar-links a.active{
 
     color:#fff;
 
 }
+
+.app-navbar-links a.active{
+
+    font-weight:700;
+
+    border-bottom:2px solid #fff;
+    padding-bottom:4px;
+
+}
+
+/* ==========================================
+   LAYOUT: SIDEBAR + KONTEN
+========================================== */
+
+.app-layout{
+
+    display:flex;
+    align-items:flex-start;
+
+    max-width:1300px;
+    margin:0 auto;
+
+}
+
+.app-sidebar{
+
+    width:var(--prestasi-sidebar-w);
+    flex-shrink:0;
+
+    position:sticky;
+    top:var(--prestasi-navbar-h);
+
+    height:calc(100vh - var(--prestasi-navbar-h));
+    overflow-y:auto;
+
+    padding:1.5rem 1rem;
+
+    background:#fff;
+    border-right:1px solid var(--prestasi-border);
+
+    display:none;
+
+}
+
+.app-sidebar-title{
+
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    color:var(--prestasi-text-light);
+    font-weight:700;
+
+    margin:0 0 .75rem .5rem;
+
+}
+
+.app-sidebar nav{
+
+    display:flex;
+    flex-direction:column;
+    gap:.15rem;
+
+    margin-bottom:1.5rem;
+
+}
+
+.app-sidebar nav a{
+
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+
+    padding:.6rem .6rem;
+
+    border-radius:8px;
+
+    color:var(--prestasi-text);
+    text-decoration:none;
+    font-size:.88rem;
+
+}
+
+.app-sidebar nav a .icon{
+
+    width:20px;
+    text-align:center;
+    flex-shrink:0;
+
+}
+
+.app-sidebar nav a:hover{
+
+    background:var(--prestasi-bg);
+
+}
+
+.app-sidebar nav a.active{
+
+    background:#EAF2FB;
+    color:var(--prestasi-primary);
+    font-weight:600;
+
+}
+
+.app-sidebar-external{
+
+    margin-top:auto;
+    padding-top:1rem;
+    border-top:1px solid var(--prestasi-border);
+
+}
+
+.app-sidebar-external a{
+
+    display:block;
+
+    font-size:.8rem;
+    color:var(--prestasi-accent);
+    text-decoration:none;
+    padding:.5rem .6rem;
+
+}
+
+.app-sidebar-external a:hover{
+
+    text-decoration:underline;
+
+}
+
+.app-content{
+
+    flex:1;
+    min-width:0;
+
+}
+
+/* ==========================================
+   OVERLAY (drawer sidebar di mobile)
+========================================== */
+
+.app-sidebar-overlay{
+
+    display:none;
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(16,24,40,.45);
+
+    z-index:25;
+
+}
+
+body.sidebar-open .app-sidebar-overlay{
+
+    display:block;
+
+}
+
+body.sidebar-open .app-sidebar{
+
+    display:flex;
+    flex-direction:column;
+
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+
+    height:100vh;
+
+    z-index:26;
+
+    width:80vw;
+    max-width:300px;
+
+    box-shadow:0 0 30px rgba(0,0,0,.25);
+
+}
+
+/* ==========================================
+   HERO + KARTU (dari versi sebelumnya, tidak berubah)
+========================================== */
 
 .prestasi-hero{
 
@@ -102,7 +353,7 @@ body.prestasi-page{
 
     color:#fff;
 
-    padding:2.5rem clamp(1rem,4vw,2.5rem) 5rem;
+    padding:2rem clamp(1rem,4vw,2.5rem) 4.5rem;
 
     text-align:center;
 
@@ -110,7 +361,7 @@ body.prestasi-page{
 
 .prestasi-hero h1{
 
-    font-size:clamp(1.4rem,3vw,2rem);
+    font-size:clamp(1.3rem,3vw,1.9rem);
     margin:0 0 .5rem;
 
 }
@@ -119,18 +370,14 @@ body.prestasi-page{
 
     margin:0;
     color:rgba(255,255,255,.85);
-    font-size:.95rem;
+    font-size:.9rem;
 
 }
 
-/* ==========================================
-   SHELL
-========================================== */
+.prestasi-shell-inner{
 
-.prestasi-shell{
-
-    max-width:1100px;
-    margin:-3.5rem auto 0;
+    max-width:900px;
+    margin:-3rem auto 0;
 
     padding:0 clamp(1rem,4vw,2rem) 3rem;
 
@@ -148,9 +395,9 @@ body.prestasi-page{
 
     margin-bottom:1.5rem;
 
-}
+    scroll-margin-top:calc(var(--prestasi-navbar-h) + 1rem);
 
-/* Kartu identitas sekolah */
+}
 
 .prestasi-school-card{
 
@@ -187,9 +434,6 @@ body.prestasi-page{
     max-width:520px;
 
 }
-
-/* Kartu ranking nasional (highlight, beda dari SIMT asli tapi
-   selaras temanya -- ini yang paling ditunggu pengunjung) */
 
 .prestasi-rank-card{
 
@@ -268,9 +512,6 @@ body.prestasi-page{
 
 }
 
-/* Grid kategori (mengadopsi pola 4 kolom+divider di SIMT,
-   di sini fleksibel sesuai jumlah kategori) */
-
 .prestasi-section-title{
 
     font-size:1rem;
@@ -343,8 +584,6 @@ body.prestasi-page{
     font-size:1.3rem;
 
 }
-
-/* Tabel per tahun & siswa berprestasi */
 
 .prestasi-table-wrap{
 
@@ -453,21 +692,34 @@ body.prestasi-page{
    RESPONSIVE
 ========================================== */
 
-@media screen and (min-width:768px){
+@media screen and (max-width:1023px){
 
-    .prestasi-shell{
+    .app-hamburger{
 
-        margin-top:-4rem;
+        display:flex;
+
+    }
+
+    .app-navbar-links{
+
+        display:none;
 
     }
 
 }
 
-@media screen and (min-width:1280px){
+@media screen and (min-width:1024px){
 
-    .prestasi-shell{
+    .app-sidebar{
 
-        max-width:1200px;
+        display:flex;
+        flex-direction:column;
+
+    }
+
+    .prestasi-shell-inner{
+
+        margin-top:-3.5rem;
 
     }
 
