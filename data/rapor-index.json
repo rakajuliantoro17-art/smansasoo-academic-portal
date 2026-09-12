@@ -1,0 +1,5 @@
+{
+  "catatan": "Daftar tahun yang ada file data/rapor-<tahun>.json-nya. Kalau nambah tahun baru: taruh file data/rapor-<tahun>.json (skema sama persis dengan rapor-2025.json), lalu tambahkan angka tahunnya ke array 'tahun_tersedia' di bawah, urut dari terbaru ke terlama.",
+  "tahun_tersedia": [2025],
+  "tahun_default": 2025
+}
