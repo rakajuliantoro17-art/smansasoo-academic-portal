@@ -171,3 +171,89 @@ sekarang atau nanti.
     }
 
 }
+
+/* ==========================================
+   NAV & FOOTER DI ATAS FOTO (Beranda & Cek Nilai)
+   Dua halaman ini punya .bg-layer (foto sekolah blur,
+   lihat css/glass.css) di belakangnya, jadi nav/footer
+   solid putih bawaan di atas terlihat menabrak dengan
+   estetika "Liquid Glass" di kartu-kartunya. Di-scope
+   lewat body[data-page] supaya halaman lain (about,
+   privacy, rapor, kelulusan, dll) tidak ikut berubah.
+========================================== */
+
+body[data-page="home"] .shell-nav,
+body[data-page="nilai"] .shell-nav{
+
+    background:rgba(8,20,38,.32);
+    border-bottom-color:rgba(255,255,255,.14);
+
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+
+    body[data-page="home"] .shell-nav,
+    body[data-page="nilai"] .shell-nav{
+        -webkit-backdrop-filter:blur(18px) saturate(160%);
+        backdrop-filter:blur(18px) saturate(160%);
+    }
+
+}
+
+body[data-page="home"] .shell-brand,
+body[data-page="nilai"] .shell-brand{
+    color:#ffffff;
+}
+
+body[data-page="home"] .shell-nav-link,
+body[data-page="nilai"] .shell-nav-link{
+    color:rgba(255,255,255,.78);
+}
+
+body[data-page="home"] .shell-nav-link:hover,
+body[data-page="nilai"] .shell-nav-link:hover{
+    color:#ffffff;
+}
+
+body[data-page="home"] .shell-nav-link.active,
+body[data-page="nilai"] .shell-nav-link.active{
+    color:var(--secondary-light);
+    border-bottom-color:var(--secondary-light);
+}
+
+body[data-page="home"] .shell-nav-toggle span,
+body[data-page="nilai"] .shell-nav-toggle span{
+    background:#ffffff;
+}
+
+body[data-page="home"] .shell-nav-links.open,
+body[data-page="nilai"] .shell-nav-links.open{
+    background:rgba(8,20,38,.92);
+    border-bottom-color:rgba(255,255,255,.14);
+}
+
+body[data-page="home"] .shell-nav-links .shell-nav-link,
+body[data-page="nilai"] .shell-nav-links .shell-nav-link{
+    border-bottom-color:rgba(255,255,255,.14);
+}
+
+body[data-page="home"] .shell-footer,
+body[data-page="nilai"] .shell-footer{
+    border-top-color:rgba(255,255,255,.16);
+    color:rgba(255,255,255,.78);
+}
+
+body[data-page="home"] .shell-footer-links a,
+body[data-page="nilai"] .shell-footer-links a{
+    color:rgba(255,255,255,.78);
+}
+
+body[data-page="home"] .shell-footer-links a:hover,
+body[data-page="nilai"] .shell-footer-links a:hover{
+    color:#ffffff;
+}
+
+body[data-page="home"] .shell-footer-inner small,
+body[data-page="nilai"] .shell-footer-inner small{
+    color:rgba(255,255,255,.55);
+}
