@@ -1,0 +1,266 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Rapor Pendidikan Page Stylesheet
+Version : 1.0.0
+==========================================================
+Dipakai HANYA oleh pages/rapor.html. Mengikuti pola
+css/nilai.css: semua warna/spacing/radius diambil dari
+css/variables.css, bukan hardcode, supaya konsisten dengan
+shell dan halaman lain (lihat docs/UI-SHELL.md bagian 4-5).
+==========================================================
+*/
+
+/* ==========================================
+   RINGKASAN (metric cards atas)
+========================================== */
+
+.rapor-summary{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+    gap:var(--space-md);
+    margin-bottom:var(--space-lg);
+}
+
+.rapor-summary-card{
+    background:var(--surface);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
+    padding:var(--space-md);
+    box-shadow:var(--shadow-sm);
+}
+
+.rapor-summary-card span{
+    display:block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--text-light);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+}
+
+.rapor-summary-card strong{
+    display:block;
+    font-size:var(--font-2xl);
+    margin-top:var(--space-xs);
+    color:var(--text);
+}
+
+.rapor-summary-note{
+    display:block;
+    margin-top:var(--space-xs);
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+}
+
+/* ==========================================
+   GRID KARTU INDIKATOR
+========================================== */
+
+.rapor-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+    gap:var(--space-md);
+}
+
+.rapor-card{
+    background:var(--surface);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-sm);
+    overflow:hidden;
+    transition:var(--transition-fast);
+}
+
+.rapor-card:hover{
+    box-shadow:var(--shadow-md);
+}
+
+.rapor-card-head{
+    width:100%;
+    text-align:left;
+    background:none;
+    border:none;
+    padding:var(--space-lg);
+    cursor:pointer;
+    font-family:inherit;
+}
+
+.rapor-card-kode{
+    display:inline-block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    color:var(--text-light);
+    letter-spacing:.04em;
+    margin-bottom:var(--space-xs);
+}
+
+.rapor-card-nama{
+    font-size:var(--font-md);
+    font-weight:var(--weight-semibold);
+    color:var(--text);
+    line-height:1.35;
+}
+
+.rapor-card-metrics{
+    display:flex;
+    align-items:flex-end;
+    gap:var(--space-lg);
+    margin-top:var(--space-md);
+}
+
+.rapor-card-skor{
+    font-size:var(--font-2xl);
+    font-weight:var(--weight-extrabold);
+    color:var(--text);
+    line-height:1;
+}
+
+.rapor-card-skor small{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-regular);
+    color:var(--text-light);
+}
+
+.rapor-card-delta{
+    font-size:var(--font-md);
+    font-weight:var(--weight-bold);
+}
+
+.rapor-card-delta.up{ color:var(--success); }
+.rapor-card-delta.down{ color:var(--danger); }
+.rapor-card-delta.flat{ color:var(--text-muted); }
+
+.rapor-card-sub-count{
+    margin-left:auto;
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+    align-self:center;
+}
+
+/* Label capaian (pill), 3 status seperti Rapor Pendidikan asli */
+
+.rapor-label{
+    display:inline-block;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-semibold);
+    padding:.15rem .65rem;
+    border-radius:var(--radius-pill);
+    margin-top:var(--space-xs);
+}
+
+.rapor-label.baik{
+    background:rgba(34,197,94,.12);
+    color:var(--success);
+    border:1px solid rgba(34,197,94,.35);
+}
+
+.rapor-label.sedang{
+    background:rgba(245,158,11,.12);
+    color:var(--warning);
+    border:1px solid rgba(245,158,11,.35);
+}
+
+.rapor-label.kurang{
+    background:rgba(239,68,68,.12);
+    color:var(--danger);
+    border:1px solid rgba(239,68,68,.35);
+}
+
+/* Progress bar skor, pola sama dengan .nilai-progress-track */
+
+.rapor-progress-track{
+    margin-top:var(--space-md);
+    height:6px;
+    border-radius:var(--radius-pill);
+    background:var(--border-light);
+    overflow:hidden;
+}
+
+.rapor-progress-fill{
+    height:100%;
+    border-radius:var(--radius-pill);
+    background:var(--success);
+    transition:width var(--transition);
+}
+
+/* ==========================================
+   DETAIL SUB-INDIKATOR (expand/collapse)
+========================================== */
+
+.rapor-card-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height var(--transition);
+    border-top:1px solid var(--border-light);
+}
+
+.rapor-card.open .rapor-card-body{
+    max-height:2000px;
+}
+
+.rapor-card-body-inner{
+    padding:var(--space-md) var(--space-lg) var(--space-lg);
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-md);
+}
+
+.rapor-sub-item{
+    padding-bottom:var(--space-md);
+    border-bottom:1px solid var(--border-light);
+}
+
+.rapor-sub-item:last-child{
+    border-bottom:none;
+    padding-bottom:0;
+}
+
+.rapor-sub-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:var(--space-sm);
+}
+
+.rapor-sub-nama{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-semibold);
+    color:var(--text);
+}
+
+.rapor-sub-skor{
+    font-size:var(--font-sm);
+    font-weight:var(--weight-bold);
+    color:var(--text);
+    white-space:nowrap;
+}
+
+.rapor-sub-definisi{
+    margin-top:var(--space-xs);
+    font-size:var(--font-xs);
+    color:var(--text-light);
+    line-height:1.5;
+}
+
+.rapor-sub-meta{
+    margin-top:var(--space-xs);
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+}
+
+.rapor-card-toggle-icon{
+    display:inline-block;
+    transition:transform var(--transition-fast);
+}
+
+.rapor-card.open .rapor-card-toggle-icon{
+    transform:rotate(180deg);
+}
+
+.rapor-source-note{
+    margin-top:var(--space-xl);
+    text-align:center;
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+}
