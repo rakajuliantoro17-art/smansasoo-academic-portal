@@ -1,248 +1,158 @@
 /*
 ==========================================================
-SMANSASOO Graduation Portal
-Configuration
-Version : 2.2.0
+SMANSASOO Academic Portal
+Configuration File
+Version : 1.1.0
 ==========================================================
-
-Portal Pengumuman Kelulusan
-SMAN 1 Sooko Mojokerto
-
-Seluruh konfigurasi aplikasi dipusatkan pada file ini.
-
-FIX (v2.2.0):
-- ACADEMIC_YEAR diubah dari "2025/2026" ke "2026/2027" sesuai
-  konfirmasi Bapak Raka — portal ini dibuat untuk tahun ajaran
-  depan dan didesain supaya bisa dipakai terus tiap tahun.
-- badge-year di index.html sekarang membaca nilai ini secara
-  otomatis lewat app.js (lihat FIX di app.js) — jadi mulai
-  sekarang, ganti tahun ajaran CUKUP di baris ini saja, tidak
-  perlu lagi edit index.html setiap tahun ajaran baru.
+FIX (v1.1.0):
+- Menghapus duplikat "const CONFIG" yang sebelumnya
+  bentrok dengan window.CONFIG dan tidak pernah dipakai.
+- API_BASE_URL sekarang diisi URL Apps Script yang sudah
+  di-deploy (bukan placeholder lagi).
+- Menambahkan API_ACTIONS agar nama action selalu konsisten
+  dengan Api.gs (student, status, settings, announcement, version).
 ==========================================================
 */
 
 window.CONFIG = {
 
-    /* ======================================================
+    /* ==========================================
        APPLICATION
-    ====================================================== */
+    ========================================== */
 
-    APP_NAME: "SMANSASOO Graduation Portal",
+    APP_NAME: "SMANSASOO Academic Portal",
 
-    VERSION: "2.2.0",
+    VERSION: "1.1.0",
 
     SCHOOL_NAME: "SMAN 1 Sooko Mojokerto",
 
     ACADEMIC_YEAR: "2026/2027",
 
-    ANNOUNCEMENT_TITLE:
-        "Pengumuman Kelulusan",
-
-    ANNOUNCEMENT_YEAR:
-        "2026",
-
-    /* ======================================================
+    /* ==========================================
        ENVIRONMENT
-    ====================================================== */
+    ========================================== */
 
     ENVIRONMENT: "production",
+    // development | production
 
-    // true = membaca data/sample.json
-    // false = membaca Google Apps Script
-
+    // Set true hanya untuk demo lokal tanpa koneksi API.
+    // Untuk pemakaian sungguhan HARUS false.
     USE_SAMPLE_DATA: false,
 
-
-
-    /* ======================================================
+    /* ==========================================
        API
-    ====================================================== */
+    ========================================== */
 
     API_BASE_URL:
+        "https://script.google.com/macros/s/AKfycbwAbjqiwBFp-xQAZVmcrybhC31FEDH054MS4_mSHgb2hjr15KnL4G-KGfiUhaB_52gsoA/exec",
 
-    "https://script.google.com/macros/s/AKfycbxZoDMyfKWKyJIVGRaRAYHJIUIE34_32w7-Khykp9em2IwqR5seG3Ph5JvI_EaW3BGVkQ/exec",
-
-    API_ACTIONS:{
-
-        STUDENT:"student",
-
-        STATUS:"status",
-
-        SETTINGS:"settings",
-
-        VERSION:"version"
-
+    // Nama action HARUS sama persis dengan switch(action) di Api.gs
+    API_ACTIONS: {
+        STUDENT: "student",
+        STATUS: "status",
+        SETTINGS: "settings",
+        ANNOUNCEMENT: "announcement",
+        VERSION: "version"
     },
 
+    // Catatan: modul Nilai (js/nilai-api.js) TIDAK memakai
+    // Apps Script lagi. Dia memanggil /api/nilai, Vercel
+    // Serverless Function di repo ini sendiri (lihat api/nilai.js),
+    // yang membaca Google Sheets langsung di sisi server.
+
     SAMPLE_DATA_URL:
+        "data/sample.json",
 
-    "../data/sample-kelulusan.json",
+    API_TIMEOUT: 10000,
 
-    API_TIMEOUT:10000,
-
-
-
-    /* ======================================================
+    /* ==========================================
        SEARCH
-    ====================================================== */
+    ========================================== */
 
-    SEARCH_MIN_LENGTH:4,
+    SEARCH_MIN_LENGTH: 4,
 
     SEARCH_PLACEHOLDER:
+        "Masukkan NIS atau NISN",
 
-    "Masukkan NIS atau NISN",
+    // Substring (huruf besar) yang menandai status BELUM naik
+    // kelas, dicek terhadap kolom STATUS di sheet STUDENTS.
+    // Contoh yang cocok: "TIDAK NAIK", "Tidak Naik Kelas", dst.
+    STATUS_NOT_PROMOTED_KEYWORD: "TIDAK",
 
+    /* ==========================================
+       CELEBRATION (status: NAIK)
+    ========================================== */
 
+    // Set false untuk mematikan musik tanpa ubah kode lain.
+    ENABLE_CELEBRATION_AUDIO: true,
 
-    /* ======================================================
-       RESULT STATUS
-    ====================================================== */
+    // WAJIB diisi file audio milik sekolah / royalty-free.
+    // Taruh file-nya di assets/audio/ lalu sesuaikan path ini.
+    // Selama file belum ada, browser akan diam-diam gagal
+    // memutar audio (tidak error ke pengguna).
+    CELEBRATION_AUDIO_URL:
+        "assets/audio/naik-kelas.mp3",
 
-    STATUS_PASS:"LULUS",
-
-    STATUS_NOT_PASS:"TIDAK LULUS",
-
-
-
-    /* ======================================================
-       VISUAL
-    ====================================================== */
-
-    BACKGROUND_IMAGE:
-
-    "../assets/images/scc.jpg",
-
-    LOGO:
-
-    "../assets/logo/logo.png",
-
-    ICON:
-
-    "../assets/icons/icon.png",
-
-    FAVICON:
-
-    "../assets/favicon.ico",
-
-
-
-    /* ======================================================
-       CELEBRATION
-    ====================================================== */
-
-    ENABLE_CELEBRATION:true,
-
-    ENABLE_CONFETTI:true,
-
-    ENABLE_BALLOON:true,
-
-    ENABLE_FLASH:true,
-
-
-
-    ENABLE_AUDIO:true,
-
-
-
-    AUDIO_URL:
-
-    "../assets/audio/lulus.mp3",
-
-
-
-    CONFETTI_PARTICLE:180,
-
-    CONFETTI_SPREAD:120,
-
-
-
-    BALLOON_COUNT:16,
-
-
-
-    /* ======================================================
-       LOADING
-    ====================================================== */
-
-    ENABLE_LOADING:true,
-
-    LOADING_DELAY:1800,
-
-
-
-    /* ======================================================
+    /* ==========================================
        CACHE
-    ====================================================== */
+    ========================================== */
 
-    ENABLE_CACHE:false,
+    ENABLE_CACHE: false,
 
-    CACHE_DURATION:300000,
+    CACHE_DURATION: 300000,
 
-
-
-    /* ======================================================
+    /* ==========================================
        PWA
-    ====================================================== */
+    ========================================== */
 
-    ENABLE_PWA:true,
+    ENABLE_PWA: true,
 
-    ENABLE_OFFLINE:false,
+    ENABLE_OFFLINE: false,
 
+    /* ==========================================
+       UI
+    ========================================== */
 
+    ENABLE_ANIMATION: true,
 
-    /* ======================================================
-       DEBUG
-    ====================================================== */
+    ENABLE_LOADING: true,
 
-    ENABLE_CONSOLE_LOG:false,
+    ENABLE_CONSOLE_LOG: true,
 
-
-
-    /* ======================================================
+    /* ==========================================
        MESSAGE
-    ====================================================== */
+    ========================================== */
 
-    MESSAGE:{
+    MESSAGE: {
 
         EMPTY_KEYWORD:
-
-        "Silakan masukkan NIS atau NISN.",
+            "Silakan masukkan NIS atau NISN.",
 
         NOT_FOUND:
-
-        "Data siswa tidak ditemukan.",
+            "Data siswa tidak ditemukan.",
 
         SERVER_ERROR:
-
-        "Terjadi kesalahan pada server.",
+            "Terjadi kesalahan pada server.",
 
         LOADING:
-
-        "Sedang memproses data...",
+            "Memuat data...",
 
         SUCCESS:
+            "Data berhasil ditemukan.",
 
-        "Data berhasil ditemukan.",
-
-        PASS_MESSAGE:
-
-        "Selamat! Anda dinyatakan LULUS.",
-
-        NOT_PASS_MESSAGE:
-
-        "Silakan menghubungi pihak sekolah untuk informasi lebih lanjut."
+        NOT_PROMOTED_NOTE:
+            "Untuk informasi lebih lanjut mengenai hasil ini, " +
+            "silakan hubungi wali kelas atau bagian Kurikulum " +
+            "SMAN 1 Sooko."
 
     }
 
 };
 
-
-/* ======================================================
+/* ==========================================
    READ ONLY
-====================================================== */
+========================================== */
 
 Object.freeze(window.CONFIG);
-
 Object.freeze(window.CONFIG.API_ACTIONS);
-
 Object.freeze(window.CONFIG.MESSAGE);
