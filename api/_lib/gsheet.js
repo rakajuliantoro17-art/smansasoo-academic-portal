@@ -103,10 +103,35 @@ async function fetchSheetRows(sheetName) {
     return parseCSV(text);
 }
 
+/**
+ * Dipakai oleh modul lain (kenaikan.js, kelulusan.js) yang tiap
+ * spreadsheet-nya cuma punya SATU tab relevan, jadi lebih praktis
+ * dirujuk pakai gid (angka di URL setelah #gid=...) daripada nama
+ * tab persis.
+ */
+async function fetchRowsByGid(sheetId, gid) {
+    if (!sheetId) {
+        throw new Error("ID spreadsheet belum diatur di Environment Variable Vercel.");
+    }
+
+    const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+        throw new Error(`Gagal mengambil sheet gid=${gid} (HTTP ${response.status}). Pastikan sheet sudah di-share "Anyone with the link".`);
+    }
+
+    const text = await response.text();
+
+    return parseCSV(text);
+}
+
 module.exports = {
     SHEET_ID,
     SHEET_NAMES,
     cleanNIS,
     parseCSV,
-    fetchSheetRows
+    fetchSheetRows,
+    fetchRowsByGid
 };
