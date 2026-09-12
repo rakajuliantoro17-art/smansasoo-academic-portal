@@ -1,0 +1,446 @@
+{
+  "npsn": "20502727",
+  "nama_sekolah": "SMAN 1 SOOKO",
+  "tahun": 2025,
+  "diperbarui": "2026-07-01",
+  "sumber": "Rapor Pendidikan Kemendikdasmen",
+  "ringkasan": {
+    "jumlah_indikator": 6,
+    "baik": 6,
+    "sedang": 0,
+    "kurang": 0,
+    "rata_rata_skor": 86.5
+  },
+  "groups": [
+    {
+      "kode": "A.1",
+      "nama": "Kemampuan literasi",
+      "grup": "Kemampuan Literasi Murid",
+      "icon": "book",
+      "skor": 100.0,
+      "label": "Baik",
+      "delta": 0.0,
+      "definisi_capaian": "Sebagian besar peserta didik telah mencapai batas kompetensi minimum untuk literasi membaca.",
+      "peringkat_provinsi": "Peringkat atas (1-20%)",
+      "peringkat_nasional": "Peringkat atas (1-20%)",
+      "sumber_data": "Asesmen Nasional 2025",
+      "sub": [
+        {
+          "kode": "A.1.1",
+          "nama": "Kompetensi membaca teks informasi",
+          "skor": 89.62,
+          "label": "Baik",
+          "delta": -2.05,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.1.2",
+          "nama": "Kompetensi membaca teks sastra",
+          "skor": 91.83,
+          "label": "Baik",
+          "delta": -0.49,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.1.3",
+          "nama": "Kompetensi mengakses dan menemukan isi teks (L1)",
+          "skor": 91.19,
+          "label": "Baik",
+          "delta": -0.69,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.1.4",
+          "nama": "Kompetensi menginterpretasi dan memahami isi teks (L2)",
+          "skor": 91.21,
+          "label": "Baik",
+          "delta": 0.14,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.1.5",
+          "nama": "Kompetensi mengevaluasi dan merefleksikan isi teks (L3)",
+          "skor": 89.62,
+          "label": "Baik",
+          "delta": -0.69,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        }
+      ]
+    },
+    {
+      "kode": "A.2",
+      "nama": "Kemampuan numerasi",
+      "grup": "Kemampuan Numerasi Murid",
+      "icon": "calculator",
+      "skor": 97.78,
+      "label": "Baik",
+      "delta": 0.0,
+      "definisi_capaian": "Sebagian besar peserta didik telah mencapai batas kompetensi minimum untuk numerasi",
+      "peringkat_provinsi": "Peringkat atas (1-20%)",
+      "peringkat_nasional": "Peringkat atas (1-20%)",
+      "sumber_data": "Asesmen Nasional 2025",
+      "sub": [
+        {
+          "kode": "A.2.1",
+          "nama": "Kompetensi pada domain Bilangan",
+          "skor": 73.61,
+          "label": "Baik",
+          "delta": -2.74,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.2.2",
+          "nama": "Kompetensi pada domain Aljabar",
+          "skor": 66.46,
+          "label": "Baik",
+          "delta": -5.53,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.2.3",
+          "nama": "Kompetensi pada domain Geometri",
+          "skor": 71.33,
+          "label": "Baik",
+          "delta": -4.14,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.2.4",
+          "nama": "Kompetensi pada domain Data dan Ketidakpastian",
+          "skor": 72.1,
+          "label": "Baik",
+          "delta": -2.6,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.2.5",
+          "nama": "Kompetensi mengetahui (L1)",
+          "skor": 72.73,
+          "label": "Baik",
+          "delta": -5.7,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.2.6",
+          "nama": "Kompetensi menerapkan (L2)",
+          "skor": 71.66,
+          "label": "Baik",
+          "delta": -4.56,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.2.7",
+          "nama": "Kompetensi menalar (L3)",
+          "skor": 70.34,
+          "label": "Baik",
+          "delta": 2.02,
+          "definisi_capaian": null,
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        }
+      ]
+    },
+    {
+      "kode": "A.3",
+      "nama": "Karakter",
+      "grup": "Karakter Murid",
+      "icon": "heart",
+      "skor": 76.51,
+      "label": "Baik",
+      "delta": 6.61,
+      "definisi_capaian": "Peserta didik terbiasa menerapkan nilai-nilai karakter pelajar pancasila yang berakhlak mulia, bergotong royong, mandiri, kreatif dan bernalar kritis serta berkebinekaan global dalam kehidupan sehari hari.",
+      "peringkat_provinsi": "Peringkat atas (1-20%)",
+      "peringkat_nasional": "Peringkat atas (1-20%)",
+      "sumber_data": "Asesmen Nasional 2025",
+      "sub": [
+        {
+          "kode": "A.3.1",
+          "nama": "Beriman, Bertakwa kepada Tuhan yang Maha Esa, dan Berakhlak Mulia",
+          "skor": 79.5,
+          "label": "Baik",
+          "delta": 7.88,
+          "definisi_capaian": "Peserta didik secara proaktif dan konsisten telah menerapkan perilaku yang menunjukkan berakhlak baik pada sesama manusia, alam, dan negara.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.3.2",
+          "nama": "Gotong Royong",
+          "skor": 75.13,
+          "label": "Baik",
+          "delta": 1.14,
+          "definisi_capaian": "Peserta didik telah mengimplementasikan dan menggerakkan aktivitas terkait kegiatan yang bertujuan memperbaiki kondisi lingkungan fisik dan lingkungan sosial secara proaktif serta konsisten.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.3.3",
+          "nama": "Kreativitas",
+          "skor": 74.28,
+          "label": "Baik",
+          "delta": 14.71,
+          "definisi_capaian": "Peserta didik telah mengimplementasikan dan menggerakkan aktivitas terkait kegiatan yang menghasilkan pemikiran, gagasan, serta karya yang baru dan berbeda secara rutin serta konsisten.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.3.4",
+          "nama": "Nalar Kritis",
+          "skor": 74.6,
+          "label": "Baik",
+          "delta": 6.06,
+          "definisi_capaian": "Peserta didik secara rutin dan konsisten telah menelusuri, menganalisis, dan mengevaluasi informasi, serta bertanggung jawab terhadap keputusan yang dibuat.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.3.5",
+          "nama": "Kebinekaan global",
+          "skor": 74.57,
+          "label": "Baik",
+          "delta": 3.37,
+          "definisi_capaian": "Peserta didik secara rutin dan konsisten menunjukkan ketertarikan terhadap keragaman di berbagai negara serta peduli terhadap isu-isu global.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "A.3.6",
+          "nama": "Kemandirian",
+          "skor": 75.02,
+          "label": "Baik",
+          "delta": 3.73,
+          "definisi_capaian": "Peserta didik secara rutin dan konsisten mampu mengelola pikiran, perasaan, dan tindakan untuk mencapai tujuan belajar.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        }
+      ]
+    },
+    {
+      "kode": "D.1",
+      "nama": "Kualitas pembelajaran",
+      "grup": "Kualitas Pembelajaran",
+      "icon": "school",
+      "skor": 76.82,
+      "label": "Baik",
+      "delta": 1.82,
+      "definisi_capaian": "Pembelajaran menunjukkan kualitas yang optimal ditunjukkan dengan suasana kelas yang kondusif, dukungan afektif dan aktivasi kognitif dari guru yang konstruktif.",
+      "peringkat_provinsi": "Peringkat atas (1-20%)",
+      "peringkat_nasional": "Peringkat atas (1-20%)",
+      "sumber_data": "Asesmen Nasional 2025",
+      "sub": [
+        {
+          "kode": "D.1.1",
+          "nama": "Manajemen kelas",
+          "skor": 77.99,
+          "label": "Baik",
+          "delta": 1.58,
+          "definisi_capaian": "Seluruh kelas suasananya kondusif untuk melangsungkan pembelajaran dan guru berupaya aktif untuk melibatkan peserta didik dalam pengelolaan kelas.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.1.2",
+          "nama": "Dukungan psikologis",
+          "skor": 78.48,
+          "label": "Baik",
+          "delta": 1.9,
+          "definisi_capaian": "Dukungan afektif berupa perhatian, kepedulian dan umpan balik untuk meningkatkan ekspektasi akademik secara konstruktif telah diberikan oleh guru.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.1.3",
+          "nama": "Metode pembelajaran",
+          "skor": 74.0,
+          "label": "Baik",
+          "delta": 2.0,
+          "definisi_capaian": "Aktivasi kognitif dalam proses pembelajaran berupa menciptakan iklim pembelajaran terbuka dengan memberikan instruksi, panduan dan aktivitas yang interaktif pada pembelajaran literasi dan numerasi yang dipraktekkan oleh guru bersifat konstruktif.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        }
+      ]
+    },
+    {
+      "kode": "D.4",
+      "nama": "Iklim keamanan satuan pendidikan",
+      "grup": "Kondisi Keamanan Sekolah",
+      "icon": "shield",
+      "skor": 84.89,
+      "label": "Baik",
+      "delta": 0.89,
+      "definisi_capaian": "Satuan pendidikan memiliki lingkungan satuan pendidikan yang aman, terlihat dari kesejahteraan psikologis yang baik dan rendahnya kasus perundungan, hukuman fisik, kekerasan seksual, dan penyalahgunaan narkoba. Satuan pendidikan dapat mempertahankan kualitas warga satuan pendidikan dalam mencegah dan menangani kasus untuk menciptakan iklim keamanan di lingkungan satuan pendidikan.",
+      "peringkat_provinsi": "Peringkat atas (1-20%)",
+      "peringkat_nasional": "Peringkat atas (1-20%)",
+      "sumber_data": "Asesmen Nasional 2025",
+      "sub": [
+        {
+          "kode": "D.4.1",
+          "nama": "Kesejahteraan psikologis (wellbeing) peserta didik",
+          "skor": 80.67,
+          "label": "Baik",
+          "delta": -4.84,
+          "definisi_capaian": "Peserta didik merasa aman, nyaman, dan sejahtera ketika berada di lingkungan satuan pendidikan.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.2",
+          "nama": "Kesejahteraan psikologis (wellbeing) guru",
+          "skor": 91.87,
+          "label": "Baik",
+          "delta": 9.87,
+          "definisi_capaian": "Guru merasa menjadi bagian tak terpisahkan dari satuan pendidikan sehingga mereka sudah sepenuhnya antusias dalam menjalani peran sebagai seorang pendidik.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.3",
+          "nama": "Pemahaman dan sikap terhadap perundungan",
+          "skor": 84.56,
+          "label": "Baik",
+          "delta": 9.56,
+          "definisi_capaian": "Kepala satuan pendidikan dan guru sudah yakin dengan pengetahuan dan pemahaman tentang penanganan perundungan, serta mungkin masih memerlukan dukungan untuk meningkatkan pengetahuan dan pemahaman.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.4",
+          "nama": "Pengalaman perundungan peserta didik",
+          "skor": 93.33,
+          "label": "Baik",
+          "delta": -6.67,
+          "definisi_capaian": "Tidak terjadi perundungan di satuan pendidikan. Meskipun tetap perlu ada pencegahan perundungan di satuan pendidikan.",
+          "peringkat_provinsi": "Peringkat menengah atas (21-40%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.5",
+          "nama": "Pemahaman dan sikap terhadap hukuman fisik",
+          "skor": 75.69,
+          "label": "Baik",
+          "delta": 7.69,
+          "definisi_capaian": "Satuan pendidikan aman dari kasus hukuman fisik. Kepala satuan pendidikan dan guru telah memiliki konsepsi yang tepat dan yakin dengan pengetahuan dan kemampuannya terkait hukuman fisik.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.6",
+          "nama": "Pengalaman hukuman fisik peserta didik",
+          "skor": 100.0,
+          "label": "Baik",
+          "delta": 0.0,
+          "definisi_capaian": "Peserta didik tidak pernah melihat/mengetahui kekerasan fisik yang terjadi di satuan pendidikan.",
+          "peringkat_provinsi": "Peringkat menengah atas (21-40%)",
+          "peringkat_nasional": "Peringkat menengah atas (21-40%)"
+        },
+        {
+          "kode": "D.4.7",
+          "nama": "Pemahaman dan sikap guru tentang kekerasan seksual",
+          "skor": 83.88,
+          "label": "Baik",
+          "delta": 11.88,
+          "definisi_capaian": "Satuan pendidikan aman dari kasus pelecehan seksual. Kepala satuan pendidikan dan guru sudah memahami dan meyakini konsep, definisi, bentuk, cara pencegahan dan kemampuan penanganan pelecehan seksual.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.8",
+          "nama": "Pengalaman kekerasan seksual peserta didik",
+          "skor": 81.08,
+          "label": "Baik",
+          "delta": -18.92,
+          "definisi_capaian": "Tidak ada pelecehan seksual di satuan pendidikan.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.4.9",
+          "nama": "Pemahaman dan sikap guru tentang rokok, minuman keras, dan narkoba",
+          "skor": 85.53,
+          "label": "Baik",
+          "delta": 8.53,
+          "definisi_capaian": "Satuan pendidikan aman dari kasus penyalahgunaan rokok, minuman keras, dan narkoba. Kepala satuan pendidikan dan guru memahami pengertian dan contoh penyalahgunaan rokok, minuman keras, dan narkoba.",
+          "peringkat_provinsi": "Peringkat menengah atas (21-40%)",
+          "peringkat_nasional": "Peringkat menengah atas (21-40%)"
+        },
+        {
+          "kode": "D.4.10",
+          "nama": "Pengalaman peserta didik terkait rokok, minuman keras, dan narkoba",
+          "skor": 96.67,
+          "label": "Baik",
+          "delta": -3.33,
+          "definisi_capaian": "Tidak ditemukan aktivitas yang berkaitan dengan rokok, minuman keras, dan narkoba di satuan pendidikan. Meskipun tetap perlu ada pencegahan dan penanganan aktivitas yang berkaitan rokok, minuman keras, dan narkoba di satuan pendidikan.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        }
+      ]
+    },
+    {
+      "kode": "D.8",
+      "nama": "Iklim Kebinekaan",
+      "grup": "Kondisi Kebinekaan Sekolah",
+      "icon": "world",
+      "skor": 83.3,
+      "label": "Baik",
+      "delta": -4.7,
+      "definisi_capaian": "Satuan pendidikan sudah mampu menghadirkan suasana proses pembelajaran yang menjunjung tinggi toleransi agama/kepercayaan dan budaya; mendapatkan pengalaman belajar yang berkualitas; mendukung kesetaraan agama/kepercayaan, dan budaya; serta memperkuat nasionalisme.",
+      "peringkat_provinsi": "Peringkat atas (1-20%)",
+      "peringkat_nasional": "Peringkat atas (1-20%)",
+      "sumber_data": "Asesmen Nasional 2025",
+      "sub": [
+        {
+          "kode": "D.8.1",
+          "nama": "Toleransi agama dan budaya",
+          "skor": 82.44,
+          "label": "Baik",
+          "delta": 1.44,
+          "definisi_capaian": "Satuan pendidikan mengakui, menghargai, menerima, mendukung dan merawat keragaman agama/kepercayaan dan budaya.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.8.2",
+          "nama": "Komitmen kebangsaan",
+          "skor": 82.37,
+          "label": "Baik",
+          "delta": -14.63,
+          "definisi_capaian": "Satuan pendidikan mendukung dan mengakomodir semua peserta didik untuk mendapatkan pengalaman belajar yang berkualitas.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        },
+        {
+          "kode": "D.8.3",
+          "nama": "Toleransi dan kesetaraan peserta didik",
+          "skor": 85.08,
+          "label": "Baik",
+          "delta": -1.26,
+          "definisi_capaian": "Peserta didik secara konsisten menunjukkan perilaku penghargaan atas keragaman agama.",
+          "peringkat_provinsi": "Peringkat atas (1-20%)",
+          "peringkat_nasional": "Peringkat atas (1-20%)"
+        }
+      ]
+    }
+  ]
+}
