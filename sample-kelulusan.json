@@ -1,0 +1,34 @@
+{
+  "students": [
+    {
+      "nis": "240001",
+      "nisn": "0087654321",
+      "name": "Ahmad Fauzi",
+      "gender": "L",
+      "status": "LULUS",
+      "graduation_number": "421.3/001/416-101.001/2026",
+      "graduation_date": "2026-05-05",
+      "note": ""
+    },
+    {
+      "nis": "240002",
+      "nisn": "0087654322",
+      "name": "Siti Nurhaliza",
+      "gender": "P",
+      "status": "LULUS",
+      "graduation_number": "",
+      "graduation_date": "",
+      "note": ""
+    },
+    {
+      "nis": "240003",
+      "nisn": "0087654323",
+      "name": "Budi Santoso",
+      "gender": "L",
+      "status": "TIDAK LULUS",
+      "graduation_number": "",
+      "graduation_date": "",
+      "note": "Belum menyelesaikan seluruh nilai mata pelajaran."
+    }
+  ]
+}
