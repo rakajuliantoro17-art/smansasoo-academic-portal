@@ -1,0 +1,474 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Prestasi Page Stylesheet
+Version : 1.0.0
+==========================================================
+Tampilan diadopsi dari halaman "Detail Prestasi Sekolah" di
+SIMT Puspresnas (simt.kemendikdasmen.go.id): hero gradient
+biru, kartu putih dengan shadow, kartu kategori dengan kotak
+ikon, dan tabel daftar siswa berprestasi.
+
+Data yang ditampilkan TIDAK ditarik live dari SIMT (lihat
+catatan di data/prestasi.json) -- halaman ini murni styling
+baru di atas data statis yang diupdate manual.
+==========================================================
+*/
+
+:root{
+
+    --prestasi-primary:#0F4C81;
+    --prestasi-primary-dark:#0A3A63;
+    --prestasi-accent:#1A81FF;
+    --prestasi-bg:#F3F5F8;
+    --prestasi-text:#1D2939;
+    --prestasi-text-light:#667085;
+    --prestasi-border:#E4E7EC;
+    --prestasi-radius:12px;
+
+}
+
+*{
+    box-sizing:border-box;
+}
+
+body.prestasi-page{
+
+    margin:0;
+    font-family:'Plus Jakarta Sans','Poppins',sans-serif;
+    background:var(--prestasi-bg);
+    color:var(--prestasi-text);
+
+}
+
+.prestasi-topbar{
+
+    background:linear-gradient(135deg,var(--prestasi-primary),var(--prestasi-primary-dark));
+
+    padding:1rem clamp(1rem,4vw,2.5rem);
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:1rem;
+
+    position:sticky;
+    top:0;
+    z-index:10;
+
+}
+
+.prestasi-topbar-brand{
+
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    color:#fff;
+
+}
+
+.prestasi-topbar-brand img{
+
+    width:32px;
+    height:32px;
+    object-fit:contain;
+
+}
+
+.prestasi-topbar-brand strong{
+
+    font-size:.95rem;
+
+}
+
+.prestasi-topbar-back{
+
+    color:rgba(255,255,255,.85);
+    text-decoration:none;
+    font-size:.85rem;
+    white-space:nowrap;
+
+}
+
+.prestasi-topbar-back:hover{
+
+    color:#fff;
+
+}
+
+.prestasi-hero{
+
+    background:linear-gradient(135deg,var(--prestasi-primary),var(--prestasi-primary-dark));
+
+    color:#fff;
+
+    padding:2.5rem clamp(1rem,4vw,2.5rem) 5rem;
+
+    text-align:center;
+
+}
+
+.prestasi-hero h1{
+
+    font-size:clamp(1.4rem,3vw,2rem);
+    margin:0 0 .5rem;
+
+}
+
+.prestasi-hero p{
+
+    margin:0;
+    color:rgba(255,255,255,.85);
+    font-size:.95rem;
+
+}
+
+/* ==========================================
+   SHELL
+========================================== */
+
+.prestasi-shell{
+
+    max-width:1100px;
+    margin:-3.5rem auto 0;
+
+    padding:0 clamp(1rem,4vw,2rem) 3rem;
+
+}
+
+.prestasi-card{
+
+    background:#fff;
+
+    border-radius:var(--prestasi-radius);
+
+    box-shadow:0 10px 30px rgba(16,24,40,.08);
+
+    padding:clamp(1.25rem,3vw,2rem);
+
+    margin-bottom:1.5rem;
+
+}
+
+/* Kartu identitas sekolah */
+
+.prestasi-school-card{
+
+    display:flex;
+    align-items:center;
+    gap:1.5rem;
+    flex-wrap:wrap;
+
+}
+
+.prestasi-school-card img{
+
+    width:72px;
+    height:72px;
+    object-fit:contain;
+    border-radius:10px;
+    background:var(--prestasi-bg);
+    padding:.5rem;
+
+}
+
+.prestasi-school-card h2{
+
+    margin:0 0 .35rem;
+    font-size:1.3rem;
+
+}
+
+.prestasi-school-card p{
+
+    margin:0;
+    color:var(--prestasi-text-light);
+    font-size:.9rem;
+    max-width:520px;
+
+}
+
+/* Kartu ranking nasional (highlight, beda dari SIMT asli tapi
+   selaras temanya -- ini yang paling ditunggu pengunjung) */
+
+.prestasi-rank-card{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:1rem;
+
+    background:linear-gradient(135deg,var(--prestasi-accent),var(--prestasi-primary));
+
+    color:#fff;
+
+}
+
+.prestasi-rank-card .rank-label{
+
+    font-size:.8rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    opacity:.85;
+    margin:0 0 .35rem;
+
+}
+
+.prestasi-rank-card .rank-value{
+
+    font-size:clamp(2rem,5vw,2.75rem);
+    font-weight:700;
+    margin:0;
+    line-height:1;
+
+}
+
+.prestasi-rank-card .rank-value small{
+
+    font-size:1rem;
+    font-weight:500;
+    opacity:.85;
+
+}
+
+.prestasi-rank-card .rank-note{
+
+    max-width:320px;
+    font-size:.82rem;
+    opacity:.9;
+    margin:.5rem 0 0;
+
+}
+
+.prestasi-rank-card a{
+
+    display:inline-flex;
+    align-items:center;
+    gap:.4rem;
+
+    background:#fff;
+    color:var(--prestasi-primary);
+
+    padding:.65rem 1.1rem;
+
+    border-radius:999px;
+
+    font-size:.85rem;
+    font-weight:600;
+
+    text-decoration:none;
+    white-space:nowrap;
+
+}
+
+.prestasi-rank-card a:hover{
+
+    background:#eef2f7;
+
+}
+
+/* Grid kategori (mengadopsi pola 4 kolom+divider di SIMT,
+   di sini fleksibel sesuai jumlah kategori) */
+
+.prestasi-section-title{
+
+    font-size:1rem;
+    font-weight:600;
+    margin:0 0 .25rem;
+
+}
+
+.prestasi-section-sub{
+
+    font-size:.85rem;
+    color:var(--prestasi-text-light);
+    margin:0 0 1.25rem;
+
+}
+
+.prestasi-kategori-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+    gap:1rem;
+
+}
+
+.prestasi-kategori-item{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+
+    padding:1rem;
+
+    border:1px solid var(--prestasi-border);
+    border-radius:10px;
+
+}
+
+.prestasi-kategori-item .k-count{
+
+    font-size:1.6rem;
+    font-weight:700;
+    line-height:1;
+
+}
+
+.prestasi-kategori-item .k-name{
+
+    display:block;
+    font-size:.82rem;
+    color:var(--prestasi-text-light);
+    margin-top:.25rem;
+
+}
+
+.prestasi-kategori-icon{
+
+    width:42px;
+    height:42px;
+    flex-shrink:0;
+
+    border-radius:10px;
+
+    background:var(--prestasi-bg);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.3rem;
+
+}
+
+/* Tabel per tahun & siswa berprestasi */
+
+.prestasi-table-wrap{
+
+    overflow-x:auto;
+
+}
+
+.prestasi-table{
+
+    width:100%;
+    border-collapse:collapse;
+    font-size:.88rem;
+
+}
+
+.prestasi-table th{
+
+    text-align:left;
+    font-weight:600;
+    color:var(--prestasi-text-light);
+    text-transform:uppercase;
+    font-size:.72rem;
+    letter-spacing:.03em;
+
+    padding:.6rem .75rem;
+
+    border-bottom:1px solid var(--prestasi-border);
+
+    white-space:nowrap;
+
+}
+
+.prestasi-table td{
+
+    padding:.7rem .75rem;
+
+    border-bottom:1px solid var(--prestasi-border);
+
+    white-space:nowrap;
+
+}
+
+.prestasi-table tbody tr:nth-child(even){
+
+    background:#FAFBFC;
+
+}
+
+.prestasi-table .col-nama{
+
+    white-space:normal;
+    font-weight:500;
+
+}
+
+.prestasi-footnote{
+
+    text-align:center;
+    margin-top:1rem;
+
+}
+
+.prestasi-footnote a{
+
+    color:var(--prestasi-accent);
+    font-weight:600;
+    text-decoration:none;
+    font-size:.9rem;
+
+}
+
+.prestasi-footnote a:hover{
+
+    text-decoration:underline;
+
+}
+
+.prestasi-updated-note{
+
+    text-align:center;
+    font-size:.78rem;
+    color:var(--prestasi-text-light);
+    margin-top:.5rem;
+
+}
+
+.prestasi-loading,
+.prestasi-error{
+
+    text-align:center;
+    padding:2rem;
+    color:var(--prestasi-text-light);
+
+}
+
+.prestasi-footer{
+
+    text-align:center;
+    font-size:.78rem;
+    color:var(--prestasi-text-light);
+    padding:1.5rem 1rem 2.5rem;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media screen and (min-width:768px){
+
+    .prestasi-shell{
+
+        margin-top:-4rem;
+
+    }
+
+}
+
+@media screen and (min-width:1280px){
+
+    .prestasi-shell{
+
+        max-width:1200px;
+
+    }
+
+}
