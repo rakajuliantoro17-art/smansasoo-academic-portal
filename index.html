@@ -13,8 +13,15 @@
 
     <meta name="theme-color" content="#0F4C81">
 
+    <!-- Open Graph (biar rapi kalau link dibagikan di WA/medsos) -->
+    <meta property="og:title" content="SMAN 1 Sooko Mojokerto | Pengumuman Kenaikan Kelas">
+    <meta property="og:description" content="Cek hasil kenaikan kelas dan pembagian kelas baru secara online.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/logo/logo.png">
+
     <!-- Favicon -->
     <link rel="icon" href="assets/logo/favicon.ico">
+    <link rel="apple-touch-icon" href="assets/icons/icon.png">
 
     <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,6 +40,11 @@
 
     <link rel="stylesheet" href="css/glass.css">
 
+    <!-- Navbar situs (menu ke Nilai/Rekap/Kelulusan/Prestasi),
+         file terpisah supaya tidak membengkakkan style.css yang
+         juga dipakai halaman lain -->
+    <link rel="stylesheet" href="css/navbar.css">
+
 </head>
 
 <body>
@@ -40,6 +52,37 @@
     <!-- Lapisan background foto sekolah (blur + gradient),
          lihat css/glass.css -->
     <div class="bg-layer" aria-hidden="true"></div>
+
+    <!-- ================= NAVBAR SITUS ================= -->
+
+    <nav class="site-navbar" aria-label="Menu situs">
+
+        <a href="index.html" class="site-navbar-brand">
+            <img src="assets/logo/logo.png" alt="Logo SMAN 1 Sooko">
+            <span>SMAN 1 Sooko Mojokerto</span>
+        </a>
+
+        <div class="site-navbar-links">
+            <a href="index.html" class="active" aria-current="page">Kenaikan Kelas</a>
+            <a href="pages/nilai.html">Nilai</a>
+            <a href="pages/rekap.html">Rekap</a>
+            <a href="pages/kelulusan.html">Kelulusan</a>
+            <a href="pages/prestasi.html">Prestasi</a>
+        </div>
+
+        <button type="button" class="site-navbar-toggle" id="siteNavToggle" aria-label="Buka menu" aria-expanded="false">
+            ☰
+        </button>
+
+    </nav>
+
+    <div class="site-navbar-mobile" id="siteNavMobile">
+        <a href="index.html" class="active" aria-current="page">Kenaikan Kelas</a>
+        <a href="pages/nilai.html">Nilai</a>
+        <a href="pages/rekap.html">Rekap</a>
+        <a href="pages/kelulusan.html">Kelulusan</a>
+        <a href="pages/prestasi.html">Prestasi</a>
+    </div>
 
     <!-- ================= HEADER ================= -->
 
@@ -59,14 +102,6 @@
             <p>
                 Tahun Pelajaran
                 <strong>2026 / 2027</strong>
-            </p>
-
-            <p class="mt-1">
-                <a href="pages/kelulusan.html" class="link-primary">Cek Pengumuman Kelulusan &rarr;</a>
-            </p>
-
-            <p class="mt-1">
-                <a href="pages/prestasi.html" class="link-primary">Prestasi Terkurasi Puspresnas &rarr;</a>
             </p>
 
         </div>
@@ -208,6 +243,28 @@
     <!-- APP (bootstrap) -->
 
     <script src="js/app.js"></script>
+
+    <!-- NAVBAR TOGGLE (mobile) -->
+
+    <script>
+        (function () {
+
+            var toggle = document.getElementById('siteNavToggle');
+
+            if (!toggle) return;
+
+            toggle.addEventListener('click', function () {
+
+                var isOpen = document.body.classList.toggle('site-nav-open');
+
+                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+
+                toggle.textContent = isOpen ? '✕' : '☰';
+
+            });
+
+        })();
+    </script>
 
 </body>
 
