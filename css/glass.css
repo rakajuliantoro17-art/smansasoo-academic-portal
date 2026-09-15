@@ -60,19 +60,9 @@ body{
 
     position:relative;
 
-    /* CATATAN PENTING: overflow-x:hidden SENGAJA TIDAK
-       ditaruh di body. Kalau body diberi `overflow` apa pun,
-       browser menjadikannya scroll-container tersendiri, dan
-       itu merusak position:sticky pada elemen anak (navbar
-       shell jadi ikut scroll, bukan nge-lock di atas). Baris
-       overflow-x:hidden yang tadinya di sini SUDAH DIPINDAH
-       ke selector html di css/style.css -- efeknya sama
-       (background .bg-layer yang di-zoom tetap ke-clip),
-       tapi TIDAK merusak sticky karena <html> tetap dianggap
-       viewport oleh browser, bukan scroll-container terpisah.
-
-    overflow-x:hidden;
-    */
+    /* overflow-x:hidden DIPINDAH ke <html> di
+       css/kelulusan/style.css -- overflow di body merusak
+       position:sticky pada navbar shell. */
 
     /* Background asli dari style.css sengaja ditransparankan
        supaya .bg-layer di bawahnya tidak tertutup "kanvas"
