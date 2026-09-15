@@ -2,7 +2,7 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell (Navbar + Sidebar + Footer)
-Version : 2.0.0
+Version : 2.1.0
 ==========================================================
 Satu-satunya tempat markup navbar & sidebar situs
 didefinisikan. Setiap halaman (sekarang maupun nanti) cukup
@@ -46,6 +46,14 @@ CHANGELOG (v2.0.0):
   ada request tambahan, tidak ada flash-of-unstyled-content,
   dan tetap jalan walau dibuka dari file:// saat development
   lokal.
+
+CHANGELOG (v2.1.0):
+- Sidebar bisa di-minimize (kolom ikon saja) lewat tombol
+  chevron di sidebar ATAU shortcut keyboard Ctrl+B / Cmd+B.
+  Preferensi disimpan di localStorage, konsisten di semua
+  halaman. Lihat wireSidebarCollapse().
+- Tiap link sidebar sekarang punya title="" (tooltip native)
+  supaya tetap jelas maksudnya saat collapsed jadi ikon saja.
 
 Halaman menandai dirinya lewat atribut pada <body>:
   data-page="home"       -> index.html
@@ -147,13 +155,26 @@ window.Shell = (() => {
 
         return `
 
-        <p class="app-sidebar-title">Menu Situs</p>
+        <div class="app-sidebar-head">
+
+            <p class="app-sidebar-title">Menu Situs</p>
+
+            <button
+                type="button"
+                class="app-sidebar-collapse-btn"
+                id="appSidebarCollapseBtn"
+                aria-label="Perkecil sidebar (Ctrl+B)"
+                title="Perkecil / perbesar sidebar (Ctrl+B)">
+                &#10094;
+            </button>
+
+        </div>
 
         <nav>
 
             ${NAV_LINKS.map((link) => `
-                <a href="${link.href}" class="${link.key === activeKey ? "active" : ""}">
-                    <span class="icon">${link.icon}</span> ${link.label}
+                <a href="${link.href}" class="${link.key === activeKey ? "active" : ""}" title="${link.label}">
+                    <span class="icon">${link.icon}</span> <span class="label">${link.label}</span>
                 </a>
             `).join("")}
 
@@ -166,8 +187,8 @@ window.Shell = (() => {
         <nav id="sectionNav">
 
             ${pageSections.map((s) => `
-                <a href="#${s.id}" data-section="${s.id}">
-                    <span class="icon">${s.icon || "&bull;"}</span> ${s.label}
+                <a href="#${s.id}" data-section="${s.id}" title="${s.label}">
+                    <span class="icon">${s.icon || "&bull;"}</span> <span class="label">${s.label}</span>
                 </a>
             `).join("")}
 
@@ -356,6 +377,78 @@ window.Shell = (() => {
     }
 
     /* ==========================================
+       SIDEBAR MINIMIZE (desktop) -- tombol chevron
+       + shortcut keyboard Ctrl+B (Cmd+B di Mac).
+       Preferensi disimpan di localStorage supaya
+       konsisten dipindah-pindah halaman.
+    ========================================== */
+
+    const COLLAPSE_STORAGE_KEY = "smansasoo-sidebar-collapsed";
+
+    function isCollapsed() {
+
+        try {
+            return localStorage.getItem(COLLAPSE_STORAGE_KEY) === "1";
+        } catch (e) {
+            return false;
+        }
+
+    }
+
+    function setCollapsed(collapsed) {
+
+        document.body.classList.toggle("sidebar-collapsed", collapsed);
+
+        const btn = document.getElementById("appSidebarCollapseBtn");
+
+        if (btn) {
+            btn.setAttribute("aria-label", collapsed ? "Perbesar sidebar (Ctrl+B)" : "Perkecil sidebar (Ctrl+B)");
+        }
+
+        try {
+            localStorage.setItem(COLLAPSE_STORAGE_KEY, collapsed ? "1" : "0");
+        } catch (e) {
+            // localStorage tidak tersedia -- abaikan, cukup state di memori.
+        }
+
+    }
+
+    function wireSidebarCollapse() {
+
+        // Terapkan preferensi tersimpan begitu shell dimuat.
+        setCollapsed(isCollapsed());
+
+        const btn = document.getElementById("appSidebarCollapseBtn");
+
+        if (btn) {
+
+            btn.addEventListener("click", () => {
+
+                setCollapsed(!document.body.classList.contains("sidebar-collapsed"));
+
+            });
+
+        }
+
+        // Ctrl+B / Cmd+B -- hanya efektif di desktop (sidebar
+        // dock tetap), CSS-nya sendiri sudah di-scope ke situ,
+        // jadi aman dipasang global tanpa cek lebar layar di JS.
+        document.addEventListener("keydown", (event) => {
+
+            const isShortcut = (event.ctrlKey || event.metaKey) && !event.shiftKey && !event.altKey
+                && event.key.toLowerCase() === "b";
+
+            if (!isShortcut) return;
+
+            event.preventDefault();
+
+            setCollapsed(!document.body.classList.contains("sidebar-collapsed"));
+
+        });
+
+    }
+
+    /* ==========================================
        INIT
     ========================================== */
 
@@ -372,6 +465,7 @@ window.Shell = (() => {
         renderFooter();
 
         wireSidebarToggle(overlay, sidebar);
+        wireSidebarCollapse();
         wireScrollSpy();
 
     }
