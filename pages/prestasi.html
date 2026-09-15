@@ -8,6 +8,21 @@
 <meta name="description" content="Rekap prestasi peserta didik SMAN 1 Sooko Mojokerto yang terkurasi Pusat Prestasi Nasional (Puspresnas), berdasarkan data SIMT Kemendikdasmen.">
 
 <meta name="theme-color" content="#0F4C81">
+
+<!-- ANTI-FLASH THEME INIT -->
+<script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('smansasoo-theme');
+            var theme = saved || ((window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+</script>
+
 <link rel="icon" href="../assets/logo/favicon.ico">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +30,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/theme.css">
 <link rel="stylesheet" href="../css/shell.css">
+<link rel="stylesheet" href="../css/settings-drawer.css">
 <link rel="stylesheet" href="../css/prestasi.css">
 
 </head>
@@ -73,6 +90,10 @@
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/shell.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
 
     <script src="../js/prestasi.js"></script>
 
