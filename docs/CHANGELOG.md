@@ -8,6 +8,31 @@ Format changelog mengikuti prinsip **Keep a Changelog** dan menggunakan **Semant
 
 ## [Unreleased]
 
+### Changed
+
+- **Navbar & sidebar disatukan.** Sebelumnya ada 4 pola navbar berbeda
+  (dropdown lama `js/shell.js`, navbar custom `index.html` via
+  `css/navbar.css`, sidebar penuh khusus `pages/prestasi.html`, dan
+  `pages/rekap.html` yang tidak punya navbar situs sama sekali).
+  Sekarang semua halaman (index, nilai, rekap, kelulusan, prestasi,
+  rapor, about, privacy) memakai satu sistem navbar+sidebar bersama
+  di `css/shell.css` + `js/shell.js` (v2.0.0), digeneralisasi dari
+  pola sidebar yang sebelumnya cuma ada di `prestasi.html`.
+- `js/shell.js` sekarang otomatis membungkus isi halaman ke dalam
+  layout sidebar+konten (`.app-layout` / `.app-content`) saat load,
+  jadi halaman lama tidak perlu ditulis ulang markup-nya.
+- Halaman dengan kebutuhan sidebar tambahan (jump-nav "Di Halaman Ini",
+  link eksternal) bisa memakainya lewat `window.SHELL_PAGE_SECTIONS`
+  dan `window.SHELL_EXTERNAL_LINK`, didokumentasikan di
+  `docs/UI-SHELL.md`.
+- `css/navbar.css` dihapus (fungsinya digantikan `css/shell.css`).
+
+### Fixed
+
+- Path favicon/logo yang salah (`assets/favicon.ico`,
+  `assets/logo.png`) di beberapa halaman, seharusnya
+  `assets/logo/favicon.ico` dan `assets/logo/logo.png`.
+
 ### Planned
 
 - Dashboard Administrator
@@ -16,7 +41,7 @@ Format changelog mengikuti prinsip **Keep a Changelog** dan menggunakan **Semant
 - Statistik Pengunjung
 - QR Verification
 - Export PDF
-- Dark Mode
+- Dark Mode di seluruh halaman (saat ini baru `pages/rekap.html`)
 
 ---
 

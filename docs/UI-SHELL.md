@@ -8,22 +8,27 @@ visual yang sudah ada.
 
 ## 1. Apa itu Shell di project ini
 
-Shell = nav bar + footer yang dipakai **semua halaman**, dirender dari
-satu sumber: `js/shell.js` + `css/shell.css`.
+Shell = navbar atas + sidebar + footer yang dipakai **semua halaman**,
+dirender dari satu sumber: `js/shell.js` + `css/shell.css`.
 
-Sebelum ini, setiap file `.html` menulis ulang markup header/footernya
-sendiri (dan sempat tidak konsisten — contoh: beberapa halaman memakai
-path logo yang salah `assets/logo.png` padahal file aslinya ada di
-`assets/logo/logo.png`). Sekarang cukup satu tempat.
+Sebelumnya situs ini punya 4 pola navbar berbeda yang tumbuh
+sendiri-sendiri per halaman (dropdown sederhana, navbar custom
+`index.html`, sidebar penuh khusus `pages/prestasi.html`, dan
+`pages/rekap.html` yang malah tidak punya navbar situs sama sekali).
+Sekarang semuanya satu sistem: navbar sticky di atas + sidebar (drawer
+di mobile lewat tombol hamburger, kolom tetap di desktop ≥1024px).
 
-Cara pakai di halaman manapun:
+Cara pakai di halaman manapun — **hanya butuh SATU elemen kosong**,
+sisanya (termasuk isi halaman yang sudah ada) otomatis dibungkus oleh
+`js/shell.js`:
 
 ```html
 <body data-page="nilai">
 
     <div id="shellNav"></div>
 
-    <!-- ...konten halaman... -->
+    <!-- ...seluruh isi halaman seperti biasa, TIDAK perlu -->
+    <!-- dibungkus <div class="app-content"> secara manual... -->
 
     <div id="shellFooter"></div>
 
@@ -34,8 +39,33 @@ Cara pakai di halaman manapun:
 </body>
 ```
 
-`js/shell.js` otomatis mengisi kedua `<div>` itu saat halaman dimuat, dan
-menyorot menu yang aktif berdasarkan `data-page`.
+Saat halaman dimuat, `js/shell.js` akan:
+1. Mengisi `#shellNav` dengan navbar (logo, menu, tombol hamburger).
+2. Memindahkan SEMUA elemen `<body>` lain (termasuk `#shellFooter`) ke
+   dalam `<div class="app-content">`, lalu menaruhnya di sebelah
+   sidebar — jadi halaman lama tidak perlu ditulis ulang markup-nya.
+3. Mengisi `#shellFooter` dan menyorot menu aktif berdasarkan
+   `data-page`.
+
+**Sidebar per-halaman tambahan (opsional).** Kalau sebuah halaman perlu
+daftar lompat "Di Halaman Ini" (seperti `pages/prestasi.html`) atau link
+eksternal di sidebar, definisikan sebelum tag `<script src="../js/shell.js">`:
+
+```html
+<script>
+    window.SHELL_PAGE_SECTIONS = [
+        { id: "sekolah", label: "Ringkasan Sekolah", icon: "🏫" },
+        { id: "peringkat", label: "Peringkat Nasional", icon: "🥇" }
+    ];
+    window.SHELL_EXTERNAL_LINK = {
+        href: "https://contoh.go.id",
+        label: "Buka Data Resmi"
+    };
+</script>
+```
+
+`SHELL_PAGE_SECTIONS` juga otomatis dapat scroll-spy (menyorot section
+yang sedang dilihat) asal tiap section punya `id` yang cocok.
 
 **Kenapa render lewat JS (bukan `fetch()` partial `.html`)?** Supaya tidak
 ada request tambahan, tidak ada flash-of-unstyled-content, dan tetap
@@ -46,19 +76,22 @@ konsisten dengan pola yang sudah dipakai file lain di project ini
 
 ## 2. Menambah menu navigasi baru
 
-Buka `js/shell.js`, tambahkan satu baris ke `NAV_LINKS`:
+Buka `js/shell.js`, tambahkan satu baris ke `NAV_LINKS` (perlu `icon`
+karena dipakai juga di sidebar):
 
 ```js
 const NAV_LINKS = [
-    { key: "home", label: "Beranda", href: "/index.html" },
-    { key: "nilai", label: "Cek Nilai", href: "/pages/nilai.html" },
-    { key: "jadwal", label: "Jadwal", href: "/pages/jadwal.html" }, // <- baru
+    { key: "home", label: "Beranda", href: "/index.html", icon: "🏠" },
+    { key: "nilai", label: "Nilai", href: "/pages/nilai.html", icon: "📝" },
+    { key: "jadwal", label: "Jadwal", href: "/pages/jadwal.html", icon: "🗓️" }, // <- baru
     ...
 ];
 ```
 
-Menu ini otomatis muncul di nav **dan** footer di semua halaman — tidak
-perlu edit file `.html` satu per satu.
+Menu ini otomatis muncul di navbar, sidebar, **dan** footer di semua
+halaman — tidak perlu edit file `.html` satu per satu. Kalau menu tidak
+perlu tampil menonjol di navbar utama (mis. halaman "Tentang"/"Privasi"),
+tambahkan ke `FOOTER_EXTRA_LINKS` saja — itu hanya muncul di footer.
 
 ---
 
