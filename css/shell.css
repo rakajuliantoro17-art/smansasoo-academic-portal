@@ -1,259 +1,417 @@
 /*
 ==========================================================
 SMANSASOO Academic Portal
-Shell Stylesheet (Nav + Footer)
-Version : 1.0.0
+Shell Stylesheet (Navbar + Sidebar + Footer)
+Version : 2.0.0
 ==========================================================
-Dipakai oleh markup yang dirender js/shell.js. Memakai
-token yang sama dari css/variables.css supaya nav & footer
-otomatis konsisten dengan halaman manapun yang memuatnya,
-sekarang atau nanti.
+CHANGELOG (v2.0.0):
+- Diganti total dari versi dropdown sebelumnya. Sekarang
+  memakai pola navbar+sidebar yang sebelumnya cuma ada di
+  pages/prestasi.html (css/prestasi.css), digeneralisasi ke
+  sini supaya SEMUA halaman pakai satu sistem yang sama:
+  navbar atas sticky + sidebar (drawer di mobile, kolom tetap
+  di desktop >=1024px).
+- Dulu ada 4 pola navbar berbeda di situs ini (dropdown di
+  shell lama, navbar custom index.html, sidebar prestasi.html,
+  topbar lokal rekap.html) — semuanya sekarang memakai file
+  ini, dirender oleh js/shell.js, supaya konsisten.
+- Warna dipetakan ke token bersama di variables.css
+  (var(--primary), var(--surface), dst) — bukan variabel
+  --prestasi-* terpisah seperti sebelumnya — supaya otomatis
+  ikut tema/mode gelap jika halaman memuat css/theme.css.
+
+Layout:
+
+  ┌─────────────────────────────────────────────┐
+  │              app-navbar (sticky)             │
+  ├───────────────┬───────────────────────────────┤
+  │  app-sidebar   │        app-content            │
+  │  (kolom tetap  │  (seluruh isi asli halaman,   │
+  │   di desktop)  │   dipindah otomatis oleh JS)  │
+  └───────────────┴───────────────────────────────┘
+
+Di mobile, sidebar jadi drawer yang dibuka lewat tombol
+hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 ==========================================================
 */
 
+:root{
+
+    --shell-navbar-h:64px;
+    --shell-sidebar-w:250px;
+
+}
+
 /* ==========================================
-   NAV BAR
+   NAVBAR (atas, sticky)
 ========================================== */
 
-.shell-nav{
-    background:var(--surface);
-    border-bottom:1px solid var(--border-light);
+.app-navbar{
+
     position:sticky;
     top:0;
     z-index:var(--z-sticky);
-}
 
-.shell-nav-inner{
-    max-width:var(--container-width);
-    margin:0 auto;
-    padding:.75rem var(--space-lg);
+    height:var(--shell-navbar-h);
+
     display:flex;
     align-items:center;
     justify-content:space-between;
-    gap:var(--space-md);
+    gap:1rem;
+
+    padding:0 clamp(1rem,3vw,2rem);
+
+    background:linear-gradient(135deg,var(--primary),var(--primary-dark));
+
+    color:var(--text-white);
+
 }
 
-.shell-brand{
+.app-navbar-left{
+
     display:flex;
     align-items:center;
-    gap:var(--space-sm);
-    text-decoration:none;
-    color:var(--primary);
-    font-weight:var(--weight-bold);
-    font-size:var(--font-sm);
+    gap:.75rem;
+
+    min-width:0;
+
 }
 
-.shell-brand-logo{
-    width:32px;
-    height:32px;
-    object-fit:contain;
-}
+.app-hamburger{
 
-.shell-nav-links{
-    display:flex;
-    align-items:center;
-    gap:var(--space-lg);
-}
-
-.shell-nav-link{
-    text-decoration:none;
-    color:var(--text-light);
-    font-weight:var(--weight-semibold);
-    font-size:var(--font-sm);
-    padding:.4rem .2rem;
-    border-bottom:2px solid transparent;
-    transition:var(--transition-fast);
-}
-
-.shell-nav-link:hover{
-    color:var(--primary);
-}
-
-.shell-nav-link.active{
-    color:var(--primary);
-    border-bottom-color:var(--primary);
-}
-
-.shell-nav-toggle{
     display:none;
-    flex-direction:column;
-    gap:4px;
-    background:none;
+
+    width:36px;
+    height:36px;
+
+    align-items:center;
+    justify-content:center;
+
+    background:rgba(255,255,255,.12);
     border:none;
-    padding:.4rem;
+    border-radius:var(--radius-sm);
+
+    color:var(--text-white);
+    font-size:1.1rem;
+
     cursor:pointer;
+
+    flex-shrink:0;
+
 }
 
-.shell-nav-toggle span{
-    width:22px;
-    height:2px;
-    background:var(--text);
-    border-radius:2px;
+.app-navbar-brand{
+
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+
+    text-decoration:none;
+    color:var(--text-white);
+
+    min-width:0;
+
+}
+
+.app-navbar-brand img{
+
+    width:30px;
+    height:30px;
+    object-fit:contain;
+    flex-shrink:0;
+
+}
+
+.app-navbar-brand strong{
+
+    font-size:var(--font-sm);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+
+}
+
+.app-navbar-links{
+
+    display:flex;
+    align-items:center;
+    gap:1.5rem;
+
+}
+
+.app-navbar-links a{
+
+    color:rgba(255,255,255,.8);
+    text-decoration:none;
+    font-size:var(--font-sm);
+    font-weight:var(--weight-medium);
+    white-space:nowrap;
+
+}
+
+.app-navbar-links a:hover,
+.app-navbar-links a.active{
+
+    color:var(--text-white);
+
+}
+
+.app-navbar-links a.active{
+
+    font-weight:var(--weight-bold);
+
+    border-bottom:2px solid var(--text-white);
+    padding-bottom:4px;
+
 }
 
 /* ==========================================
-   FOOTER
+   LAYOUT: SIDEBAR + KONTEN
 ========================================== */
 
-.shell-footer{
-    margin-top:var(--space-2xl);
-    padding:var(--space-xl) 0;
-    text-align:center;
-    color:var(--text-light);
-    font-size:var(--font-sm);
-    border-top:1px solid var(--border-light);
-}
+.app-layout{
 
-.shell-footer-links{
     display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:var(--space-md);
-    margin-bottom:var(--space-sm);
+    align-items:flex-start;
+
+    max-width:1300px;
+    margin:0 auto;
+
 }
 
-.shell-footer-links a{
-    color:var(--text-light);
-    text-decoration:none;
-    font-weight:var(--weight-semibold);
+.app-sidebar{
+
+    width:var(--shell-sidebar-w);
+    flex-shrink:0;
+
+    position:sticky;
+    top:var(--shell-navbar-h);
+
+    height:calc(100vh - var(--shell-navbar-h));
+    overflow-y:auto;
+
+    padding:var(--space-lg) var(--space-md);
+
+    background:var(--surface);
+    border-right:1px solid var(--border-light);
+
+    display:none;
+
+}
+
+.app-sidebar-title{
+
     font-size:var(--font-xs);
     text-transform:uppercase;
-    letter-spacing:.04em;
+    letter-spacing:.05em;
+    color:var(--text-light);
+    font-weight:var(--weight-bold);
+
+    margin:0 0 .75rem .5rem;
+
 }
 
-.shell-footer-links a:hover{
+.app-sidebar nav{
+
+    display:flex;
+    flex-direction:column;
+    gap:.15rem;
+
+    margin-bottom:var(--space-lg);
+
+}
+
+.app-sidebar nav a{
+
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+
+    padding:.6rem .6rem;
+
+    border-radius:var(--radius-sm);
+
+    color:var(--text);
+    text-decoration:none;
+    font-size:var(--font-sm);
+
+}
+
+.app-sidebar nav a .icon{
+
+    width:20px;
+    text-align:center;
+    flex-shrink:0;
+
+}
+
+.app-sidebar nav a:hover{
+
+    background:var(--surface-alt);
+
+}
+
+.app-sidebar nav a.active{
+
+    background:color-mix(in srgb, var(--primary) 12%, transparent);
     color:var(--primary);
+    font-weight:var(--weight-semibold);
+
 }
 
-.shell-footer-inner small{
+.app-sidebar-external{
+
+    margin-top:auto;
+    padding-top:var(--space-md);
+    border-top:1px solid var(--border-light);
+
+}
+
+.app-sidebar-external a{
+
     display:block;
-    margin-top:var(--space-xs);
-    color:var(--text-muted);
+
+    font-size:var(--font-xs);
+    color:var(--info);
+    text-decoration:none;
+    padding:.5rem .6rem;
+
+}
+
+.app-sidebar-external a:hover{
+
+    text-decoration:underline;
+
+}
+
+.app-content{
+
+    flex:1;
+    min-width:0;
+
+}
+
+/* ==========================================
+   OVERLAY (drawer sidebar di mobile)
+========================================== */
+
+.app-sidebar-overlay{
+
+    display:none;
+
+    position:fixed;
+    inset:0;
+
+    background:rgba(16,24,40,.45);
+
+    z-index:calc(var(--z-overlay) - 1);
+
+}
+
+body.sidebar-open .app-sidebar-overlay{
+
+    display:block;
+
+}
+
+body.sidebar-open .app-sidebar{
+
+    display:flex;
+    flex-direction:column;
+
+    position:fixed;
+    top:0;
+    left:0;
+    bottom:0;
+
+    height:100vh;
+
+    z-index:var(--z-overlay);
+
+    width:80vw;
+    max-width:300px;
+
+    box-shadow:var(--shadow-lg);
+
 }
 
 /* ==========================================
    RESPONSIVE
 ========================================== */
 
-@media (max-width: 640px){
+@media screen and (max-width:1023px){
 
-    .shell-nav-toggle{
-        display:flex;
-    }
+    .app-navbar-links{
 
-    .shell-nav-links{
-        position:absolute;
-        top:100%;
-        left:0;
-        right:0;
-        background:var(--surface);
-        flex-direction:column;
-        align-items:flex-start;
-        gap:0;
-        padding:var(--space-sm) var(--space-lg);
-        border-bottom:1px solid var(--border-light);
-        box-shadow:var(--shadow-sm);
         display:none;
+
     }
 
-    .shell-nav-links.open{
+    .app-hamburger{
+
         display:flex;
+
     }
 
-    .shell-nav-link{
-        width:100%;
-        padding:.75rem 0;
-        border-bottom:1px solid var(--border-light);
-    }
+}
 
-    .shell-nav-inner{
-        position:relative;
+@media screen and (min-width:1024px){
+
+    .app-sidebar{
+
+        display:flex;
+        flex-direction:column;
+
     }
 
 }
 
 /* ==========================================
-   NAV & FOOTER DI ATAS FOTO (Beranda & Cek Nilai)
-   Dua halaman ini punya .bg-layer (foto sekolah blur,
-   lihat css/glass.css) di belakangnya, jadi nav/footer
-   solid putih bawaan di atas terlihat menabrak dengan
-   estetika "Liquid Glass" di kartu-kartunya. Di-scope
-   lewat body[data-page] supaya halaman lain (about,
-   privacy, rapor, kelulusan, dll) tidak ikut berubah.
+   FOOTER (dipakai lewat #shellFooter)
 ========================================== */
 
-body[data-page="home"] .shell-nav,
-body[data-page="nilai"] .shell-nav{
+.shell-footer{
 
-    background:rgba(8,20,38,.32);
-    border-bottom-color:rgba(255,255,255,.14);
-
-}
-
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
-
-    body[data-page="home"] .shell-nav,
-    body[data-page="nilai"] .shell-nav{
-        -webkit-backdrop-filter:blur(18px) saturate(160%);
-        backdrop-filter:blur(18px) saturate(160%);
-    }
+    margin-top:var(--space-2xl);
+    padding:var(--space-xl) 0;
+    text-align:center;
+    color:var(--text-light);
+    font-size:var(--font-sm);
+    border-top:1px solid var(--border-light);
 
 }
 
-body[data-page="home"] .shell-brand,
-body[data-page="nilai"] .shell-brand{
-    color:#ffffff;
+.shell-footer-links{
+
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:var(--space-md);
+    margin-bottom:var(--space-sm);
+
 }
 
-body[data-page="home"] .shell-nav-link,
-body[data-page="nilai"] .shell-nav-link{
-    color:rgba(255,255,255,.78);
+.shell-footer-links a{
+
+    color:var(--text-light);
+    text-decoration:none;
+    font-weight:var(--weight-semibold);
+    font-size:var(--font-xs);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+
 }
 
-body[data-page="home"] .shell-nav-link:hover,
-body[data-page="nilai"] .shell-nav-link:hover{
-    color:#ffffff;
+.shell-footer-links a:hover{
+
+    color:var(--primary);
+
 }
 
-body[data-page="home"] .shell-nav-link.active,
-body[data-page="nilai"] .shell-nav-link.active{
-    color:var(--secondary-light);
-    border-bottom-color:var(--secondary-light);
-}
+.shell-footer-inner small{
 
-body[data-page="home"] .shell-nav-toggle span,
-body[data-page="nilai"] .shell-nav-toggle span{
-    background:#ffffff;
-}
+    display:block;
+    margin-top:var(--space-xs);
+    color:var(--text-muted);
 
-body[data-page="home"] .shell-nav-links.open,
-body[data-page="nilai"] .shell-nav-links.open{
-    background:rgba(8,20,38,.92);
-    border-bottom-color:rgba(255,255,255,.14);
-}
-
-body[data-page="home"] .shell-nav-links .shell-nav-link,
-body[data-page="nilai"] .shell-nav-links .shell-nav-link{
-    border-bottom-color:rgba(255,255,255,.14);
-}
-
-body[data-page="home"] .shell-footer,
-body[data-page="nilai"] .shell-footer{
-    border-top-color:rgba(255,255,255,.16);
-    color:rgba(255,255,255,.78);
-}
-
-body[data-page="home"] .shell-footer-links a,
-body[data-page="nilai"] .shell-footer-links a{
-    color:rgba(255,255,255,.78);
-}
-
-body[data-page="home"] .shell-footer-links a:hover,
-body[data-page="nilai"] .shell-footer-links a:hover{
-    color:#ffffff;
-}
-
-body[data-page="home"] .shell-footer-inner small,
-body[data-page="nilai"] .shell-footer-inner small{
-    color:rgba(255,255,255,.55);
 }
