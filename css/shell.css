@@ -446,6 +446,33 @@ body.sidebar-open .app-sidebar{
 
     }
 
+    /* Hero header (index.html, nilai.html, kelulusan.html, dst
+       yang punya <header class="header">) SENGAJA dikecualikan
+       dari margin-left di atas. Tanpa ini, .container di dalam
+       header (logo, judul) jadi ke-tengah relatif ke area
+       konten yang sudah dipersempit sidebar -- bukan ke layar
+       penuh -- sehingga terlihat "geser ke kanan", bukan benar-
+       benar center. Header ditarik balik selebar sidebar supaya
+       tetap full-bleed selebar viewport, dan sidebar (position:
+       fixed, z-index lebih tinggi) menimpa sedikit bagian
+       kirinya -- ini pola umum "hero di belakang sidebar tetap"
+       dan justru terlihat lebih rapi. */
+    .app-content > .header{
+
+        margin-left:calc(-1 * var(--shell-sidebar-w));
+        width:calc(100% + var(--shell-sidebar-w));
+
+        transition:margin-left var(--transition-fast),width var(--transition-fast);
+
+    }
+
+    body.sidebar-collapsed .app-content > .header{
+
+        margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
+        width:calc(100% + var(--shell-sidebar-w-collapsed));
+
+    }
+
     .app-sidebar-collapse-btn{
 
         display:flex;
