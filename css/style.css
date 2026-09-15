@@ -52,11 +52,10 @@ FIX (v1.1.0):
 html{
     scroll-behavior:smooth;
 
-    /* Dipindah dari body (lihat catatan panjang di css/glass.css)
-       supaya position:sticky pada navbar shell (js/shell.js)
-       tidak rusak. overflow di <html> tetap dianggap viewport
-       oleh browser, jadi efeknya (meng-clip .bg-layer yang di-
-       zoom di glass.css) tetap sama, tapi sticky tetap jalan. */
+    /* Dipindah dari body (lihat catatan di css/kelulusan/glass.css)
+       supaya position:sticky navbar shell (js/shell.js) tidak
+       rusak -- overflow di <html> tetap dianggap viewport oleh
+       browser, jadi tidak membuat scroll-container terpisah. */
     overflow-x:hidden;
 }
 
@@ -103,21 +102,6 @@ body{
     padding:50px 20px;
 
     text-align:center;
-
-}
-
-/* .container di dalam header jadi flex column (warisan dari
-   rule .container umum di atas untuk keperluan halaman lain),
-   tapi tanpa align-items eksplisit, item berlebar-tetap
-   (logo, width:110px) jatuh ke kiri -- cuma teks di item
-   full-width (h1/p/badge) yang kelihatan center karena
-   text-align, padahal logonya sendiri tidak. Di-scope ke
-   ".header .container" saja, SENGAJA tidak diubah di rule
-   ".container" umum karena itu dipakai banyak halaman lain
-   (rapor, about, dll) yang butuh anak-anaknya full-width. */
-.header .container{
-
-    align-items:center;
 
 }
 
