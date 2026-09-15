@@ -2,8 +2,16 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell Stylesheet (Navbar + Sidebar + Footer)
-Version : 2.0.0
+Version : 2.1.0
 ==========================================================
+CHANGELOG (v2.1.0):
+- Navbar & sidebar sekarang pakai material "Liquid Glass"
+  (var(--glass-blur/tint/border) dari variables.css) supaya
+  konsisten dengan komponen glass lain di situs (search-card,
+  dst) -- ada fallback solid untuk browser tanpa
+  backdrop-filter (lihat blok @supports).
+- Sidebar bisa di-minimize jadi kolom ikon (var(--shell-sidebar-w-collapsed))
+  lewat body.sidebar-collapsed, di-toggle dari js/shell.js.
 CHANGELOG (v2.0.0):
 - Diganti total dari versi dropdown sebelumnya. Sekarang
   memakai pola navbar+sidebar yang sebelumnya cuma ada di
@@ -39,6 +47,7 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
     --shell-navbar-h:64px;
     --shell-sidebar-w:250px;
+    --shell-sidebar-w-collapsed:68px;
 
 }
 
@@ -61,9 +70,31 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
     padding:0 clamp(1rem,3vw,2rem);
 
+    /* Fallback dulu untuk browser tanpa backdrop-filter --
+       ditimpa oleh @supports di bawah. Tetap solid & terbaca
+       walau tanpa efek glass. */
     background:linear-gradient(135deg,var(--primary),var(--primary-dark));
 
+    border-bottom:1px solid var(--glass-border,rgba(255,255,255,.18));
+
     color:var(--text-white);
+
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+
+    .app-navbar{
+
+        background:linear-gradient(135deg,
+            color-mix(in srgb, var(--primary) 78%, transparent),
+            color-mix(in srgb, var(--primary-dark) 82%, transparent)
+        );
+
+        -webkit-backdrop-filter:blur(var(--glass-blur,24px)) saturate(var(--glass-saturate,180%));
+
+        backdrop-filter:blur(var(--glass-blur,24px)) saturate(var(--glass-saturate,180%));
+
+    }
 
 }
 
@@ -157,13 +188,82 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
     height:calc(100vh - var(--shell-navbar-h));
     overflow-y:auto;
+    overflow-x:hidden;
 
     padding:var(--space-lg) var(--space-md);
 
+    /* Fallback dulu untuk browser tanpa backdrop-filter. */
     background:var(--surface);
-    border-right:1px solid var(--border-light);
+
+    border-right:1px solid var(--glass-border,var(--border-light));
 
     display:none;
+
+    transition:width var(--transition-fast);
+
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+
+    .app-sidebar{
+
+        background:color-mix(in srgb, var(--surface) 72%, transparent);
+
+        -webkit-backdrop-filter:blur(var(--glass-blur,24px)) saturate(var(--glass-saturate,180%));
+
+        backdrop-filter:blur(var(--glass-blur,24px)) saturate(var(--glass-saturate,180%));
+
+    }
+
+}
+
+.app-sidebar-head{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.5rem;
+
+    margin:0 0 .75rem .5rem;
+
+}
+
+.app-sidebar-head .app-sidebar-title{
+
+    margin:0;
+
+}
+
+.app-sidebar-collapse-btn{
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    width:26px;
+    height:26px;
+    flex-shrink:0;
+
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-sm);
+
+    background:var(--surface-alt);
+    color:var(--text-light);
+
+    font-size:.75rem;
+    line-height:1;
+
+    cursor:pointer;
+
+    transition:transform var(--transition-fast),background var(--transition-fast);
+
+}
+
+.app-sidebar-collapse-btn:hover{
+
+    background:var(--border-light);
+    color:var(--text);
 
 }
 
@@ -341,6 +441,61 @@ body.sidebar-open .app-sidebar{
            ketiban, karena sidebar-nya sekarang fixed
            (dikeluarkan dari alur flex). */
         margin-left:var(--shell-sidebar-w);
+
+        transition:margin-left var(--transition-fast);
+
+    }
+
+    .app-sidebar-collapse-btn{
+
+        display:flex;
+
+    }
+
+    /* ==========================================
+       SIDEBAR MINIMIZE (Ctrl+B) -- desktop saja.
+       Sidebar menyempit jadi kolom ikon, label teks
+       disembunyikan (bukan dihapus, tetap ada untuk
+       screen reader lewat title="" di tiap link).
+    ========================================== */
+
+    body.sidebar-collapsed .app-sidebar{
+
+        width:var(--shell-sidebar-w-collapsed);
+        padding-left:.5rem;
+        padding-right:.5rem;
+
+    }
+
+    body.sidebar-collapsed .app-content{
+
+        margin-left:var(--shell-sidebar-w-collapsed);
+
+    }
+
+    body.sidebar-collapsed .app-sidebar-title,
+    body.sidebar-collapsed .app-sidebar nav a .label,
+    body.sidebar-collapsed .app-sidebar-external{
+
+        display:none;
+
+    }
+
+    body.sidebar-collapsed .app-sidebar-head{
+
+        justify-content:center;
+
+    }
+
+    body.sidebar-collapsed .app-sidebar nav a{
+
+        justify-content:center;
+
+    }
+
+    body.sidebar-collapsed .app-sidebar-collapse-btn{
+
+        transform:rotate(180deg);
 
     }
 
