@@ -88,7 +88,6 @@ window.Shell = (() => {
     const NAV_LINKS = [
         { key: "home", label: "Beranda", href: "/index.html", icon: "🏠" },
         { key: "nilai", label: "Nilai", href: "/pages/nilai.html", icon: "📝" },
-        { key: "rekap", label: "Rekap", href: "/pages/rekap.html", icon: "📊" },
         { key: "kelulusan", label: "Kelulusan", href: "/pages/kelulusan.html", icon: "🎓" },
         { key: "prestasi", label: "Prestasi", href: "/pages/prestasi.html", icon: "🏆" },
         { key: "rapor", label: "Rapor Pendidikan", href: "/pages/rapor.html", icon: "📈" }
@@ -112,8 +111,6 @@ window.Shell = (() => {
 
     function navbarHTML() {
 
-        const activeKey = activePage();
-
         return `
 
         <nav class="app-navbar">
@@ -128,14 +125,6 @@ window.Shell = (() => {
                     <img src="/assets/logo/logo.png" alt="Logo ${CONFIG.SCHOOL_NAME}">
                     <strong>${CONFIG.SCHOOL_NAME}</strong>
                 </a>
-
-            </div>
-
-            <div class="app-navbar-links">
-
-                ${NAV_LINKS.map((link) => `
-                    <a href="${link.href}" class="${link.key === activeKey ? "active" : ""}">${link.label}</a>
-                `).join("")}
 
             </div>
 
@@ -212,8 +201,6 @@ window.Shell = (() => {
 
         const year = (window.Utils && Utils.getCurrentYear) ? Utils.getCurrentYear() : new Date().getFullYear();
 
-        const allLinks = NAV_LINKS.map((l) => ({ label: l.label, href: l.href })).concat(FOOTER_EXTRA_LINKS);
-
         mount.innerHTML = `
 
         <footer class="shell-footer">
@@ -222,7 +209,7 @@ window.Shell = (() => {
 
                 <div class="shell-footer-links">
 
-                    ${allLinks.map((link) => `<a href="${link.href}">${link.label}</a>`).join("")}
+                    ${FOOTER_EXTRA_LINKS.map((link) => `<a href="${link.href}">${link.label}</a>`).join("")}
 
                 </div>
 
