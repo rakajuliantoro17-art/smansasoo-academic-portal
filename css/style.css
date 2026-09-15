@@ -51,6 +51,13 @@ FIX (v1.1.0):
 
 html{
     scroll-behavior:smooth;
+
+    /* Dipindah dari body (lihat catatan panjang di css/glass.css)
+       supaya position:sticky pada navbar shell (js/shell.js)
+       tidak rusak. overflow di <html> tetap dianggap viewport
+       oleh browser, jadi efeknya (meng-clip .bg-layer yang di-
+       zoom di glass.css) tetap sama, tapi sticky tetap jalan. */
+    overflow-x:hidden;
 }
 
 body{
