@@ -131,40 +131,6 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
 }
 
-.app-navbar-links{
-
-    display:flex;
-    align-items:center;
-    gap:1.5rem;
-
-}
-
-.app-navbar-links a{
-
-    color:rgba(255,255,255,.8);
-    text-decoration:none;
-    font-size:var(--font-sm);
-    font-weight:var(--weight-medium);
-    white-space:nowrap;
-
-}
-
-.app-navbar-links a:hover,
-.app-navbar-links a.active{
-
-    color:var(--text-white);
-
-}
-
-.app-navbar-links a.active{
-
-    font-weight:var(--weight-bold);
-
-    border-bottom:2px solid var(--text-white);
-    padding-bottom:4px;
-
-}
-
 /* ==========================================
    LAYOUT: SIDEBAR + KONTEN
 ========================================== */
@@ -174,8 +140,13 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
     display:flex;
     align-items:flex-start;
 
-    max-width:1300px;
-    margin:0 auto;
+    /* SENGAJA tidak ada max-width/margin:auto di sini lagi --
+       sebelumnya ada, dan itu yang membuat sidebar ikut
+       ke-tengah di layar lebar (>1300px), bukan lock di tepi
+       kiri viewport. .app-sidebar sekarang position:fixed
+       sendiri (lihat breakpoint desktop di bawah), dan
+       .app-content mengatur lebar+center kontennya sendiri
+       lewat .container internal tiap halaman. */
 
 }
 
@@ -183,9 +154,6 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
     width:var(--shell-sidebar-w);
     flex-shrink:0;
-
-    position:sticky;
-    top:var(--shell-navbar-h);
 
     height:calc(100vh - var(--shell-navbar-h));
     overflow-y:auto;
@@ -341,12 +309,6 @@ body.sidebar-open .app-sidebar{
 
 @media screen and (max-width:1023px){
 
-    .app-navbar-links{
-
-        display:none;
-
-    }
-
     .app-hamburger{
 
         display:flex;
@@ -361,6 +323,24 @@ body.sidebar-open .app-sidebar{
 
         display:flex;
         flex-direction:column;
+
+        /* Lock ke tepi kiri VIEWPORT (bukan ikut center
+           bareng .app-layout) -- lihat catatan di rule
+           .app-layout di atas. */
+        position:fixed;
+        top:var(--shell-navbar-h);
+        left:0;
+
+        z-index:var(--z-sticky);
+
+    }
+
+    .app-content{
+
+        /* Kasih ruang selebar sidebar supaya konten tidak
+           ketiban, karena sidebar-nya sekarang fixed
+           (dikeluarkan dari alur flex). */
+        margin-left:var(--shell-sidebar-w);
 
     }
 
