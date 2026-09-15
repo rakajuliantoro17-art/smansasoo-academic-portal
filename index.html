@@ -40,49 +40,21 @@
 
     <link rel="stylesheet" href="css/glass.css">
 
-    <!-- Navbar situs (menu ke Nilai/Rekap/Kelulusan/Prestasi),
-         file terpisah supaya tidak membengkakkan style.css yang
-         juga dipakai halaman lain -->
-    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/shell.css">
 
 </head>
 
-<body>
+<body data-page="home">
 
     <!-- Lapisan background foto sekolah (blur + gradient),
          lihat css/glass.css -->
     <div class="bg-layer" aria-hidden="true"></div>
 
-    <!-- ================= NAVBAR SITUS ================= -->
+    <!-- ================= SHELL: NAVBAR + SIDEBAR =================
+         Markup diisi js/shell.js supaya navbar & sidebar konsisten
+         di semua halaman (lihat docs/UI-SHELL.md). -->
 
-    <nav class="site-navbar" aria-label="Menu situs">
-
-        <a href="index.html" class="site-navbar-brand">
-            <img src="assets/logo/logo.png" alt="Logo SMAN 1 Sooko">
-            <span>SMAN 1 Sooko Mojokerto</span>
-        </a>
-
-        <div class="site-navbar-links">
-            <a href="index.html" class="active" aria-current="page">Kenaikan Kelas</a>
-            <a href="pages/nilai.html">Nilai</a>
-            <a href="pages/rekap.html">Rekap</a>
-            <a href="pages/kelulusan.html">Kelulusan</a>
-            <a href="pages/prestasi.html">Prestasi</a>
-        </div>
-
-        <button type="button" class="site-navbar-toggle" id="siteNavToggle" aria-label="Buka menu" aria-expanded="false">
-            ☰
-        </button>
-
-    </nav>
-
-    <div class="site-navbar-mobile" id="siteNavMobile">
-        <a href="index.html" class="active" aria-current="page">Kenaikan Kelas</a>
-        <a href="pages/nilai.html">Nilai</a>
-        <a href="pages/rekap.html">Rekap</a>
-        <a href="pages/kelulusan.html">Kelulusan</a>
-        <a href="pages/prestasi.html">Prestasi</a>
-    </div>
+    <div id="shellNav"></div>
 
     <!-- ================= HEADER ================= -->
 
@@ -169,29 +141,9 @@
 
 
 
-    <!-- ================= FOOTER ================= -->
+    <!-- ================= SHELL: FOOTER ================= -->
 
-    <footer>
-
-        <div class="container">
-
-            <p>
-
-                © 2026
-
-                SMAN 1 Sooko Mojokerto
-
-            </p>
-
-            <small>
-
-                Academic Portal Version 1.2
-
-            </small>
-
-        </div>
-
-    </footer>
+    <div id="shellFooter"></div>
 
 
 
@@ -244,27 +196,9 @@
 
     <script src="js/app.js"></script>
 
-    <!-- NAVBAR TOGGLE (mobile) -->
+    <!-- SHELL (navbar + sidebar + footer, dipakai semua halaman) -->
 
-    <script>
-        (function () {
-
-            var toggle = document.getElementById('siteNavToggle');
-
-            if (!toggle) return;
-
-            toggle.addEventListener('click', function () {
-
-                var isOpen = document.body.classList.toggle('site-nav-open');
-
-                toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-
-                toggle.textContent = isOpen ? '✕' : '☰';
-
-            });
-
-        })();
-    </script>
+    <script src="js/shell.js"></script>
 
 </body>
 
