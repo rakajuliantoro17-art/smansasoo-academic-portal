@@ -57,9 +57,15 @@
 
     <link rel="stylesheet" href="../css/rekap.css">
 
+    <link rel="stylesheet" href="../css/shell.css">
+
 </head>
 
-<body class="rekap-page">
+<body class="rekap-page" data-page="rekap">
+
+    <!-- ================= SHELL: NAVBAR + SIDEBAR ================= -->
+
+    <div id="shellNav"></div>
 
     <!-- ================= TOP BAR ================= -->
 
@@ -242,11 +248,18 @@
         © 2026 SMAN 1 Sooko Mojokerto &middot; Modul Rekap Nilai &middot; Academic Portal
     </footer>
 
+    <!-- ================= SHELL: FOOTER ================= -->
+
+    <div id="shellFooter"></div>
+
     <!-- CONFIG -->
     <script src="../js/config.js"></script>
 
     <!-- UTILS -->
     <script src="../js/utils.js"></script>
+
+    <!-- SHELL (navbar + sidebar + footer, dipakai semua halaman) -->
+    <script src="../js/shell.js"></script>
 
     <!-- THEME -->
     <script src="../js/theme.js"></script>

@@ -8,146 +8,73 @@
 <meta name="description" content="Rekap prestasi peserta didik SMAN 1 Sooko Mojokerto yang terkurasi Pusat Prestasi Nasional (Puspresnas), berdasarkan data SIMT Kemendikdasmen.">
 
 <meta name="theme-color" content="#0F4C81">
-<link rel="icon" href="../assets/favicon.ico">
+<link rel="icon" href="../assets/logo/favicon.ico">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/shell.css">
 <link rel="stylesheet" href="../css/prestasi.css">
 
 </head>
-<body class="prestasi-page">
+<body class="prestasi-page" data-page="prestasi">
 
-    <!-- ================= NAVBAR ================= -->
+    <!-- ================= SHELL: NAVBAR + SIDEBAR =================
+         Markup diisi js/shell.js (lihat docs/UI-SHELL.md). Daftar
+         "Di Halaman Ini" & link SIMT di bawah dibaca shell.js lewat
+         window.SHELL_PAGE_SECTIONS / window.SHELL_EXTERNAL_LINK. -->
 
-    <nav class="app-navbar">
+    <script>
+        window.SHELL_PAGE_SECTIONS = [
+            { id: "sekolah", label: "Ringkasan Sekolah", icon: "🏫" },
+            { id: "peringkat", label: "Peringkat Nasional", icon: "🥇" },
+            { id: "kategori", label: "Kategori Prestasi", icon: "📂" },
+            { id: "per-tahun", label: "Per Tahun", icon: "📅" },
+            { id: "siswa", label: "Siswa Berprestasi", icon: "👤" }
+        ];
+        window.SHELL_EXTERNAL_LINK = {
+            href: "https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727",
+            label: "Buka Data Resmi di SIMT"
+        };
+    </script>
 
-        <div class="app-navbar-left">
+    <div id="shellNav"></div>
 
-            <button type="button" class="app-hamburger" id="sidebarToggle" aria-label="Buka menu">☰</button>
+    <!-- ================= KONTEN ================= -->
 
-            <a href="../index.html" class="app-navbar-brand">
-                <img src="../assets/logo/logo.png" alt="Logo SMAN 1 Sooko">
-                <strong>SMAN 1 Sooko Mojokerto</strong>
-            </a>
+    <div class="prestasi-hero">
 
-        </div>
+        <h1>Prestasi Terkurasi Puspresnas</h1>
 
-        <div class="app-navbar-links">
-            <a href="../index.html">Beranda</a>
-            <a href="nilai.html">Nilai</a>
-            <a href="rekap.html">Rekap</a>
-            <a href="kelulusan.html">Kelulusan</a>
-            <a href="prestasi.html" class="active">Prestasi</a>
-        </div>
-
-    </nav>
-
-    <!-- Overlay: klik di luar sidebar (mobile) untuk menutup -->
-    <div class="app-sidebar-overlay" id="sidebarOverlay"></div>
-
-    <div class="app-layout">
-
-        <!-- ================= SIDEBAR ================= -->
-
-        <aside class="app-sidebar" id="appSidebar">
-
-            <p class="app-sidebar-title">Menu Situs</p>
-
-            <nav>
-                <a href="../index.html"><span class="icon">🏠</span> Beranda</a>
-                <a href="nilai.html"><span class="icon">📝</span> Nilai</a>
-                <a href="rekap.html"><span class="icon">📊</span> Rekap Kelas</a>
-                <a href="kelulusan.html"><span class="icon">🎓</span> Kelulusan</a>
-                <a href="prestasi.html" class="active"><span class="icon">🏆</span> Prestasi</a>
-            </nav>
-
-            <p class="app-sidebar-title">Di Halaman Ini</p>
-
-            <nav id="sectionNav">
-                <a href="#sekolah" data-section="sekolah"><span class="icon">🏫</span> Ringkasan Sekolah</a>
-                <a href="#peringkat" data-section="peringkat"><span class="icon">🥇</span> Peringkat Nasional</a>
-                <a href="#kategori" data-section="kategori"><span class="icon">📂</span> Kategori Prestasi</a>
-                <a href="#per-tahun" data-section="per-tahun"><span class="icon">📅</span> Per Tahun</a>
-                <a href="#siswa" data-section="siswa"><span class="icon">👤</span> Siswa Berprestasi</a>
-            </nav>
-
-            <div class="app-sidebar-external">
-                <a href="https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727" target="_blank" rel="noopener">
-                    Buka Data Resmi di SIMT &rarr;
-                </a>
-            </div>
-
-        </aside>
-
-        <!-- ================= KONTEN ================= -->
-
-        <div class="app-content">
-
-            <div class="prestasi-hero">
-
-                <h1>Prestasi Terkurasi Puspresnas</h1>
-
-                <p>Peta persebaran prestasi peserta didik, berdasarkan data SIMT Kemendikdasmen</p>
-
-            </div>
-
-            <main class="prestasi-shell-inner">
-
-                <div id="prestasiRoot">
-
-                    <div class="prestasi-loading">Memuat data prestasi...</div>
-
-                </div>
-
-            </main>
-
-            <footer class="prestasi-footer">
-                Data ditampilkan berdasarkan pencatatan manual dari
-                <a href="https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727" target="_blank" rel="noopener">SIMT Puspresnas</a>
-                &middot; NPSN 20502727
-            </footer>
-
-        </div>
+        <p>Peta persebaran prestasi peserta didik, berdasarkan data SIMT Kemendikdasmen</p>
 
     </div>
 
+    <main class="prestasi-shell-inner">
+
+        <div id="prestasiRoot">
+
+            <div class="prestasi-loading">Memuat data prestasi...</div>
+
+        </div>
+
+    </main>
+
+    <footer class="prestasi-footer">
+        Data ditampilkan berdasarkan pencatatan manual dari
+        <a href="https://simt.kemendikdasmen.go.id/detail-prestasi-sekolah?npsn=20502727" target="_blank" rel="noopener">SIMT Puspresnas</a>
+        &middot; NPSN 20502727
+    </footer>
+
+    <div id="shellFooter"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/shell.js"></script>
+
     <script src="../js/prestasi.js"></script>
-
-    <script>
-        // Toggle sidebar drawer (mobile)
-        (function () {
-
-            var toggle = document.getElementById('sidebarToggle');
-            var overlay = document.getElementById('sidebarOverlay');
-
-            function closeSidebar() {
-                document.body.classList.remove('sidebar-open');
-            }
-
-            if (toggle) {
-
-                toggle.addEventListener('click', function () {
-                    document.body.classList.toggle('sidebar-open');
-                });
-
-            }
-
-            if (overlay) {
-
-                overlay.addEventListener('click', closeSidebar);
-
-            }
-
-            document.querySelectorAll('#sectionNav a').forEach(function (link) {
-
-                link.addEventListener('click', closeSidebar);
-
-            });
-
-        })();
-    </script>
 
 </body>
 </html>
