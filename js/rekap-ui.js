@@ -304,7 +304,13 @@ window.RekapUI = (() => {
 
         result.innerHTML = `
 
-        <div class="nilai-card fade-in">
+        <div class="nilai-card fade-in printable">
+
+            <div class="print-letterhead">
+                <img src="../assets/logo/logo.png" alt="Logo ${escapeHTML(CONFIG.SCHOOL_NAME)}">
+                <h3>${escapeHTML(CONFIG.SCHOOL_NAME)}</h3>
+                <p>Rekap Nilai Kelas &middot; Tahun Pelajaran ${escapeHTML(CONFIG.ACADEMIC_YEAR)}</p>
+            </div>
 
             <div class="rekap-summary-header">
                 <span class="nilai-badge">${escapeHTML(summary.kelas)}</span>
@@ -359,6 +365,14 @@ window.RekapUI = (() => {
             ` : ""}
 
             <div id="rekapTableContainer"></div>
+
+            <button
+                type="button"
+                class="btn-print"
+                data-print-trigger
+                data-print-filename="Rekap-Kelas-${escapeHTML(summary.kelas)}-${escapeHTML(summary.mapel)}">
+                <span class="icon">&#128424;</span> Cetak / Unduh PDF
+            </button>
 
         </div>
 

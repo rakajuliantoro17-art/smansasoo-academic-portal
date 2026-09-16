@@ -126,9 +126,15 @@ window.NilaiUI = (() => {
 
         result.innerHTML = `
 
-        <div class="nilai-card fade-in">
+        <div class="nilai-card fade-in printable">
 
             ${subjects.length > 1 ? tabsHTML() : ""}
+
+            <div class="print-letterhead">
+                <img src="../assets/logo/logo.png" alt="Logo ${escapeHTML(CONFIG.SCHOOL_NAME)}">
+                <h3>${escapeHTML(CONFIG.SCHOOL_NAME)}</h3>
+                <p>Rekap Nilai Matematika &middot; Tahun Pelajaran ${escapeHTML(CONFIG.ACADEMIC_YEAR)}</p>
+            </div>
 
             <div class="nilai-header">
 
@@ -166,6 +172,14 @@ window.NilaiUI = (() => {
             ${subject.missingList && subject.missingList.length ? missingHTML(subject.missingList) : ""}
 
             ${detailsTableHTML(subject.details)}
+
+            <button
+                type="button"
+                class="btn-print"
+                data-print-trigger
+                data-print-filename="Nilai-${escapeHTML(subject.mapel)}-${escapeHTML(subject.nis)}">
+                <span class="icon">&#128424;</span> Cetak / Unduh PDF
+            </button>
 
         </div>
 

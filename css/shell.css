@@ -608,3 +608,42 @@ body.sidebar-open .app-sidebar{
     color:var(--text-muted);
 
 }
+
+/* ==========================================
+   PRINT: sembunyikan chrome shell (navbar, sidebar,
+   overlay, footer) supaya yang tercetak cuma konten
+   halamannya (kartu hasil, dsb). Detail styling kartu hasil
+   itu sendiri ada di css/print.css (dipakai halaman yang
+   punya tombol "Cetak / Unduh PDF").
+========================================== */
+
+@media print{
+
+    .app-navbar,
+    .app-sidebar,
+    .app-sidebar-overlay,
+    .app-sidebar-collapse-btn,
+    .shell-footer{
+
+        display:none !important;
+
+    }
+
+    .app-content{
+
+        margin-left:0 !important;
+        width:100% !important;
+
+    }
+
+    .app-content > main,
+    .app-content > header,
+    .app-content > .container,
+    .app-content > #shellFooter{
+
+        margin-left:0 !important;
+        width:100% !important;
+
+    }
+
+}

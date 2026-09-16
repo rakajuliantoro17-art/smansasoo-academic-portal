@@ -100,8 +100,8 @@ window.UI = (() => {
     function studentCardHTML(student, opts) {
 
         const cardClass = opts.neutral
-            ? "result-card result-neutral fade-in"
-            : "result-card success slide-up";
+            ? "result-card result-neutral fade-in printable"
+            : "result-card success slide-up printable";
 
         const skRows = opts.neutral
             ? ""
@@ -131,6 +131,12 @@ window.UI = (() => {
 
         <div class="${cardClass}">
 
+            <div class="print-letterhead">
+                <img src="../assets/logo/logo.png" alt="Logo ${escapeHTML(CONFIG.SCHOOL_NAME)}">
+                <h3>${escapeHTML(CONFIG.SCHOOL_NAME)}</h3>
+                <p>Hasil Pengumuman Kelulusan</p>
+            </div>
+
             <h2 class="result-title">${opts.title}</h2>
 
             <div class="result-item">
@@ -156,6 +162,14 @@ window.UI = (() => {
             ${skRows}
 
             ${note}
+
+            <button
+                type="button"
+                class="btn-print"
+                data-print-trigger
+                data-print-filename="Kelulusan-${escapeHTML(student.nis)}">
+                <span class="icon">&#128424;</span> Cetak / Unduh PDF
+            </button>
 
         </div>
 

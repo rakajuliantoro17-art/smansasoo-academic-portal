@@ -1,0 +1,238 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Print Stylesheet
+Version : 1.0.0
+==========================================================
+Dipakai di halaman yang punya tombol "Cetak / Unduh PDF"
+(index.html, pages/nilai.html, pages/kelulusan.html,
+pages/rekap.html).
+
+Isinya 2 bagian:
+1. Tampilan tombol .btn-print SAAT DI LAYAR (normal).
+2. Aturan @media print -- yang menentukan bentuk hasil PDF
+   nya: sembunyikan navbar/sidebar/form/tombol, tampilkan
+   cuma kartu hasil, warna disesuaikan supaya hemat tinta
+   (latar putih, teks hitam) dan tetap terbaca walau dicetak
+   hitam-putih.
+
+CATATAN: aturan untuk MENYEMBUNYIKAN navbar & sidebar shell
+ada di css/shell.css (bukan di sini), karena shell itu dipakai
+di SEMUA halaman -- taruh di sana supaya satu-satunya sumber
+kebenaran, sesuai pola project ini (lihat docs/UI-SHELL.md).
+File ini fokus ke bagian yang spesifik ke kartu hasil saja.
+==========================================================
+*/
+
+/* ==========================================
+   TOMBOL (tampilan normal di layar)
+========================================== */
+
+.btn-print{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.5rem;
+
+    margin-top:20px;
+
+    padding:12px 22px;
+
+    border:2px solid var(--primary,#0F4C81);
+    border-radius:12px;
+
+    background:transparent;
+    color:var(--primary,#0F4C81);
+
+    font-family:inherit;
+    font-size:15px;
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.btn-print:hover{
+
+    background:var(--primary,#0F4C81);
+    color:#fff;
+
+}
+
+.btn-print .icon{
+
+    font-size:1.05em;
+
+}
+
+/* Kartu yang bisa dicetak diberi wadah relative supaya kalau
+   nanti perlu elemen dekoratif print-only bisa diposisikan --
+   juga dipakai sebagai penanda "elemen ini yang mau dicetak"
+   oleh aturan @media print di bawah. */
+.printable{
+
+    position:relative;
+
+}
+
+/* ==========================================
+   PRINT: KEPALA SURAT (cuma muncul saat dicetak)
+========================================== */
+
+.print-letterhead{
+
+    display:none;
+
+}
+
+/* ==========================================
+   @media print
+========================================== */
+
+@media print{
+
+    /* Reset dasar: latar putih, teks hitam, hemat tinta. */
+
+    *{
+
+        box-shadow:none !important;
+        text-shadow:none !important;
+
+        background:transparent !important;
+
+        -webkit-print-color-adjust:exact;
+        print-color-adjust:exact;
+
+    }
+
+    html,body{
+
+        background:#fff !important;
+
+    }
+
+    /* Sembunyikan tombol cetak itu sendiri -- tidak ada
+       gunanya muncul di kertas. */
+    .btn-print,
+    [data-print-trigger]{
+
+        display:none !important;
+
+    }
+
+    /* Sembunyikan form pencarian, tab, dan navigasi -- yang
+       mau dicetak cuma HASIL-nya, bukan alat pencariannya. */
+    #searchForm,
+    #nilaiForm,
+    .rekap-panel,
+    .nilai-page-tabs,
+    .search-section > .search-card,
+    .rekap-table-toolbar,
+    .rekap-segmented{
+
+        display:none !important;
+
+    }
+
+    /* Kepala surat print-only: identitas sekolah supaya hasil
+       cetak tetap jelas asalnya walau dipisah dari halaman
+       web-nya. */
+    .print-letterhead{
+
+        display:block !important;
+
+        text-align:center;
+        margin-bottom:20px;
+        padding-bottom:14px;
+
+        border-bottom:2px solid #000;
+
+    }
+
+    .print-letterhead img{
+
+        width:60px;
+        height:60px;
+        object-fit:contain;
+        margin-bottom:8px;
+
+    }
+
+    .print-letterhead h3{
+
+        margin:0;
+        font-size:16px;
+
+    }
+
+    .print-letterhead p{
+
+        margin:2px 0 0;
+        font-size:12px;
+        color:#444 !important;
+
+    }
+
+    /* Kartu hasil: lepas dari layout flex/grid, isi lebar
+       kertas, hilangkan dekorasi glass/shadow yang tidak
+       relevan di kertas. */
+    .printable,
+    .result-card,
+    .nilai-card,
+    .prestasi-card{
+
+        width:100% !important;
+        max-width:100% !important;
+        margin:0 0 16px 0 !important;
+
+        border:1px solid #ccc !important;
+        border-radius:8px !important;
+
+        padding:20px !important;
+
+        page-break-inside:avoid;
+
+        color:#000 !important;
+
+    }
+
+    .result-value,
+    .nilai-header h2,
+    .result-title{
+
+        color:#000 !important;
+
+    }
+
+    /* Tabel (rincian nilai, rekap kelas) tetap perlu border
+       supaya terbaca di kertas -- glass/border tipis di layar
+       sering hilang total kalau dicetak. */
+    table{
+
+        border-collapse:collapse !important;
+        width:100% !important;
+
+    }
+
+    table th,
+    table td{
+
+        border:1px solid #999 !important;
+        color:#000 !important;
+
+    }
+
+    /* Halaman itu sendiri: singkirkan tata letak sidebar biar
+       kartu hasil pakai lebar kertas penuh (aturan navbar/
+       sidebar disembunyikan ada di css/shell.css). */
+    .app-content{
+
+        margin:0 !important;
+        width:100% !important;
+
+    }
+
+}
