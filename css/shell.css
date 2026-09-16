@@ -2,16 +2,16 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell Stylesheet (Navbar + Sidebar + Footer)
-Version : 2.1.0
+Version : 2.2.0
 ==========================================================
-CHANGELOG (v2.1.0):
-- Navbar & sidebar sekarang pakai material "Liquid Glass"
-  (var(--glass-blur/tint/border) dari variables.css) supaya
-  konsisten dengan komponen glass lain di situs (search-card,
-  dst) -- ada fallback solid untuk browser tanpa
-  backdrop-filter (lihat blok @supports).
-- Sidebar bisa di-minimize jadi kolom ikon (var(--shell-sidebar-w-collapsed))
-  lewat body.sidebar-collapsed, di-toggle dari js/shell.js.
+CHANGELOG (v2.2.0):
+- Perluas trik "abaikan sidebar untuk center" (sebelumnya
+  cuma .header) ke SEMUA elemen level-atas halaman: <main>,
+  <header>, .container (kelulusan.html), dan #shellFooter.
+  Sebelumnya cuma header yang full-bleed, jadi kartu "Cek
+  Hasil" / komponen tengah lain masih ke-tengah relatif ke
+  area yang dipersempit sidebar, bukan ke layar penuh.
+==========================================================
 CHANGELOG (v2.0.0):
 - Diganti total dari versi dropdown sebelumnya. Sekarang
   memakai pola navbar+sidebar yang sebelumnya cuma ada di
@@ -446,18 +446,46 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    /* Hero header (index.html, nilai.html, kelulusan.html, dst
-       yang punya <header class="header">) SENGAJA dikecualikan
-       dari margin-left di atas. Tanpa ini, .container di dalam
-       header (logo, judul) jadi ke-tengah relatif ke area
-       konten yang sudah dipersempit sidebar -- bukan ke layar
-       penuh -- sehingga terlihat "geser ke kanan", bukan benar-
-       benar center. Header ditarik balik selebar sidebar supaya
-       tetap full-bleed selebar viewport, dan sidebar (position:
-       fixed, z-index lebih tinggi) menimpa sedikit bagian
-       kirinya -- ini pola umum "hero di belakang sidebar tetap"
-       dan justru terlihat lebih rapi. */
-    .app-content > .header{
+    /* Elemen level-atas halaman yang PERLU proporsional
+       terhadap layar penuh (bukan area yang sudah dipersempit
+       sidebar): header hero, <main>, .container pembungkus
+       (dipakai kelulusan.html: header+search jadi satu
+       .container), dan footer bersama dari shell.js.
+
+       SENGAJA pakai daftar selector spesifik (bukan wildcard
+       "> *") supaya TIDAK ikut menyentuh elemen fixed-position
+       lain yang juga jadi anak .app-content lewat pemindahan
+       shell.js (.bg-layer, .flash, #balloons, .overlay, audio)
+       -- elemen-elemen itu sudah punya inset/top/left sendiri
+       untuk menutupi seluruh layar, dan margin-left negatif di
+       sini bisa mengacaukannya kalau ikut kena.
+
+       Tanpa aturan ini: elemen-elemen di bawah jadi ke-tengah
+       relatif ke area yang sudah dipersempit margin-left di
+       atas (viewport dikurangi lebar sidebar) -- BUKAN ke
+       layar penuh -- sehingga logo, kartu pencarian, dan
+       footer semua kelihatan "geser ke kanan", proporsinya
+       tidak pas lagi.
+
+       Trik: tiap elemen ditarik balik selebar sidebar
+       (margin-left negatif) + lebarnya ditambah selebar
+       sidebar juga, jadi kembali full-bleed selebar viewport
+       sungguhan. Isinya (biasanya .container dengan
+       width:min(...) + margin:auto) lalu center dengan benar
+       terhadap viewport, bukan terhadap area yang sudah
+       dipotong sidebar.
+
+       Sidebar (position:fixed, z-index lebih tinggi, glass)
+       cuma menimpa sedikit bagian kiri elemen ini secara
+       visual -- pola umum "konten di belakang sidebar tetap",
+       dan hasilnya proporsional baik saat sidebar penuh
+       (250px) maupun saat di-minimize (68px), karena
+       --shell-sidebar-w yang dipakai otomatis ikut berubah
+       lewat class body.sidebar-collapsed di bawah. */
+    .app-content > main,
+    .app-content > header,
+    .app-content > .container,
+    .app-content > #shellFooter{
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -466,7 +494,10 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > .header{
+    body.sidebar-collapsed .app-content > main,
+    body.sidebar-collapsed .app-content > header,
+    body.sidebar-collapsed .app-content > .container,
+    body.sidebar-collapsed .app-content > #shellFooter{
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
