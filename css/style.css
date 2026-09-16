@@ -105,6 +105,23 @@ body{
 
 }
 
+/* .container di dalam header jadi flex column (warisan dari
+   rule .container umum di atas, dipakai halaman lain untuk
+   layout full-width), tapi tanpa align-items eksplisit, item
+   berlebar-tetap (logo, width:110px) jatuh ke kiri -- cuma
+   teks di item full-width (h1/p) yang kelihatan center karena
+   text-align, padahal logonya sendiri tidak.
+   CATATAN: rule ini PERNAH ditambahkan sebelumnya lalu hilang
+   lagi (kemungkinan ketiban saat migrasi ke sistem
+   navbar+sidebar). Kalau nanti index.html/nilai.html di-refactor
+   ulang lagi, pastikan baris ini ikut dipertahankan -- dicari
+   lewat "Logo diatas ... belum di tengah" kalau regresi lagi. */
+.header .container{
+
+    align-items:center;
+
+}
+
 .logo{
 
     width:110px;
