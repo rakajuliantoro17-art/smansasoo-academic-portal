@@ -217,7 +217,17 @@ body{
    FORM
 ============================== */
 
-#searchForm{
+/* CATATAN: selector ini SENGAJA menyasar 2 ID sekaligus
+   (#searchForm dipakai index.html & kelulusan.html, #nilaiForm
+   dipakai pages/nilai.html) -- sebelumnya cuma #searchForm
+   yang disebut, jadi form pencarian NIS di halaman Nilai sama
+   sekali tidak ke-style (balik ke tampilan default browser:
+   input kecil, tombol mepet). rekap.html tidak perlu ikut
+   ditambahkan di sini karena sudah punya styling form sendiri
+   (lihat .rekap-field di css/rekap.css). */
+
+#searchForm,
+#nilaiForm{
 
     display:flex;
 
@@ -227,7 +237,8 @@ body{
 
 }
 
-#searchForm input{
+#searchForm input,
+#nilaiForm input{
 
     height:55px;
 
@@ -245,13 +256,15 @@ body{
 
 }
 
-#searchForm input:focus{
+#searchForm input:focus,
+#nilaiForm input:focus{
 
     border-color:var(--primary);
 
 }
 
-#searchForm button{
+#searchForm button,
+#nilaiForm button{
 
     height:55px;
 
