@@ -41,6 +41,34 @@ body.prestasi-page{
 }
 
 /* ==========================================
+   BACKGROUND FOTO (assets/images/gbl.jpg)
+   ==========================================
+   Halaman Prestasi desainnya berdiri sendiri (tidak pakai
+   css/glass.css bersama), jadi lapisan foto dibuat sendiri
+   di sini -- BEDA dari glass.css yang blur berat (22-34px) +
+   gelapkan foto (brightness .68-.72). Di sini sengaja cuma
+   blur RINGAN (~10%, kira-kira blur(4px)) tanpa digelapkan,
+   supaya foto masih cukup kelihatan jelas, bukan cuma jadi
+   gumpalan warna buram seperti di halaman lain.
+
+   .prestasi-hero dan kartu (.prestasi-card, dst) tetap solid
+   (putih/gradient biru) seperti sebelumnya -- TIDAK dibuat
+   transparan/glass, jadi foto ini kelihatan di celah/pinggir
+   di sekitar konten, bukan menembus kartunya. */
+
+.prestasi-bg-layer{
+
+    position:fixed;
+    inset:-2%;
+    z-index:-1;
+
+    background:url("../assets/images/gbl.jpg") center center / cover no-repeat;
+
+    filter:blur(4px);
+
+}
+
+/* ==========================================
    HERO + KARTU (dari versi sebelumnya, tidak berubah)
 ========================================== */
 
@@ -77,6 +105,31 @@ body.prestasi-page{
     margin:-3rem auto 0;
 
     padding:0 clamp(1rem,4vw,2rem) 3rem;
+
+    /* Melebar bertahap di layar besar supaya proporsional --
+       900px fixed kelihatan sempit/tenggelam di 1920px kalau
+       cuma diam di situ terus. */
+    width:100%;
+
+}
+
+@media screen and (min-width:1440px){
+
+    .prestasi-shell-inner{
+
+        max-width:1100px;
+
+    }
+
+}
+
+@media screen and (min-width:1800px){
+
+    .prestasi-shell-inner{
+
+        max-width:1280px;
+
+    }
 
 }
 
