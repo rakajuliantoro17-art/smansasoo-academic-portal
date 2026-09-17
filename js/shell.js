@@ -98,7 +98,8 @@ window.Shell = (() => {
         { key: "nilai", label: "Nilai", href: "/pages/nilai.html", icon: "📝" },
         { key: "kelulusan", label: "Kelulusan", href: "/pages/kelulusan.html", icon: "🎓" },
         { key: "prestasi", label: "Prestasi", href: "/pages/prestasi.html", icon: "🏆" },
-        { key: "rapor", label: "Rapor Pendidikan", href: "/pages/rapor.html", icon: "📈" }
+        { key: "rapor", label: "Rapor Pendidikan", href: "/pages/rapor.html", icon: "📈" },
+        { key: "simulasi-tka", label: "Simulasi TKA", href: "/pages/simulasi-tka.html", icon: "🧠" }
     ];
 
     // Ditambahkan di footer saja (tidak memenuhi navbar/sidebar utama).
