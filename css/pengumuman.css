@@ -97,3 +97,23 @@ halaman Nilai dan Rapor Pendidikan.
     padding:var(--space-2xl) 0;
 
 }
+
+/* ==========================================
+   BACKGROUND FOTO KHUSUS HALAMAN PENGUMUMAN
+   ==========================================
+   Default .bg-layer (css/glass.css) pakai assets/images/scc.jpg.
+   Halaman Pengumuman sengaja pakai foto beda (Skr.jpg) --
+   override di sini (dimuat setelah glass.css, dan lebih
+   spesifik lewat body[data-page="pengumuman"]) supaya TIDAK
+   perlu ubah glass.css yang dipakai bersama halaman lain.
+
+   Cuma background-image yang di-override; position/size/repeat
+   dari css/glass.css (cover, center, no-repeat) tetap berlaku
+   karena tidak disentuh di sini.
+========================================== */
+
+body[data-page="pengumuman"] .bg-layer{
+
+    background-image:url("../assets/images/Skr.jpg");
+
+}
