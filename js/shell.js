@@ -95,6 +95,7 @@ window.Shell = (() => {
 
     const NAV_LINKS = [
         { key: "home", label: "Beranda", href: "/index.html", icon: "🏠" },
+        { key: "pengumuman", label: "Pengumuman", href: "/pages/pengumuman.html", icon: "📢" },
         { key: "nilai", label: "Nilai", href: "/pages/nilai.html", icon: "📝" },
         { key: "kelulusan", label: "Kelulusan", href: "/pages/kelulusan.html", icon: "🎓" },
         { key: "prestasi", label: "Prestasi", href: "/pages/prestasi.html", icon: "🏆" },
