@@ -1,0 +1,5 @@
+{
+  "catatan": "Daftar tahun ajaran yang datanya sudah tersedia untuk modul Nilai. Beda dengan rapor-index.json (yang nunjuk ke file JSON statis), di sini tiap tahun nunjuk ke SPREADSHEET GOOGLE SHEETS sendiri lewat Environment Variable Vercel bernama GOOGLE_SHEET_ID_<TAHUN> (contoh: GOOGLE_SHEET_ID_2026). Kalau nambah tahun ajaran baru: 1) di Vercel Dashboard -> Project -> Settings -> Environment Variables, tambahkan GOOGLE_SHEET_ID_<TAHUN> berisi ID spreadsheet Google Sheets tahun itu (struktur sheet-nya harus sama persis: 'NIlai Math Wajib Kelas XI', 'Nilai Math Lanjutan Kelas XI', 'Nilai Input Raport'), 2) tambahkan angka tahunnya ke array 'tahun_tersedia' di bawah, urut dari terbaru ke terlama, 3) redeploy. Kalau satu tahun TIDAK punya Environment Variable sendiri, tahun itu otomatis jatuh ke GOOGLE_SHEET_ID (default) -- jadi tahun berjalan tidak wajib bikin env var baru kalau memang belum mau pisah datanya.",
+  "tahun_tersedia": [2026],
+  "tahun_default": 2026
+}

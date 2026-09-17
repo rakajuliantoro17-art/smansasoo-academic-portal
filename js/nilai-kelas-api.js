@@ -47,9 +47,17 @@ async function fetchKelasJSON(url) {
  * ==========================================
  */
 
-async function getClassList() {
+async function getClassList(tahun) {
 
-    const result = await fetchKelasJSON("/api/kelas-list");
+    const params = new URLSearchParams();
+
+    if (tahun) {
+        params.set("tahun", tahun);
+    }
+
+    const query = params.toString();
+
+    const result = await fetchKelasJSON(`/api/kelas-list${query ? `?${query}` : ""}`);
 
     return result.success ? result.data : [];
 
@@ -61,12 +69,16 @@ async function getClassList() {
  * ==========================================
  */
 
-async function getClassSummary(kelas, mapel) {
+async function getClassSummary(kelas, mapel, tahun) {
 
     const params = new URLSearchParams({
         kelas: kelas || "SEMUA",
         mapel: mapel || "WAJIB"
     });
+
+    if (tahun) {
+        params.set("tahun", tahun);
+    }
 
     const result = await fetchKelasJSON(`/api/kelas-summary?${params.toString()}`);
 

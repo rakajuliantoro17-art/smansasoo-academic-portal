@@ -81,7 +81,9 @@ window.NilaiSearch = (() => {
 
         try {
 
-            const response = await NilaiAPI.searchNilai(keyword);
+            const tahun = window.NilaiYear ? NilaiYear.getYear() : null;
+
+            const response = await NilaiAPI.searchNilai(keyword, tahun);
 
             if (!response.success) {
 

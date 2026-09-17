@@ -8,6 +8,28 @@ Format changelog mengikuti prinsip **Keep a Changelog** dan menggunakan **Semant
 
 ## [Unreleased]
 
+### Added
+
+- **Multi Tahun Ajaran (modul Nilai).** `pages/nilai.html` sekarang
+  punya dropdown "Tahun Pelajaran". Tiap tahun boleh disimpan di
+  spreadsheet Google Sheets terpisah lewat Environment Variable
+  `GOOGLE_SHEET_ID_<TAHUN>` (`api/_lib/gsheet.js` fungsi
+  `resolveSheetId()`), daftar tahun tersedia dikontrol dari
+  `data/nilai-index.json`. Endpoint `/api/nilai`, `/api/kelas-list`,
+  `/api/kelas-summary` semua menerima query param `?tahun=` opsional;
+  tanpa param itu perilakunya tetap sama seperti sebelumnya (pakai
+  `GOOGLE_SHEET_ID` default), jadi tidak breaking. Lihat README bagian
+  "Multi Tahun Ajaran (Nilai)".
+- **Panel Statistik Pengunjung (floating, glassmorphism).** Tombol baru
+  di bagian bawah sidebar (`js/shell.js`) membuka panel
+  (`js/stats-panel.js` + `css/stats-panel.css`) berisi jumlah kunjungan
+  per halaman. Backend `/api/stats` (GET ambil data, POST tambah hit)
+  disimpan di Upstash Redis lewat REST API, dan `js/stats-tracker.js`
+  mengirim satu hit fire-and-forget tiap halaman dimuat. Kalau
+  `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` belum diatur,
+  panel tetap muncul dengan pesan "belum diaktifkan" (tidak error).
+  Lihat README bagian "Statistik Pengunjung (Panel Floating)".
+
 ### Changed
 
 - **Navbar & sidebar disatukan.** Sebelumnya ada 4 pola navbar berbeda
@@ -36,9 +58,7 @@ Format changelog mengikuti prinsip **Keep a Changelog** dan menggunakan **Semant
 ### Planned
 
 - Dashboard Administrator
-- Multi Tahun Ajaran
 - Multi Jenis Pengumuman
-- Statistik Pengunjung
 - QR Verification
 - Export PDF
 - Dark Mode di seluruh halaman (saat ini baru `pages/rekap.html`)

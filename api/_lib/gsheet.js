@@ -17,10 +17,50 @@ Cara kerja:
   ID spreadsheet dibaca dari Environment Variable Vercel
   (GOOGLE_SHEET_ID), tidak pernah ditulis di kode maupun
   dikirim ke browser.
+
+CHANGELOG (v1.1.0):
+- Tambah dukungan MULTI TAHUN AJARAN untuk modul Nilai.
+  Tiap tahun ajaran boleh punya spreadsheet sendiri lewat
+  Environment Variable GOOGLE_SHEET_ID_<TAHUN> (mis.
+  GOOGLE_SHEET_ID_2026). resolveSheetId(tahun) mencari env
+  var itu dulu; kalau tidak ada (atau tahun tidak dikirim),
+  otomatis jatuh ke GOOGLE_SHEET_ID biasa supaya endpoint
+  lama yang belum kirim ?tahun= tetap jalan seperti sebelumnya.
+  fetchSheetRows() sekarang menerima sheetId opsional sebagai
+  parameter kedua; kalau tidak diisi, pakai SHEET_ID default
+  (perilaku lama, tidak breaking).
 ==========================================================
 */
 
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
+
+/**
+ * Cari ID spreadsheet untuk satu tahun ajaran tertentu.
+ * Urutan pencarian:
+ *  1. Environment Variable GOOGLE_SHEET_ID_<TAHUN> (spesifik tahun itu)
+ *  2. GOOGLE_SHEET_ID (default / tahun berjalan)
+ *
+ * Dipakai supaya tahun ajaran lama & baru bisa disimpan di
+ * spreadsheet yang berbeda tanpa mengubah kode -- cukup tambah
+ * Environment Variable baru di Vercel Dashboard.
+ */
+function resolveSheetId(tahun) {
+
+    const cleanTahun = (tahun === null || tahun === undefined)
+        ? ""
+        : String(tahun).trim();
+
+    if (cleanTahun && /^[0-9]{4}$/.test(cleanTahun)) {
+
+        const specific = process.env[`GOOGLE_SHEET_ID_${cleanTahun}`];
+
+        if (specific) return specific;
+
+    }
+
+    return SHEET_ID;
+
+}
 
 const SHEET_NAMES = {
     wajib: "NIlai Math Wajib Kelas XI",
@@ -85,12 +125,15 @@ function parseCSV(text) {
     return rows;
 }
 
-async function fetchSheetRows(sheetName) {
-    if (!SHEET_ID) {
+async function fetchSheetRows(sheetName, sheetId) {
+
+    const targetSheetId = sheetId || SHEET_ID;
+
+    if (!targetSheetId) {
         throw new Error("GOOGLE_SHEET_ID belum diatur di Environment Variable Vercel.");
     }
 
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
+    const url = `https://docs.google.com/spreadsheets/d/${targetSheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheetName)}`;
 
     const response = await fetch(url);
 
@@ -132,6 +175,7 @@ module.exports = {
     SHEET_NAMES,
     cleanNIS,
     parseCSV,
+    resolveSheetId,
     fetchSheetRows,
     fetchRowsByGid
 };

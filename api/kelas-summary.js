@@ -27,14 +27,17 @@ Total 12 komponen dipakai untuk progress (index 4-12,14,16,17).
 ==========================================================
 */
 
-const { SHEET_NAMES, cleanNIS, fetchSheetRows, SHEET_ID } = require("./_lib/gsheet");
+const { SHEET_NAMES, cleanNIS, fetchSheetRows, resolveSheetId } = require("./_lib/gsheet");
 
 const PROGRESS_COLUMNS = [4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16, 17];
 
 module.exports = async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
 
-    if (!SHEET_ID) {
+    const tahun = (req.query.tahun || "").toString().trim();
+    const sheetId = resolveSheetId(tahun);
+
+    if (!sheetId) {
         res.status(500).json({ success: false, message: "GOOGLE_SHEET_ID belum diatur di Environment Variable Vercel." });
         return;
     }
@@ -46,8 +49,8 @@ module.exports = async (req, res) => {
 
     try {
         const [dataRows, raportRows] = await Promise.all([
-            fetchSheetRows(sheetName),
-            fetchSheetRows(SHEET_NAMES.raport).catch(() => [])
+            fetchSheetRows(sheetName, sheetId),
+            fetchSheetRows(SHEET_NAMES.raport, sheetId).catch(() => [])
         ]);
 
         const raportMap = {};

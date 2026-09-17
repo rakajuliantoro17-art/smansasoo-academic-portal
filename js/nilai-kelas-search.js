@@ -38,7 +38,9 @@ window.NilaiKelasSearch = (() => {
 
         try {
 
-            const classes = await NilaiKelasAPI.getClassList();
+            const tahun = window.NilaiYear ? NilaiYear.getYear() : null;
+
+            const classes = await NilaiKelasAPI.getClassList(tahun);
 
             classes.forEach((k) => {
 
@@ -59,16 +61,40 @@ window.NilaiKelasSearch = (() => {
 
     }
 
+    /**
+     * Dipanggil saat tahun ajaran diganti (lihat js/nilai-page-tabs.js)
+     * supaya dropdown kelas & hasil rekap tahun sebelumnya tidak
+     * ketinggalan tercampur dengan tahun yang baru dipilih.
+     */
+    function resetClassList() {
+
+        const select = document.getElementById("selectKelas");
+
+        if (select) {
+
+            select.innerHTML = `<option value="SEMUA">Semua Kelas</option>`;
+
+        }
+
+        classListLoaded = false;
+
+        if (window.NilaiKelasUI) {
+            NilaiKelasUI.clear();
+        }
+
+    }
+
     async function handleSubmit() {
 
         const kelas = document.getElementById("selectKelas").value;
         const mapel = document.getElementById("selectMapelClass").value;
+        const tahun = window.NilaiYear ? NilaiYear.getYear() : null;
 
         NilaiKelasUI.showLoading();
 
         try {
 
-            const response = await NilaiKelasAPI.getClassSummary(kelas, mapel);
+            const response = await NilaiKelasAPI.getClassSummary(kelas, mapel, tahun);
 
             if (!response.success) {
 
@@ -94,7 +120,9 @@ window.NilaiKelasSearch = (() => {
 
         initialize,
 
-        ensureClassList
+        ensureClassList,
+
+        resetClassList
 
     };
 

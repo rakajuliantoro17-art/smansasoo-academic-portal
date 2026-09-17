@@ -48,4 +48,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    // Ganti tahun ajaran -> hasil pencarian NIS & daftar kelas
+    // tahun sebelumnya tidak relevan lagi, jadi direset. Kalau
+    // tab "Rata-Rata Kelas" sedang aktif, daftar kelas langsung
+    // dimuat ulang untuk tahun yang baru dipilih.
+    if (window.NilaiYear) {
+
+        NilaiYear.onChange(() => {
+
+            if (window.NilaiUI) NilaiUI.clear();
+
+            if (window.NilaiKelasSearch) {
+
+                NilaiKelasSearch.resetClassList();
+
+                if (sectionKelas && !sectionKelas.classList.contains("hidden")) {
+                    NilaiKelasSearch.ensureClassList();
+                }
+
+            }
+
+        });
+
+    }
+
 });

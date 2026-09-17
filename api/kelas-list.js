@@ -11,12 +11,15 @@ sheet (Wajib, Lanjutan, Raport), diurutkan A-Z.
 ==========================================================
 */
 
-const { SHEET_NAMES, fetchSheetRows, SHEET_ID } = require("./_lib/gsheet");
+const { SHEET_NAMES, fetchSheetRows, resolveSheetId } = require("./_lib/gsheet");
 
 module.exports = async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
 
-    if (!SHEET_ID) {
+    const tahun = (req.query.tahun || "").toString().trim();
+    const sheetId = resolveSheetId(tahun);
+
+    if (!sheetId) {
         res.status(500).json({ success: false, message: "GOOGLE_SHEET_ID belum diatur di Environment Variable Vercel.", data: [] });
         return;
     }
@@ -25,7 +28,7 @@ module.exports = async (req, res) => {
         const sheetKeys = [SHEET_NAMES.wajib, SHEET_NAMES.lanjutan, SHEET_NAMES.raport];
 
         const results = await Promise.all(
-            sheetKeys.map((name) => fetchSheetRows(name).catch(() => []))
+            sheetKeys.map((name) => fetchSheetRows(name, sheetId).catch(() => []))
         );
 
         const classes = [];

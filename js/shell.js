@@ -208,6 +208,16 @@ window.Shell = (() => {
 
         ` : ""}
 
+        <button
+            type="button"
+            class="app-sidebar-stats-toggle${externalLink ? "" : " app-sidebar-stats-toggle-pinned"}"
+            id="statsPanelToggle"
+            title="Statistik Pengunjung"
+            aria-haspopup="dialog"
+            aria-expanded="false">
+            <span class="icon">📊</span> <span class="label">Statistik Pengunjung</span>
+        </button>
+
         `;
 
     }

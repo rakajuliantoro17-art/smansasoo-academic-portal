@@ -49,13 +49,17 @@ async function fetchNilaiJSON(url) {
  * ==========================================
  */
 
-async function searchNilai(keyword) {
+async function searchNilai(keyword, tahun) {
 
     if (!keyword) {
         throw new Error("Keyword tidak boleh kosong.");
     }
 
     const params = new URLSearchParams({ keyword });
+
+    if (tahun) {
+        params.set("tahun", tahun);
+    }
 
     // Path absolut ("/api/nilai") supaya tetap benar dipanggil
     // dari halaman mana pun, termasuk dari dalam /pages/.

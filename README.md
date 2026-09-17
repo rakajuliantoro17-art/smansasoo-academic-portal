@@ -135,6 +135,73 @@ kelihatan di browser maupun di source code GitHub.
 
 ---
 
+## 📅 Multi Tahun Ajaran (Nilai)
+
+Modul Cek Nilai mendukung banyak tahun ajaran sekaligus. Tahun berjalan
+(default) tetap pakai `GOOGLE_SHEET_ID` seperti biasa; tahun ajaran lain
+boleh disimpan di spreadsheet terpisah lewat Environment Variable dengan
+pola `GOOGLE_SHEET_ID_<TAHUN>`.
+
+### Cara nambah tahun ajaran baru
+
+1. Siapkan spreadsheet untuk tahun itu dengan **struktur sheet yang sama
+   persis** dengan yang sekarang (nama tab: `NIlai Math Wajib Kelas XI`,
+   `Nilai Math Lanjutan Kelas XI`, `Nilai Input Raport`), lalu share
+   **"Anyone with the link - Viewer"**.
+2. Di **Vercel Dashboard → Project → Settings → Environment Variables**,
+   tambahkan:
+
+   | Key | Value |
+   |-----|-------|
+   | `GOOGLE_SHEET_ID_2026` | ID spreadsheet tahun ajaran 2026/2027 |
+   | `GOOGLE_SHEET_ID_2025` | ID spreadsheet tahun ajaran 2025/2026 |
+
+   (angka tahunnya = tahun **mulai** tahun ajaran, 4 digit, sesuai yang
+   nanti ditulis di `tahun_tersedia`)
+
+3. Edit `data/nilai-index.json`, tambahkan angka tahunnya ke
+   `tahun_tersedia` (urut dari terbaru ke terlama) dan set
+   `tahun_default` kalau perlu diganti.
+4. Commit + redeploy. Dropdown "Tahun Pelajaran" di `pages/nilai.html`
+   otomatis muncul tanpa perlu ubah kode lain.
+
+> Tahun yang TIDAK punya `GOOGLE_SHEET_ID_<TAHUN>` sendiri otomatis
+> jatuh ke `GOOGLE_SHEET_ID` (default) — jadi kalau memang belum mau
+> memisah datanya, tidak wajib bikin env var baru dulu.
+
+---
+
+## 📊 Statistik Pengunjung (Panel Floating)
+
+Sidebar punya tombol **"Statistik Pengunjung"** di bagian paling bawah
+yang membuka panel floating (glassmorphism) berisi jumlah kunjungan ke
+tiap halaman (Nilai, Kelulusan, Kenaikan Kelas, dst). Datanya disimpan
+di **Upstash Redis** (gratis untuk trafik kecil-menengah), diakses lewat
+REST API — tidak butuh tambahan dependency npm apa pun.
+
+### Setup
+
+1. Buat database Redis gratis di <https://console.upstash.com>
+   (New Database → pilih region terdekat → Create).
+2. Di halaman database itu, salin **REST URL** dan **REST TOKEN**.
+3. Di **Vercel Dashboard → Project → Settings → Environment Variables**,
+   tambahkan:
+
+   | Key | Value |
+   |-----|-------|
+   | `UPSTASH_REDIS_REST_URL` | REST URL dari langkah 2 |
+   | `UPSTASH_REDIS_REST_TOKEN` | REST TOKEN dari langkah 2 |
+
+4. Redeploy project.
+
+Selama dua Environment Variable itu belum diisi, panel tetap muncul
+tapi menampilkan pesan "belum diaktifkan" — tidak ada yang error/rusak
+di sisi pengguna. Endpoint yang dipakai: `GET /api/stats` (ambil semua
+angka) dan `POST /api/stats?page=<key>` (tambah 1 hit, dipanggil
+otomatis oleh `js/stats-tracker.js` tiap halaman dimuat).
+
+---
+
 ## 🔌 API
 
 Google Apps Script digunakan sebagai REST API.

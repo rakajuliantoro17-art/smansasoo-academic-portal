@@ -26,7 +26,7 @@ CHANGELOG (v1.1.0):
 ==========================================================
 */
 
-const { SHEET_NAMES, cleanNIS, fetchSheetRows, SHEET_ID } = require("./_lib/gsheet");
+const { SHEET_NAMES, cleanNIS, fetchSheetRows, resolveSheetId } = require("./_lib/gsheet");
 
 function parseSubjectData(mapelTitle, kelas, nis, nama, assessments, nilaiRaport) {
     let completedCount = 0;
@@ -63,7 +63,10 @@ function parseSubjectData(mapelTitle, kelas, nis, nama, assessments, nilaiRaport
 module.exports = async (req, res) => {
     res.setHeader("Cache-Control", "no-store");
 
-    if (!SHEET_ID) {
+    const tahun = (req.query.tahun || "").toString().trim();
+    const sheetId = resolveSheetId(tahun);
+
+    if (!sheetId) {
         res.status(500).json({ success: false, message: "GOOGLE_SHEET_ID belum diatur di Environment Variable Vercel." });
         return;
     }
@@ -79,9 +82,9 @@ module.exports = async (req, res) => {
 
     try {
         const [wajibRows, lanjutanRows, raportRows] = await Promise.all([
-            fetchSheetRows(SHEET_NAMES.wajib).catch(() => []),
-            fetchSheetRows(SHEET_NAMES.lanjutan).catch(() => []),
-            fetchSheetRows(SHEET_NAMES.raport).catch(() => [])
+            fetchSheetRows(SHEET_NAMES.wajib, sheetId).catch(() => []),
+            fetchSheetRows(SHEET_NAMES.lanjutan, sheetId).catch(() => []),
+            fetchSheetRows(SHEET_NAMES.raport, sheetId).catch(() => [])
         ]);
 
         let nilaiRaport = "-";
