@@ -2,7 +2,18 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell Stylesheet (Navbar + Sidebar + Footer)
-Version : 2.2.0
+Version : 2.3.0
+==========================================================
+CHANGELOG (v2.3.0):
+- Trik "abaikan sidebar untuk center" (v2.2.0) diganti dari
+  daftar selector manual (main/header/.container/#shellFooter)
+  jadi wildcard "> *" + :not() pengecualian. Sebelumnya
+  rekap.html, prestasi.html, simulasi-tka.html (pembungkus
+  custom: .rekap-topbar/.rekap-hero/.prestasi-hero/.tka-hero)
+  kelewat dari daftar itu, jadi masih tidak proporsional
+  dibanding halaman lain. Wildcard ini otomatis mencakup
+  pembungkus custom halaman BARU juga, tanpa perlu diedit lagi
+  di sini tiap kali ada halaman baru.
 ==========================================================
 CHANGELOG (v2.2.0):
 - Perluas trik "abaikan sidebar untuk center" (sebelumnya
@@ -482,10 +493,47 @@ body.sidebar-open .app-sidebar{
        (250px) maupun saat di-minimize (68px), karena
        --shell-sidebar-w yang dipakai otomatis ikut berubah
        lewat class body.sidebar-collapsed di bawah. */
-    .app-content > main,
-    .app-content > header,
-    .app-content > .container,
-    .app-content > #shellFooter{
+    /* Elemen level-atas halaman yang PERLU proporsional
+       terhadap layar penuh (bukan area yang sudah dipersempit
+       sidebar): header hero, <main>, .container pembungkus
+       (kelulusan.html), footer bersama shell.js, DAN
+       pembungkus custom milik halaman tertentu (rekap.html
+       pakai .rekap-topbar/.rekap-hero, prestasi.html pakai
+       .prestasi-hero, simulasi-tka.html pakai .tka-hero, dst).
+
+       Supaya TIDAK perlu terus menambah nama class satu-satu
+       tiap kali ada halaman baru dengan pembungkus custom-nya
+       sendiri (rapuh, gampang kelewat -- ini persis yang bikin
+       kelulusan/prestasi/simulasi-tka sempat tidak konsisten),
+       selector di bawah SENGAJA pakai wildcard "> *" yang
+       berlaku ke SEMUA anak langsung .app-content, dikecualikan
+       cuma elemen dekoratif full-screen yang memang harus
+       tetap begini (:not(...)): .bg-layer (foto background),
+       .flash/#balloons/.overlay/audio (lapisan perayaan status
+       NAIK/LULUS), dan <script> (tidak dirender, tidak relevan).
+
+       Tanpa ini: elemen jadi ke-tengah relatif ke area yang
+       sudah dipersempit margin-left di atas (viewport dikurangi
+       lebar sidebar) -- BUKAN ke layar penuh -- sehingga logo,
+       kartu pencarian, dan footer semua kelihatan "geser ke
+       kanan", proporsinya tidak pas lagi.
+
+       Trik: tiap elemen ditarik balik selebar sidebar
+       (margin-left negatif) + lebarnya ditambah selebar
+       sidebar juga, jadi kembali full-bleed selebar viewport
+       sungguhan. Isinya (biasanya .container dengan
+       width:min(...) + margin:auto) lalu center dengan benar
+       terhadap viewport, bukan terhadap area yang sudah
+       dipotong sidebar.
+
+       Sidebar (position:fixed, z-index lebih tinggi, glass)
+       cuma menimpa sedikit bagian kiri elemen ini secara
+       visual -- pola umum "konten di belakang sidebar tetap",
+       dan hasilnya proporsional baik saat sidebar penuh
+       (250px) maupun saat di-minimize (68px), karena
+       --shell-sidebar-w yang dipakai otomatis ikut berubah
+       lewat class body.sidebar-collapsed di bawah. */
+    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script){
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -494,10 +542,7 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > main,
-    body.sidebar-collapsed .app-content > header,
-    body.sidebar-collapsed .app-content > .container,
-    body.sidebar-collapsed .app-content > #shellFooter{
+    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script){
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
@@ -636,10 +681,7 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    .app-content > main,
-    .app-content > header,
-    .app-content > .container,
-    .app-content > #shellFooter{
+    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script){
 
         margin-left:0 !important;
         width:100% !important;
