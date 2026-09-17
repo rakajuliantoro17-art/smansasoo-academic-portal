@@ -607,8 +607,23 @@ body.sidebar-open .app-sidebar{
        dan hasilnya proporsional baik saat sidebar penuh
        (250px) maupun saat di-minimize (68px), karena
        --shell-sidebar-w yang dipakai otomatis ikut berubah
-       lewat class body.sidebar-collapsed di bawah. */
-    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script){
+       lewat class body.sidebar-collapsed di bawah.
+
+       PENGECUALIAN TAMBAHAN -- .prestasi-shell-inner &
+       .rekap-shell: berbeda dari .prestasi-hero/.rekap-topbar
+       (yang MEMANG full-bleed, tanpa max-width sendiri), dua
+       elemen ini adalah kolom konten yang punya max-width +
+       margin:auto SENDIRI untuk center di area aman (bukan di
+       layar penuh). Kalau ikut wildcard di atas, margin-left
+       paksaannya menang dari margin:auto milik elemen itu
+       (selector wildcard ini punya :not(#balloons) yang
+       menambah bobot spesifisitas setingkat ID, mengalahkan
+       satu class biasa) -- akibatnya kolom konten malah
+       ketarik balik ke kiri, ketiban sidebar, dan tidak center
+       lagi. Kalau bikin halaman baru dengan pola serupa (kolom
+       konten ber-max-width sebagai anak langsung
+       .app-content), tambahkan classnya ke sini juga. */
+    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell){
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -617,7 +632,7 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script){
+    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell){
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
