@@ -1,0 +1,99 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Pengumuman Page Stylesheet
+Version : 1.0.0
+==========================================================
+Pakai token bersama dari css/variables.css (var(--surface),
+var(--text), dst) -- BUKAN token self-contained seperti
+css/prestasi.css atau css/simulasi-tka.css -- karena halaman
+ini konten inti portal sendiri (bukan tampilan situs pihak
+ketiga), jadi harus otomatis ikut tema gelap/terang seperti
+halaman Nilai dan Rapor Pendidikan.
+==========================================================
+*/
+
+.pengumuman-list{
+
+    display:flex;
+    flex-direction:column;
+    gap:var(--space-md);
+    margin-top:var(--space-lg);
+
+}
+
+.pengumuman-card{
+
+    background:var(--surface);
+    border:1px solid var(--border-light);
+    border-left:4px solid var(--primary);
+    border-radius:var(--radius-lg);
+    padding:var(--space-lg);
+    box-shadow:var(--shadow-sm);
+
+}
+
+.pengumuman-card.is-penting{
+
+    border-left-color:var(--danger);
+    background:var(--danger-bg);
+
+}
+
+.pengumuman-card-head{
+
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:var(--space-md);
+
+}
+
+.pengumuman-card-head h3{
+
+    margin:0;
+    font-size:var(--font-lg);
+    font-weight:var(--weight-bold);
+    color:var(--text);
+
+}
+
+.pengumuman-badge{
+
+    flex-shrink:0;
+    background:var(--danger);
+    color:#ffffff;
+    font-size:var(--font-xs);
+    font-weight:var(--weight-bold);
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    padding:.25rem .65rem;
+    border-radius:var(--radius-pill);
+
+}
+
+.pengumuman-date{
+
+    display:block;
+    margin-top:.35rem;
+    font-size:var(--font-xs);
+    color:var(--text-muted);
+
+}
+
+.pengumuman-body{
+
+    margin:var(--space-sm) 0 0;
+    color:var(--text-light);
+    line-height:1.65;
+    white-space:pre-line;
+
+}
+
+.pengumuman-empty{
+
+    text-align:center;
+    color:var(--text-muted);
+    padding:var(--space-2xl) 0;
+
+}
