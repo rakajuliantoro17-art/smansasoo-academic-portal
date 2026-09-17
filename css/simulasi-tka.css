@@ -1,0 +1,260 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Simulasi TKA Page Stylesheet
+Version : 1.0.0
+==========================================================
+Navbar + sidebar TIDAK didefinisikan di file ini -- sudah ada
+di css/shell.css (dipakai semua halaman, dirender js/shell.js).
+File ini cuma berisi gaya khusus halaman Simulasi TKA: hero,
+kartu info, dan area embed iframe. Mengikuti pola self-contained
+yang sama seperti css/prestasi.css (token --tka-*, bukan token
+bersama), supaya perubahan warna di satu halaman tidak
+merembet ke halaman lain.
+==========================================================
+*/
+
+:root{
+
+    --tka-primary:#0F4C81;
+    --tka-primary-dark:#0A3A63;
+    --tka-accent:#F4B400;
+    --tka-bg:#F3F5F8;
+    --tka-surface:#FFFFFF;
+    --tka-text:#1D2939;
+    --tka-text-light:#667085;
+    --tka-border:#E4E7EC;
+    --tka-radius:12px;
+    --tka-navbar-h:64px;
+    --tka-sidebar-w:250px;
+
+}
+
+body.tka-page{
+
+    margin:0;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    background:var(--tka-bg);
+    color:var(--tka-text);
+
+}
+
+/* ==========================================
+   HERO
+========================================== */
+
+.tka-hero{
+
+    padding:2.5rem 1.5rem 1.5rem;
+    text-align:center;
+    background:linear-gradient(160deg, var(--tka-primary) 0%, var(--tka-primary-dark) 100%);
+    color:#ffffff;
+
+}
+
+.tka-hero h1{
+
+    margin:0 0 .5rem;
+    font-size:clamp(1.5rem, 3vw, 2.25rem);
+    font-weight:800;
+
+}
+
+.tka-hero p{
+
+    margin:0;
+    opacity:.85;
+    font-size:.95rem;
+
+}
+
+/* ==========================================
+   MAIN + CARDS
+========================================== */
+
+.tka-main{
+
+    max-width:900px;
+    margin:0 auto;
+    padding:1.75rem 1.25rem 3rem;
+    display:flex;
+    flex-direction:column;
+    gap:1.5rem;
+
+}
+
+.tka-card{
+
+    background:var(--tka-surface);
+    border:1px solid var(--tka-border);
+    border-radius:var(--tka-radius);
+    padding:1.75rem;
+    box-shadow:0 4px 16px rgba(16, 24, 40, .04);
+
+}
+
+.tka-card h2{
+
+    margin:0 0 .75rem;
+    font-size:1.15rem;
+    font-weight:700;
+    color:var(--tka-primary);
+
+}
+
+.tka-card p{
+
+    margin:0 0 .75rem;
+    line-height:1.65;
+    color:var(--tka-text);
+
+}
+
+.tka-note-list{
+
+    margin:0;
+    padding-left:1.15rem;
+    color:var(--tka-text-light);
+    font-size:.9rem;
+    line-height:1.7;
+
+}
+
+.tka-note-list li{
+    margin-bottom:.35rem;
+}
+
+/* ==========================================
+   EMBED SECTION
+========================================== */
+
+.tka-embed-head{
+
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    margin-bottom:1rem;
+
+}
+
+.tka-embed-head h2{
+    margin:0;
+}
+
+.tka-newtab-link{
+
+    font-size:.85rem;
+    font-weight:600;
+    color:var(--tka-primary);
+    text-decoration:none;
+    border:1px solid var(--tka-border);
+    border-radius:999px;
+    padding:.4rem .9rem;
+    white-space:nowrap;
+
+}
+
+.tka-newtab-link:hover{
+    background:var(--tka-bg);
+}
+
+.tka-embed-placeholder{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:.75rem;
+    padding:3rem 1rem;
+    text-align:center;
+    background:var(--tka-bg);
+    border:1px dashed var(--tka-border);
+    border-radius:var(--tka-radius);
+
+}
+
+.tka-start-btn{
+
+    background:var(--tka-accent);
+    color:#3A2A00;
+    border:none;
+    border-radius:999px;
+    padding:.85rem 2.25rem;
+    font-size:1rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+
+}
+
+.tka-start-btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 6px 16px rgba(244, 180, 0, .35);
+}
+
+.tka-embed-hint{
+
+    margin:0;
+    font-size:.8rem;
+    color:var(--tka-text-light);
+
+}
+
+.tka-embed-wrap{
+
+    border:1px solid var(--tka-border);
+    border-radius:var(--tka-radius);
+    overflow:hidden;
+    background:var(--tka-bg);
+
+}
+
+.tka-embed-frame{
+
+    display:block;
+    width:100%;
+    height:75vh;
+    min-height:520px;
+    border:none;
+
+}
+
+.hidden{
+    display:none !important;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.tka-footer{
+
+    text-align:center;
+    padding:1.5rem 1rem;
+    font-size:.8rem;
+    color:var(--tka-text-light);
+
+}
+
+.tka-footer a{
+    color:var(--tka-primary);
+    font-weight:600;
+    text-decoration:none;
+}
+
+.tka-footer a:hover{
+    text-decoration:underline;
+}
+
+/* ==========================================
+   DESKTOP: samakan ruang dengan sidebar shell
+========================================== */
+
+@media (min-width: 1024px){
+
+    .tka-main{
+        max-width:960px;
+    }
+
+}
