@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulasi TKA | SMAN 1 Sooko Mojokerto</title>
+<meta name="description" content="Akses cepat ke Simulasi Tes Kemampuan Akademik (TKA) resmi dari Pusat Asesmen Pendidikan (Pusmendik), Kementerian Pendidikan Dasar dan Menengah.">
+
+<meta name="theme-color" content="#0F4C81">
+
+<!-- ANTI-FLASH THEME INIT -->
+<script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('smansasoo-theme');
+            var theme = saved || ((window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+</script>
+
+<link rel="icon" href="../assets/logo/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/shell.css">
+<link rel="stylesheet" href="../css/settings-drawer.css">
+<link rel="stylesheet" href="../css/simulasi-tka.css">
+
+</head>
+<body class="tka-page" data-page="simulasi-tka">
+
+    <!-- ================= SHELL: NAVBAR + SIDEBAR ================= -->
+
+    <script>
+        window.SHELL_PAGE_SECTIONS = [
+            { id: "tentang", label: "Tentang TKA", icon: "ℹ️" },
+            { id: "simulasi", label: "Simulasi", icon: "🧠" }
+        ];
+        window.SHELL_EXTERNAL_LINK = {
+            href: "https://pusmendik.kemendikdasmen.go.id/tka/simulasi_tka",
+            label: "Buka di Situs Resmi Pusmendik"
+        };
+    </script>
+
+    <div id="shellNav"></div>
+
+    <!-- ================= KONTEN ================= -->
+
+    <div class="tka-hero">
+
+        <h1>Simulasi TKA</h1>
+
+        <p>Latihan Tes Kemampuan Akademik resmi dari Pusat Asesmen Pendidikan (Pusmendik)</p>
+
+    </div>
+
+    <main class="tka-main">
+
+        <section class="tka-card" id="tentang">
+
+            <h2>Tentang Simulasi TKA</h2>
+
+            <p>
+                Tes Kemampuan Akademik (TKA) adalah asesmen sukarela dari
+                Kementerian Pendidikan Dasar dan Menengah untuk mengukur
+                capaian akademik murid secara objektif dan terstandar.
+                Simulasi ini <strong>gratis</strong> dan disediakan langsung
+                oleh Pusmendik — bukan latihan buatan sekolah.
+            </p>
+
+            <ul class="tka-note-list">
+                <li>Login memakai akun resmi TKA milik siswa masing-masing (bukan akun portal sekolah).</li>
+                <li>Halaman di bawah adalah tampilan langsung dari situs resmi Pusmendik, dibuka di dalam portal ini.</li>
+                <li>Kalau tidak muncul atau bermasalah, pakai tombol "Buka di tab baru" di bawah.</li>
+            </ul>
+
+        </section>
+
+        <section class="tka-card tka-embed-section" id="simulasi">
+
+            <div class="tka-embed-head">
+
+                <h2>Mulai Simulasi</h2>
+
+                <a
+                    href="https://pusmendik.kemendikdasmen.go.id/tka/simulasi_tka"
+                    target="_blank"
+                    rel="noopener"
+                    class="tka-newtab-link">
+                    Buka di tab baru ↗
+                </a>
+
+            </div>
+
+            <div id="tkaEmbedPlaceholder" class="tka-embed-placeholder">
+
+                <button type="button" id="tkaStartBtn" class="tka-start-btn">
+                    Mulai Simulasi
+                </button>
+
+                <p class="tka-embed-hint">Situs resmi akan dimuat di bawah ini.</p>
+
+            </div>
+
+            <div id="tkaEmbedWrap" class="tka-embed-wrap hidden">
+
+                <iframe
+                    id="tkaEmbedFrame"
+                    class="tka-embed-frame"
+                    title="Simulasi TKA - Pusmendik"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer class="tka-footer">
+        Simulasi disediakan oleh
+        <a href="https://pusmendik.kemendikdasmen.go.id/tka/" target="_blank" rel="noopener">Pusat Asesmen Pendidikan (Pusmendik)</a>
+        &middot; Kementerian Pendidikan Dasar dan Menengah
+    </footer>
+
+    <div id="shellFooter"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/shell.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
+
+    <script src="../js/simulasi-tka.js"></script>
+
+</body>
+</html>
