@@ -2,7 +2,19 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell Stylesheet (Navbar + Sidebar + Footer)
-Version : 2.3.0
+Version : 2.4.0
+==========================================================
+CHANGELOG (v2.4.0):
+- Background sidebar diganti dari backdrop-filter (nge-blur
+  apa pun di baliknya, beda-beda tiap halaman) jadi foto
+  assets/images/drh.jpg sendiri yang di-blur langsung lewat
+  ::before + filter:blur -- konsisten sama persis di semua
+  halaman, termasuk yang sama sekali tidak punya foto
+  background sendiri (nilai, rekap, prestasi, rapor, dst).
+  Tint di atasnya (::after) pakai token --glass-tint-* yang
+  sama dengan komponen glass lain di situs. Konten asli
+  sidebar dinaikkan z-index (".app-sidebar > *") supaya
+  selalu di atas kedua lapisan itu.
 ==========================================================
 CHANGELOG (v2.3.0):
 - Trik "abaikan sidebar untuk center" (v2.2.0) diganti dari
@@ -203,8 +215,16 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
     padding:var(--space-lg) var(--space-md);
 
-    /* Fallback dulu untuk browser tanpa backdrop-filter. */
+    /* Fallback kalau assets/images/drh.jpg gagal dimuat --
+       lapisan foto+tint ada di ::before/::after di bawah,
+       jadi warna ini normalnya tidak kelihatan sama sekali. */
     background:var(--surface);
+
+    /* Perlu positioned + isolate supaya ::before (foto blur)
+       dan ::after (tint) punya "panggung" sendiri untuk
+       z-index, terpisah dari stacking context sidebar lain. */
+    position:relative;
+    isolation:isolate;
 
     border-right:1px solid var(--glass-border,var(--border-light));
 
@@ -214,17 +234,72 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
 }
 
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+/* ==========================================
+   BACKGROUND SIDEBAR: assets/images/drh.jpg + glassmorphism
+   ==========================================
+   Beda dengan trik glass di komponen lain (search-card, dst)
+   yang pakai backdrop-filter (nge-blur apa pun yang ada DI
+   BALIK elemennya, jadi hasilnya beda-beda tergantung halaman
+   -- ada yang punya foto scc.jpg di baliknya, ada yang tidak).
 
-    .app-sidebar{
+   Sidebar butuh foto yang SAMA & KONSISTEN di semua halaman,
+   jadi fotonya ditaruh di ::before sebagai lapisannya sendiri
+   (bukan mengintip apa yang ada di belakang sidebar), lalu
+   di-blur langsung (filter:blur, bukan backdrop-filter) supaya
+   hasilnya identik di halaman mana pun -- termasuk halaman yang
+   sama sekali tidak punya foto background sendiri (nilai,
+   rekap, prestasi, rapor, dst).
 
-        background:color-mix(in srgb, var(--surface) 72%, transparent);
+   Urutan lapisan (dari paling belakang ke depan):
+   1. ::before -- foto drh.jpg, di-blur
+   2. ::after  -- tint gradient (variabel --glass-tint-* yang
+      sama dipakai komponen glass lain), supaya teks menu tetap
+      terbaca di atas foto
+   3. Konten asli sidebar (nav, judul, dst) -- diberi z-index
+      lebih tinggi lewat ".app-sidebar > *" di bawah supaya
+      selalu di atas kedua lapisan itu, apa pun urutan elemen
+      barunya nanti.
+========================================== */
 
-        -webkit-backdrop-filter:blur(var(--glass-blur,24px)) saturate(var(--glass-saturate,180%));
+.app-sidebar::before{
 
-        backdrop-filter:blur(var(--glass-blur,24px)) saturate(var(--glass-saturate,180%));
+    content:"";
 
-    }
+    position:absolute;
+    inset:0;
+    z-index:0;
+
+    background-image:url("../assets/images/drh.jpg");
+    background-size:cover;
+    background-position:center;
+
+    filter:blur(var(--glass-blur,24px));
+
+    pointer-events:none;
+
+}
+
+.app-sidebar::after{
+
+    content:"";
+
+    position:absolute;
+    inset:0;
+    z-index:1;
+
+    background:linear-gradient(165deg,
+        var(--glass-tint-top,rgba(255,255,255,.55)) 0%,
+        var(--glass-tint-bottom,rgba(255,255,255,.3)) 100%
+    );
+
+    pointer-events:none;
+
+}
+
+.app-sidebar > *{
+
+    position:relative;
+    z-index:2;
 
 }
 
