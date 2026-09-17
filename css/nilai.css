@@ -421,3 +421,24 @@ tetap konsisten dengan halaman kenaikan kelas.
     }
 
 }
+
+/* ==========================================
+   BACKGROUND FOTO KHUSUS HALAMAN NILAI
+   ==========================================
+   Default .bg-layer (css/glass.css) pakai assets/images/scc.jpg
+   untuk semua halaman. Halaman Nilai sengaja pakai foto beda
+   (tyr.jpg) -- override di sini (dimuat setelah glass.css,
+   dan lebih spesifik lewat body[data-page="nilai"]) supaya
+   TIDAK perlu ubah glass.css yang dipakai bersama halaman lain
+   (Beranda, Kelulusan, dst tetap pakai scc.jpg).
+
+   Cuma background-image yang di-override; position/size/repeat
+   dari css/glass.css (cover, center, no-repeat) tetap berlaku
+   karena tidak disentuh di sini.
+========================================== */
+
+body[data-page="nilai"] .bg-layer{
+
+    background-image:url("../assets/images/tyr.jpg");
+
+}
