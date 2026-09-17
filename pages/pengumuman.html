@@ -1,111 +1,106 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
+/*
+==========================================================
+SMANSASOO Academic Portal
+API Route: /api/announcements
+Version : 1.0.0
+==========================================================
+Baca sheet "ANNOUNCEMENTS" di spreadsheet yang sama dengan
+Nilai/Rekap (GOOGLE_SHEET_ID). Skema kolom (baris 1 = header):
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pengumuman | SMAN 1 Sooko Mojokerto</title>
-<meta name="description" content="Papan pengumuman resmi SMAN 1 Sooko Mojokerto.">
+  A: Judul      -- judul pengumuman
+  B: Isi        -- isi lengkap
+  C: Tanggal    -- tanggal (bebas format, ditampilkan apa
+                   adanya; dicoba di-parse untuk pengurutan,
+                   kalau gagal parse jatuh ke urutan baris)
+  D: Prioritas  -- "Penting" atau kosong/"Normal"
+  E: Aktif      -- "Y" supaya tampil, apa pun selain itu
+                   (termasuk kosong) disembunyikan tanpa
+                   perlu hapus barisnya
 
-<meta name="theme-color" content="#0F4C81">
+Hanya baris dengan Judul terisi DAN Aktif="Y" (tidak
+case-sensitive) yang dikembalikan, diurutkan tanggal
+terbaru dulu.
+==========================================================
+*/
 
-<!-- ANTI-FLASH THEME INIT -->
-<script>
-    (function () {
-        try {
-            var saved = localStorage.getItem('smansasoo-theme');
-            var theme = saved || ((window.matchMedia &&
-                window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        } catch (e) {
-            document.documentElement.setAttribute('data-theme', 'light');
+const { SHEET_ID, fetchSheetRows } = require("./_lib/gsheet");
+
+const SHEET_NAME = "ANNOUNCEMENTS";
+
+function parseDateSafe(value) {
+
+    const d = new Date(value);
+
+    return isNaN(d.getTime()) ? null : d;
+
+}
+
+module.exports = async (req, res) => {
+
+    res.setHeader("Cache-Control", "no-store");
+
+    if (!SHEET_ID) {
+        res.status(500).json({ success: false, message: "GOOGLE_SHEET_ID belum diatur di Environment Variable Vercel.", data: [] });
+        return;
+    }
+
+    try {
+
+        const rows = await fetchSheetRows(SHEET_NAME);
+
+        const announcements = [];
+
+        for (let i = 1; i < rows.length; i++) {
+
+            const row = rows[i];
+
+            const judul = String(row[0] || "").trim();
+            const isi = String(row[1] || "").trim();
+            const tanggal = String(row[2] || "").trim();
+            const prioritas = String(row[3] || "").trim() || "Normal";
+            const aktif = String(row[4] || "").trim().toUpperCase();
+
+            if (!judul || aktif !== "Y") continue;
+
+            announcements.push({
+
+                judul,
+                isi,
+                tanggal,
+                prioritas,
+                _sortDate: parseDateSafe(tanggal),
+                _sortIndex: i
+
+            });
+
         }
-    })();
-</script>
 
-<link rel="icon" href="../assets/logo/favicon.ico">
+        announcements.sort((a, b) => {
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+            // Yang punya tanggal valid diurutkan terbaru dulu;
+            // yang tanggalnya tidak bisa di-parse ditaruh di
+            // bawah, diurutkan sesuai urutan baris di sheet.
+            if (a._sortDate && b._sortDate) {
+                return b._sortDate - a._sortDate;
+            }
 
-<!-- CSS wajib di setiap halaman -->
-<link rel="stylesheet" href="../css/variables.css">
-<link rel="stylesheet" href="../css/theme.css">
-<link rel="stylesheet" href="../css/style.css">
-<link rel="stylesheet" href="../css/responsive.css">
-<link rel="stylesheet" href="../css/animation.css">
-<link rel="stylesheet" href="../css/shell.css">
-<link rel="stylesheet" href="../css/settings-drawer.css">
-<link rel="stylesheet" href="../css/stats-panel.css">
+            if (a._sortDate && !b._sortDate) return -1;
+            if (!a._sortDate && b._sortDate) return 1;
 
-<!-- CSS khusus halaman ini -->
-<link rel="stylesheet" href="../css/pengumuman.css">
+            return a._sortIndex - b._sortIndex;
 
-</head>
+        });
 
-<body data-page="pengumuman">
+        const data = announcements.map(({ judul, isi, tanggal, prioritas }) => ({
+            judul, isi, tanggal, prioritas
+        }));
 
-    <!-- ================= SHELL: NAVBAR + SIDEBAR ================= -->
+        res.status(200).json({ success: true, message: "Pengumuman berhasil diambil.", data });
 
-    <div id="shellNav"></div>
+    } catch (err) {
 
-    <!-- ================= HEADER ================= -->
+        res.status(500).json({ success: false, message: err.message || "Terjadi kesalahan pada server.", data: [] });
 
-    <header class="header">
+    }
 
-        <div class="container">
-
-            <h1>Papan<span>Pengumuman</span></h1>
-
-            <p>Informasi resmi dari SMAN 1 Sooko Mojokerto</p>
-
-        </div>
-
-    </header>
-
-    <!-- ================= KONTEN ================= -->
-
-    <section class="container">
-
-        <div id="pengumumanLoading" class="loading-box">
-            <div class="spinner"></div>
-            <p>Memuat pengumuman...</p>
-        </div>
-
-        <div id="pengumumanError" class="error-card hidden"></div>
-
-        <div id="pengumumanContent" class="hidden">
-
-            <div id="pengumumanList" class="pengumuman-list"></div>
-
-        </div>
-
-    </section>
-
-    <div id="shellFooter"></div>
-
-    <!-- CONFIG (wajib, dipakai Shell untuk nama sekolah & versi) -->
-    <script src="../js/config.js"></script>
-
-    <!-- UTILS (wajib) -->
-    <script src="../js/utils.js"></script>
-
-    <!-- SHELL (wajib, render nav + footer) -->
-    <script src="../js/shell.js"></script>
-
-    <!-- STATISTIK PENGUNJUNG (panel floating di sidebar) -->
-    <script src="../js/stats-tracker.js"></script>
-    <script src="../js/stats-panel.js"></script>
-
-    <!-- TEMA (dark/light) + DRAWER PENGATURAN -->
-    <script src="../js/theme.js"></script>
-    <script src="../js/settings-drawer.js"></script>
-
-    <!-- Fitur Pengumuman -->
-    <script src="../js/pengumuman-data.js"></script>
-    <script src="../js/pengumuman-ui.js"></script>
-    <script src="../js/pengumuman-app.js"></script>
-
-</body>
-</html>
+};
