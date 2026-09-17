@@ -40,6 +40,28 @@ CHANGELOG (v3.0.0):
    WASH BACKGROUND (dasar buat efek kaca)
    Cuma aktif di halaman ini (data-page="rapor"),
    supaya halaman lain tidak ikut berubah.
+
+   UPDATE (v3.1.0) -- BACKGROUND FOTO + NUANSA GIRLY:
+   Sebelumnya cuma gradient polos (tanpa foto). Sekarang
+   pakai assets/images/gtr.jpg sebagai foto latar, TAPI
+   blur-nya sengaja dibikin tipis saja (sekitar 5-10% dari
+   blur dramatis 34px yang dipakai halaman Kelulusan/
+   Kenaikan Kelas, jadi ~3px), supaya fotonya masih terlihat
+   jelas -- bukan efek "foto hancur" seperti glass.css.
+
+   Dua lapis dipakai (dipisah dari .rapor-card dkk yang
+   sudah ada supaya tidak numpuk backdrop-filter):
+   1. ::before = foto (blur tipis + sedikit terang & lembut,
+      TIDAK digelapkan seperti glass.css -- rapor.css
+      pakai teks gelap, jadi foto harus tetap cerah).
+   2. ::after  = wash pastel pink+lavender (nuansa "girly"),
+      diselaraskan dengan radial gradient biru/emas brand
+      yang sudah ada supaya tidak lepas dari identitas
+      warna situs, cuma ditambah rona pastel di atasnya.
+
+   inset:-6% + transform:scale(1.08) pada ::before supaya
+   tepi yang kena blur tidak kelihatan (trik yang sama
+   dipakai .bg-layer di css/glass.css).
 ========================================== */
 
 body[data-page="rapor"]{
@@ -54,6 +76,24 @@ body[data-page="rapor"]::before{
 
     position:fixed;
 
+    inset:-6%;
+
+    z-index:-2;
+
+    background:url("../assets/images/gtr.jpg") center 30% / cover no-repeat;
+
+    filter:blur(3px) brightness(1.04) saturate(1.05);
+
+    transform:scale(1.08);
+
+}
+
+body[data-page="rapor"]::after{
+
+    content:"";
+
+    position:fixed;
+
     inset:0;
 
     z-index:-1;
@@ -61,7 +101,7 @@ body[data-page="rapor"]::before{
     background:
         radial-gradient(1100px 600px at 8% -10%, rgba(15,76,129,.10) 0%, transparent 60%),
         radial-gradient(900px 500px at 100% 0%, rgba(244,180,0,.08) 0%, transparent 55%),
-        var(--background);
+        linear-gradient(155deg, rgba(255,214,232,.38) 0%, rgba(233,213,255,.22) 45%, rgba(255,255,255,.55) 100%);
 
 }
 
@@ -79,17 +119,18 @@ body[data-page="rapor"]::before{
     margin-bottom:var(--space-lg);
     padding:var(--space-lg);
     border-radius:var(--radius-xl);
-    background:rgba(255,255,255,.6);
-    border:1px solid rgba(255,255,255,.6);
+    background:rgba(255,250,252,.65);
+    border:1px solid rgba(255,255,255,.7);
     box-shadow:
         var(--shadow-md),
-        inset 0 1px 0 rgba(255,255,255,.7);
+        0 8px 30px -12px rgba(236,72,153,.18),
+        inset 0 1px 0 rgba(255,255,255,.8);
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
     .rapor-toolbar{
-        background:linear-gradient(160deg, rgba(255,255,255,.68) 0%, rgba(255,255,255,.42) 100%);
+        background:linear-gradient(160deg, rgba(255,250,253,.72) 0%, rgba(255,240,247,.44) 100%);
         -webkit-backdrop-filter:blur(18px) saturate(160%);
         backdrop-filter:blur(18px) saturate(160%);
     }
@@ -215,18 +256,18 @@ body[data-page="rapor"]::before{
 
 .rapor-summary-card{
     position:relative;
-    background:rgba(255,255,255,.55);
-    border:1px solid rgba(255,255,255,.6);
+    background:rgba(255,250,252,.58);
+    border:1px solid rgba(255,255,255,.65);
     border-radius:var(--radius-lg);
     padding:var(--space-md) var(--space-lg);
-    box-shadow:var(--shadow-sm);
+    box-shadow:var(--shadow-sm), 0 6px 20px -10px rgba(236,72,153,.16);
     overflow:hidden;
 }
 
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
     .rapor-summary-card{
-        background:linear-gradient(160deg, rgba(255,255,255,.62) 0%, rgba(255,255,255,.32) 100%);
+        background:linear-gradient(160deg, rgba(255,250,253,.66) 0%, rgba(255,240,248,.34) 100%);
         -webkit-backdrop-filter:blur(14px) saturate(150%);
         backdrop-filter:blur(14px) saturate(150%);
     }
@@ -270,11 +311,11 @@ body[data-page="rapor"]::before{
 
 .rapor-card{
     position:relative;
-    background:rgba(255,255,255,.6);
-    border:1px solid rgba(255,255,255,.65);
+    background:rgba(255,250,252,.62);
+    border:1px solid rgba(255,255,255,.7);
     border-top:3px solid var(--border);
     border-radius:var(--radius-lg);
-    box-shadow:var(--shadow-sm);
+    box-shadow:var(--shadow-sm), 0 8px 24px -14px rgba(236,72,153,.15);
     overflow:hidden;
     transition:
         transform .25s var(--ease-ios, ease),
@@ -284,7 +325,7 @@ body[data-page="rapor"]::before{
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
     .rapor-card{
-        background:linear-gradient(165deg, rgba(255,255,255,.66) 0%, rgba(255,255,255,.34) 100%);
+        background:linear-gradient(165deg, rgba(255,250,253,.7) 0%, rgba(255,240,248,.36) 100%);
         -webkit-backdrop-filter:blur(16px) saturate(150%);
         backdrop-filter:blur(16px) saturate(150%);
     }
