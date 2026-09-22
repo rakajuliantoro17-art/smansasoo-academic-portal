@@ -622,8 +622,11 @@ body.sidebar-open .app-sidebar{
        ketarik balik ke kiri, ketiban sidebar, dan tidak center
        lagi. Kalau bikin halaman baru dengan pola serupa (kolom
        konten ber-max-width sebagai anak langsung
-       .app-content), tambahkan classnya ke sini juga. */
-    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell){
+       .app-content), tambahkan classnya ke sini juga.
+       (.container dan .tka-main ditambahkan belakangan -- kena
+       bug yang sama persis, kelulusan.html & simulasi-tka.html
+       sempat kelihatan "nempel kiri, ketutup sidebar"). */
+    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main){
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -632,7 +635,7 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell){
+    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main){
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
