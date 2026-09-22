@@ -1,1241 +1,1291 @@
 /*
-==========================================================
-SMANSASOO Academic Portal
-Glassmorphism Global Layer
-Version : 3.0.0 — "Liquid Glass"
-==========================================================
+=========================================================
+SMANSASOO ACADEMIC PORTAL
+Liquid Glass UI
+File    : css/glass.css
+Version : 2.3.0
+=========================================================
 
-FUNGSI:
-1. Global background layer.
-2. Liquid Glass material.
-3. Glass card untuk halaman Academic Portal.
-4. Background khusus halaman Pengumuman.
-5. Support dark/light theme melalui CSS variables.
-6. Fallback untuk browser tanpa backdrop-filter.
-7. Specular highlight + refractive edge.
-8. Tidak mengubah struktur HTML yang sudah ada.
-
-KONSEP:
-- Transparansi material ±10%
-- Backdrop blur
-- Saturation
-- Soft border
-- Inner highlight
-- Outer shadow
-- Liquid glass reflection
-==========================================================
+DESIGN SYSTEM
+- Liquid Glass / iOS 26 inspired
+- Glass tint       : 10%
+- Backdrop blur    : 20px
+- Saturation       : 140%
+- Content          : 100% opaque
+- Responsive
+- Dark / Light mode compatible
+=========================================================
 */
 
 
 /* =========================================================
-   GLOBAL BODY
+   1. GLOBAL GLASS MATERIAL
 ========================================================= */
 
-body{
+.glass,
+.search-card,
+.result-card,
+.loading-box,
+.error-card,
+.pengumuman-card,
+.result-box,
+.badge-year {
 
-    position:relative;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
 
-    background:transparent;
+    /*
+     * 10% glass tint.
+     * Jangan menggunakan opacity: .1 pada container,
+     * karena seluruh isi akan ikut transparan.
+     */
+    background: rgba(255, 255, 255, .10);
 
+    border: 1px solid rgba(255, 255, 255, .20);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .20),
+        0 4px 12px rgba(0, 0, 0, .10),
+        inset 0 1px 0 rgba(255, 255, 255, .35),
+        inset 0 -1px 0 rgba(255, 255, 255, .05);
+
+    -webkit-backdrop-filter:
+        blur(20px)
+        saturate(140%);
+
+    backdrop-filter:
+        blur(20px)
+        saturate(140%);
 }
 
 
 /* =========================================================
-   GLOBAL BACKGROUND LAYER
+   2. FALLBACK UNTUK BROWSER TANPA BACKDROP FILTER
 ========================================================= */
 
-.bg-layer{
+@supports not (
+    (backdrop-filter: blur(1px))
+    or
+    (-webkit-backdrop-filter: blur(1px))
+) {
 
-    position:fixed;
+    .glass,
+    .search-card,
+    .result-card,
+    .loading-box,
+    .error-card,
+    .pengumuman-card,
+    .result-box,
+    .badge-year {
 
-    inset:-4%;
+        background: rgba(255, 255, 255, .88);
 
-    z-index:-2;
+        border: 1px solid rgba(255, 255, 255, .60);
+
+        box-shadow:
+            0 15px 40px rgba(0, 0, 0, .15);
+    }
+}
+
+
+/* =========================================================
+   3. GLASS SPECULAR HIGHLIGHT
+   Pantulan cahaya bagian atas
+========================================================= */
+
+.glass::before,
+.search-card::before,
+.result-card::before,
+.loading-box::before,
+.error-card::before,
+.pengumuman-card::before,
+.result-box::before,
+.badge-year::before {
+
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    z-index: -1;
+
+    pointer-events: none;
 
     background:
-        url("../assets/images/scc.jpg")
-        center center /
-        cover
-        no-repeat;
+        radial-gradient(
+            130% 100%
+            at 12% -15%,
+            rgba(255, 255, 255, .45) 0%,
+            rgba(255, 255, 255, .12) 35%,
+            rgba(255, 255, 255, 0) 60%
+        );
+}
+
+
+/* =========================================================
+   4. REFRACTIVE EDGE
+   Garis cahaya tipis di bagian bawah
+========================================================= */
+
+.glass::after,
+.search-card::after,
+.result-card::after,
+.loading-box::after,
+.error-card::after,
+.pengumuman-card::after,
+.result-box::after,
+.badge-year::after {
+
+    content: "";
+
+    position: absolute;
+
+    left: 6%;
+    right: 6%;
+    bottom: 0;
+
+    height: 1px;
+
+    pointer-events: none;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, .30),
+            transparent
+        );
+}
+
+
+/* =========================================================
+   5. BACKGROUND LAYER
+========================================================= */
+
+body {
+    position: relative;
+    min-height: 100vh;
+    background: transparent;
+}
+
+
+/*
+ * Pastikan background layer berada di belakang
+ * seluruh konten portal.
+ */
+
+.bg-layer {
+
+    position: fixed;
+    inset: 0;
+
+    z-index: -10;
+
+    overflow: hidden;
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    transform: scale(1.03);
 
     filter:
         blur(22px)
         brightness(.68)
         saturate(1.25);
 
-    transform:scale(1.06);
-
     animation:
-        bgDrift
-        26s
-        var(--ease-ios)
-        infinite
-        alternate;
-
-    transition:
-        background 1.1s var(--ease-ios),
-        filter .9s ease;
-
-    will-change:
-        transform,
-        filter;
-
+        glassBackgroundDrift 24s ease-in-out infinite alternate;
 }
 
 
-@keyframes bgDrift{
+/* Overlay untuk meningkatkan keterbacaan */
 
-    from{
+.bg-layer::after {
 
-        transform:
-            scale(1.06)
-            translate3d(0,0,0);
+    content: "";
 
-    }
-
-    to{
-
-        transform:
-            scale(1.14)
-            translate3d(-1%,-1%,0);
-
-    }
-
-}
-
-
-/* =========================================================
-   BACKGROUND OVERLAY
-========================================================= */
-
-.bg-layer::after{
-
-    content:'';
-
-    position:absolute;
-
-    inset:0;
-
-    pointer-events:none;
+    position: absolute;
+    inset: 0;
 
     background:
-
-        radial-gradient(
-            120% 90%
-            at 50% -10%,
-            rgba(255,255,255,.08),
-            rgba(255,255,255,0) 55%
-        ),
-
         linear-gradient(
             180deg,
-            rgba(10,53,91,.30) 0%,
-            rgba(7,26,53,.50) 65%,
-            rgba(7,26,53,.62) 100%
+            rgba(0, 0, 0, .18),
+            rgba(0, 0, 0, .30)
         );
 
+    pointer-events: none;
 }
 
 
 /* =========================================================
-   PENGUMUMAN BACKGROUND
+   6. BACKGROUND ANIMATION
 ========================================================= */
 
-body[data-page="pengumuman"] .bg-layer{
+@keyframes glassBackgroundDrift {
 
-    background:
-        url("../assets/images/Skr.jpg")
-        center center /
-        cover
-        no-repeat;
-
-}
-
-
-/* =========================================================
-   OPTIONAL CELEBRATION BACKGROUND
-   Tetap kompatibel jika halaman Graduation memakai class
-   .celebration
-========================================================= */
-
-body.celebration .bg-layer{
-
-    background:
-        url("../assets/images/syari.png")
-        center center /
-        cover
-        no-repeat;
-
-    filter:
-        blur(18px)
-        brightness(.72)
-        saturate(1.3);
-
-}
-
-
-/* =========================================================
-   HEADER DI ATAS FOTO
-========================================================= */
-
-.header h1{
-
-    color:var(--text-white);
-
-    letter-spacing:-.02em;
-
-}
-
-
-.header h1 span{
-
-    color:var(--secondary-light);
-
-}
-
-
-.header p{
-
-    color:rgba(255,255,255,.85);
-
-}
-
-
-.header p strong{
-
-    color:#ffffff;
-
-}
-
-
-.header .link-primary{
-
-    color:var(--secondary-light);
-
-    text-decoration:underline;
-
-}
-
-
-.logo{
-
-    filter:
-        drop-shadow(
-            0 6px 18px rgba(0,0,0,.4)
-        );
-
-}
-
-
-/* =========================================================
-   GLOBAL GLASS MATERIAL
-========================================================= */
-
-.glass{
-
-    position:relative;
-
-    isolation:isolate;
-
-    overflow:hidden;
-
-    background:
-        rgba(255,255,255,.10);
-
-    border:
-        1px solid rgba(255,255,255,.22);
-
-    border-radius:
-        var(--glass-radius);
-
-    box-shadow:
-
-        0 20px 60px
-        rgba(0,0,0,.22),
-
-        0 2px 8px
-        rgba(0,0,0,.12),
-
-        inset 0 1px 0
-        rgba(255,255,255,.38),
-
-        inset 0 -1px 0
-        rgba(255,255,255,.06);
-
-}
-
-
-/* =========================================================
-   GLASS BACKDROP
-========================================================= */
-
-@supports (
-    (backdrop-filter:blur(1px))
-    or
-    (-webkit-backdrop-filter:blur(1px))
-){
-
-    .glass{
-
-        background:
-
-            linear-gradient(
-                165deg,
-                rgba(255,255,255,.12) 0%,
-                rgba(255,255,255,.06) 48%,
-                rgba(255,255,255,.03) 100%
-            );
-
-        -webkit-backdrop-filter:
-
-            blur(var(--glass-blur))
-            saturate(var(--glass-saturate));
-
-        backdrop-filter:
-
-            blur(var(--glass-blur))
-            saturate(var(--glass-saturate));
-
+    0% {
+        transform:
+            scale(1.03)
+            translate3d(0, 0, 0);
     }
 
+    50% {
+        transform:
+            scale(1.06)
+            translate3d(-.5%, -.3%, 0);
+    }
+
+    100% {
+        transform:
+            scale(1.03)
+            translate3d(.5%, .3%, 0);
+    }
 }
 
 
 /* =========================================================
-   GLASS SPECULAR HIGHLIGHT
+   7. PAGE-SPECIFIC BACKGROUND
 ========================================================= */
 
-.glass::before{
 
-    content:'';
+/* Pengumuman */
 
-    position:absolute;
+body[data-page="pengumuman"] .bg-layer {
 
-    inset:0;
+    background-image:
+        url("../assets/images/Skr.jpg");
+}
 
-    z-index:-1;
 
-    pointer-events:none;
+/* =========================================================
+   8. BADGE TAHUN / HEADER BADGE
+========================================================= */
+
+.badge-year {
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    min-height: 32px;
+
+    padding:
+        .45rem
+        .85rem;
+
+    border-radius:
+        var(--radius-pill, 999px);
+
+    color:
+        var(--text, #ffffff);
+
+    font-size:
+        var(--font-sm, .875rem);
+
+    font-weight:
+        var(--weight-bold, 700);
+
+    letter-spacing:
+        .02em;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================================
+   9. SEARCH CARD
+========================================================= */
+
+.search-card {
+
+    border-radius:
+        var(--glass-radius, 24px);
+
+    padding:
+        var(--space-lg, 1.5rem);
+
+    color:
+        var(--text, #ffffff);
+}
+
+
+/* Search title */
+
+.search-card h1,
+.search-card h2,
+.search-card h3 {
+
+    position: relative;
+    z-index: 1;
+
+    color:
+        var(--text, #ffffff);
+}
+
+
+/* =========================================================
+   10. RESULT CARD
+========================================================= */
+
+.result-card {
+
+    border-radius:
+        var(--glass-radius, 24px);
+
+    padding:
+        var(--space-lg, 1.5rem);
+
+    color:
+        var(--text, #ffffff);
+}
+
+
+/* =========================================================
+   11. RESULT BOX
+========================================================= */
+
+.result-box {
+
+    border-radius:
+        var(--glass-radius, 24px);
+
+    padding:
+        var(--space-lg, 1.5rem);
+
+    max-height:
+        min(70vh, 720px);
+
+    overflow-y:
+        auto;
+
+    color:
+        var(--text, #ffffff);
+
+    scrollbar-width:
+        thin;
+}
+
+
+/* Scrollbar Chrome / Edge */
+
+.result-box::-webkit-scrollbar {
+
+    width: 8px;
+}
+
+.result-box::-webkit-scrollbar-track {
 
     background:
+        rgba(255, 255, 255, .05);
 
-        radial-gradient(
-            130% 100%
-            at 12% -15%,
-            rgba(255,255,255,.48) 0%,
-            rgba(255,255,255,.12) 34%,
-            rgba(255,255,255,0) 60%
+    border-radius:
+        999px;
+}
+
+.result-box::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(255, 255, 255, .20);
+
+    border-radius:
+        999px;
+
+    border:
+        2px solid transparent;
+
+    background-clip:
+        padding-box;
+}
+
+.result-box::-webkit-scrollbar-thumb:hover {
+
+    background:
+        rgba(255, 255, 255, .35);
+
+    background-clip:
+        padding-box;
+}
+
+
+/* =========================================================
+   12. LOADING BOX
+========================================================= */
+
+.loading-box {
+
+    border-radius:
+        var(--glass-radius, 24px);
+
+    padding:
+        var(--space-xl, 2rem);
+
+    text-align:
+        center;
+
+    color:
+        var(--text, #ffffff);
+}
+
+
+/* =========================================================
+   13. ERROR CARD
+========================================================= */
+
+.error-card {
+
+    border-radius:
+        var(--glass-radius, 24px);
+
+    padding:
+        var(--space-lg, 1.5rem);
+
+    color:
+        var(--text, #ffffff);
+
+    /*
+     * Tetap glass 10%.
+     * Warna merah hanya sebagai tint tambahan.
+     */
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 70, 70, .10),
+            rgba(255, 255, 255, .08)
         );
 
+    border-color:
+        rgba(255, 100, 100, .25);
 }
 
 
 /* =========================================================
-   GLASS REFRACTION EDGE
+   14. PENGUMUMAN CARD
 ========================================================= */
 
-.glass::after{
+.pengumuman-card {
 
-    content:'';
+    border-radius:
+        var(--glass-radius, 24px);
 
-    position:absolute;
+    padding:
+        var(--space-lg, 1.5rem);
 
-    left:6%;
+    color:
+        #ffffff;
 
-    right:6%;
+    border-left:
+        4px solid
+        var(--primary, #ffffff);
+}
 
-    bottom:0;
 
-    height:1px;
+/* Pengumuman penting */
 
-    pointer-events:none;
+.pengumuman-card.is-penting {
+
+    border-left-color:
+        var(--danger, #ff453a);
 
     background:
+        linear-gradient(
+            135deg,
+            rgba(255, 69, 58, .10),
+            rgba(255, 255, 255, .08)
+        );
 
+    border-color:
+        rgba(255, 255, 255, .18);
+
+    border-left-color:
+        var(--danger, #ff453a);
+}
+
+
+/* =========================================================
+   15. PENGUMUMAN HEADER
+========================================================= */
+
+.pengumuman-card-head {
+
+    position: relative;
+    z-index: 1;
+
+    display: flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap:
+        var(--space-md, 1rem);
+}
+
+
+.pengumuman-card-head h3 {
+
+    margin: 0;
+
+    color:
+        #ffffff;
+
+    font-size:
+        var(--font-lg, 1.125rem);
+
+    font-weight:
+        var(--weight-bold, 700);
+
+    line-height:
+        1.4;
+}
+
+
+/* =========================================================
+   16. PENGUMUMAN BADGE
+========================================================= */
+
+.pengumuman-badge {
+
+    flex-shrink: 0;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background:
+        rgba(255, 69, 58, .85);
+
+    color:
+        #ffffff;
+
+    font-size:
+        var(--font-xs, .75rem);
+
+    font-weight:
+        var(--weight-bold, 700);
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        .04em;
+
+    padding:
+        .25rem .65rem;
+
+    border-radius:
+        var(--radius-pill, 999px);
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, .15);
+}
+
+
+/* =========================================================
+   17. PENGUMUMAN DATE
+========================================================= */
+
+.pengumuman-date {
+
+    position: relative;
+    z-index: 1;
+
+    display: block;
+
+    margin-top:
+        .35rem;
+
+    color:
+        rgba(255, 255, 255, .70);
+
+    font-size:
+        var(--font-xs, .75rem);
+}
+
+
+/* =========================================================
+   18. PENGUMUMAN BODY
+========================================================= */
+
+.pengumuman-body {
+
+    position: relative;
+    z-index: 1;
+
+    margin:
+        var(--space-sm, .5rem) 0 0;
+
+    color:
+        rgba(255, 255, 255, .90);
+
+    line-height:
+        1.65;
+
+    white-space:
+        pre-line;
+}
+
+
+/* =========================================================
+   19. PENGUMUMAN EMPTY
+========================================================= */
+
+.pengumuman-empty {
+
+    padding:
+        var(--space-2xl, 3rem) 0;
+
+    text-align:
+        center;
+
+    color:
+        rgba(255, 255, 255, .65);
+}
+
+
+/* =========================================================
+   20. FORM INPUT GLASS
+========================================================= */
+
+.glass input,
+.glass select,
+.glass textarea,
+.search-card input,
+.search-card select,
+.search-card textarea {
+
+    background:
+        rgba(255, 255, 255, .10);
+
+    border:
+        1px solid rgba(255, 255, 255, .20);
+
+    color:
+        #ffffff;
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .12);
+}
+
+
+.glass input::placeholder,
+.glass textarea::placeholder,
+.search-card input::placeholder,
+.search-card textarea::placeholder {
+
+    color:
+        rgba(255, 255, 255, .55);
+}
+
+
+.glass input:focus,
+.glass select:focus,
+.glass textarea:focus,
+.search-card input:focus,
+.search-card select:focus,
+.search-card textarea:focus {
+
+    outline:
+        none;
+
+    border-color:
+        rgba(255, 255, 255, .45);
+
+    background:
+        rgba(255, 255, 255, .14);
+
+    box-shadow:
+        0 0 0 3px rgba(255, 255, 255, .08),
+        inset 0 1px 0 rgba(255, 255, 255, .20);
+}
+
+
+/* =========================================================
+   21. GLASS BUTTON
+========================================================= */
+
+.glass button,
+.search-card button {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border:
+        1px solid rgba(255, 255, 255, .25);
+
+    background:
+        rgba(255, 255, 255, .10);
+
+    color:
+        #ffffff;
+
+    -webkit-backdrop-filter:
+        blur(12px);
+
+    backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, .12),
+        inset 0 1px 0 rgba(255, 255, 255, .20);
+
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.glass button:hover,
+.search-card button:hover {
+
+    background:
+        rgba(255, 255, 255, .16);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, .18),
+        inset 0 1px 0 rgba(255, 255, 255, .30);
+
+    transform:
+        translateY(-1px);
+}
+
+
+.glass button:active,
+.search-card button:active {
+
+    transform:
+        translateY(0)
+        scale(.98);
+}
+
+
+/* =========================================================
+   22. RESULT NEUTRAL
+========================================================= */
+
+.result-neutral {
+
+    background:
+        rgba(255, 255, 255, .08);
+
+    border:
+        1px solid rgba(255, 255, 255, .16);
+
+    border-radius:
+        var(--radius-lg, 18px);
+
+    padding:
+        var(--space-lg, 1.5rem);
+
+    color:
+        rgba(255, 255, 255, .85);
+}
+
+
+/* =========================================================
+   23. FLASH MESSAGE
+========================================================= */
+
+.flash {
+
+    position: fixed;
+
+    top:
+        1rem;
+
+    left: 50%;
+
+    z-index:
+        9999;
+
+    transform:
+        translateX(-50%);
+
+    padding:
+        .75rem 1rem;
+
+    border-radius:
+        999px;
+
+    background:
+        rgba(255, 255, 255, .10);
+
+    border:
+        1px solid rgba(255, 255, 255, .20);
+
+    color:
+        #ffffff;
+
+    -webkit-backdrop-filter:
+        blur(20px)
+        saturate(140%);
+
+    backdrop-filter:
+        blur(20px)
+        saturate(140%);
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, .20);
+}
+
+
+/* =========================================================
+   24. MODAL / OVERLAY
+========================================================= */
+
+.overlay {
+
+    position: fixed;
+    inset: 0;
+
+    z-index:
+        var(--z-overlay, 1000);
+
+    display: grid;
+
+    place-items:
+        center;
+
+    place-items:
+        safe center;
+
+    overflow-y:
+        auto;
+
+    padding:
+        1rem;
+
+    background:
+        rgba(0, 0, 0, .30);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+
+    backdrop-filter:
+        blur(8px);
+}
+
+
+/* =========================================================
+   25. MODAL RESULT BOX
+========================================================= */
+
+.overlay .result-box {
+
+    width:
+        min(100%, 900px);
+
+    max-height:
+        min(85vh, 900px);
+
+    overflow-y:
+        auto;
+}
+
+
+/* =========================================================
+   26. GLASS DIVIDER
+========================================================= */
+
+.glass-divider {
+
+    height:
+        1px;
+
+    margin:
+        var(--space-md, 1rem) 0;
+
+    border: 0;
+
+    background:
         linear-gradient(
             90deg,
             transparent,
-            rgba(255,255,255,.32),
+            rgba(255, 255, 255, .25),
             transparent
         );
-
 }
 
 
 /* =========================================================
-   GLOBAL GLASS CARD
+   27. GLASS ICON
 ========================================================= */
 
-.search-card,
-.result-card,
-.loading-box,
-.error-card{
+.glass-icon {
 
-    position:relative;
+    display: inline-flex;
 
-    isolation:isolate;
+    align-items:
+        center;
 
-    overflow:hidden;
+    justify-content:
+        center;
 
-    background:
+    width:
+        42px;
 
-        rgba(12,32,58,.10);
-
-    border:
-
-        1px solid rgba(255,255,255,.22);
+    height:
+        42px;
 
     border-radius:
+        14px;
 
-        var(--glass-radius);
+    background:
+        rgba(255, 255, 255, .10);
 
-    box-shadow:
-
-        0 25px 70px
-        rgba(0,0,0,.28),
-
-        0 2px 8px
-        rgba(0,0,0,.12),
-
-        inset 0 1px 0
-        rgba(255,255,255,.40),
-
-        inset 0 -1px 0
-        rgba(255,255,255,.06);
+    border:
+        1px solid rgba(255, 255, 255, .20);
 
     color:
+        #ffffff;
 
-        var(--text-white);
+    -webkit-backdrop-filter:
+        blur(14px);
 
-    transition:
+    backdrop-filter:
+        blur(14px);
 
-        transform .35s var(--ease-spring),
-
-        box-shadow .35s var(--ease-ios),
-
-        background .4s ease;
-
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, .25);
 }
 
 
-@supports (
-    (backdrop-filter:blur(1px))
-    or
-    (-webkit-backdrop-filter:blur(1px))
-){
+/* =========================================================
+   28. GLASS TABLE
+========================================================= */
 
+.glass table {
+
+    width:
+        100%;
+
+    border-collapse:
+        separate;
+
+    border-spacing:
+        0;
+
+    overflow:
+        hidden;
+
+    border-radius:
+        16px;
+
+    background:
+        rgba(255, 255, 255, .05);
+}
+
+
+.glass th {
+
+    background:
+        rgba(255, 255, 255, .10);
+
+    color:
+        #ffffff;
+
+    font-weight:
+        700;
+}
+
+
+.glass td,
+.glass th {
+
+    padding:
+        .75rem 1rem;
+
+    border-bottom:
+        1px solid rgba(255, 255, 255, .10);
+}
+
+
+.glass tbody tr {
+
+    transition:
+        background .2s ease;
+}
+
+
+.glass tbody tr:hover {
+
+    background:
+        rgba(255, 255, 255, .07);
+}
+
+
+/* =========================================================
+   29. GLASS LINK
+========================================================= */
+
+.glass a {
+
+    color:
+        #ffffff;
+
+    text-decoration:
+        none;
+
+    transition:
+        opacity .2s ease;
+}
+
+
+.glass a:hover {
+
+    opacity:
+        .75;
+}
+
+
+/* =========================================================
+   30. GLASS TEXT
+========================================================= */
+
+.glass .muted,
+.glass .text-muted {
+
+    color:
+        rgba(255, 255, 255, .65);
+}
+
+
+/* =========================================================
+   31. RESPONSIVE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    .glass,
     .search-card,
     .result-card,
     .loading-box,
-    .error-card{
+    .error-card,
+    .pengumuman-card,
+    .result-box {
+
+        border-radius:
+            20px;
+
+        padding:
+            1rem;
+
+        box-shadow:
+            0 15px 40px rgba(0, 0, 0, .18),
+            inset 0 1px 0 rgba(255, 255, 255, .25);
+    }
+
+
+    .pengumuman-card-head {
+
+        flex-direction:
+            column;
+
+        gap:
+            .5rem;
+    }
+
+
+    .pengumuman-badge {
+
+        align-self:
+            flex-start;
+    }
+
+
+    .result-box {
+
+        max-height:
+            75vh;
+    }
+
+
+    .bg-layer {
+
+        filter:
+            blur(18px)
+            brightness(.70)
+            saturate(1.20);
+    }
+}
+
+
+/* =========================================================
+   32. SMALL MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+    .glass,
+    .search-card,
+    .result-card,
+    .loading-box,
+    .error-card,
+    .pengumuman-card,
+    .result-box {
+
+        border-radius:
+            18px;
+
+        padding:
+            .85rem;
+    }
+
+
+    .pengumuman-card-head h3 {
+
+        font-size:
+            1rem;
+    }
+
+
+    .pengumuman-body {
+
+        font-size:
+            .9rem;
+
+        line-height:
+            1.6;
+    }
+
+
+    .badge-year {
+
+        min-height:
+            30px;
+
+        padding:
+            .35rem .7rem;
+
+        font-size:
+            .75rem;
+    }
+}
+
+
+/* =========================================================
+   33. REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .bg-layer {
+
+        animation:
+            none;
+    }
+
+    .glass button,
+    .search-card button {
+
+        transition:
+            none;
+    }
+}
+
+
+/* =========================================================
+   34. DARK MODE
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+    .glass,
+    .search-card,
+    .result-card,
+    .loading-box,
+    .error-card,
+    .pengumuman-card,
+    .result-box,
+    .badge-year {
 
         background:
+            rgba(255, 255, 255, .10);
 
-            linear-gradient(
-                165deg,
-                rgba(255,255,255,.12) 0%,
-                rgba(255,255,255,.06) 48%,
-                rgba(255,255,255,.03) 100%
-            );
-
-        -webkit-backdrop-filter:
-
-            blur(var(--glass-blur))
-            saturate(var(--glass-saturate));
-
-        backdrop-filter:
-
-            blur(var(--glass-blur))
-            saturate(var(--glass-saturate));
-
+        border-color:
+            rgba(255, 255, 255, .18);
     }
-
 }
 
 
 /* =========================================================
-   GLOBAL CARD SPECULAR
+   35. LIGHT MODE
 ========================================================= */
 
-.search-card::before,
-.result-card::before,
-.loading-box::before,
-.error-card::before{
+@media (prefers-color-scheme: light) {
 
-    content:'';
-
-    position:absolute;
-
-    inset:0;
-
-    z-index:-1;
-
-    pointer-events:none;
-
-    background:
-
-        radial-gradient(
-            130% 100%
-            at 12% -15%,
-            rgba(255,255,255,.48) 0%,
-            rgba(255,255,255,.12) 34%,
-            rgba(255,255,255,0) 60%
-        );
-
-}
-
-
-/* =========================================================
-   GLOBAL CARD REFRACTION
-========================================================= */
-
-.search-card::after,
-.result-card::after,
-.loading-box::after,
-.error-card::after{
-
-    content:'';
-
-    position:absolute;
-
-    left:6%;
-
-    right:6%;
-
-    bottom:0;
-
-    height:1px;
-
-    pointer-events:none;
-
-    background:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.32),
-            transparent
-        );
-
-}
-
-
-/* =========================================================
-   PENGUMUMAN CARD
-========================================================= */
-
-.pengumuman-list{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:var(--space-md);
-
-    margin-top:var(--space-lg);
-
-}
-
-
-.pengumuman-card{
-
-    position:relative;
-
-    isolation:isolate;
-
-    overflow:hidden;
-
-    background:
-
-        rgba(12,32,58,.10);
-
-    border:
-
-        1px solid rgba(255,255,255,.22);
-
-    border-left:
-
-        4px solid var(--primary);
-
-    border-radius:
-
-        var(--glass-radius);
-
-    padding:
-
-        var(--space-lg);
-
-    box-shadow:
-
-        0 20px 60px
-        rgba(0,0,0,.22),
-
-        0 2px 8px
-        rgba(0,0,0,.12),
-
-        inset 0 1px 0
-        rgba(255,255,255,.38),
-
-        inset 0 -1px 0
-        rgba(255,255,255,.06);
-
-    color:
-
-        var(--text-white);
-
-    transition:
-
-        transform .35s var(--ease-spring),
-
-        box-shadow .35s var(--ease-ios),
-
-        background .4s ease;
-
-}
-
-
-@supports (
-    (backdrop-filter:blur(1px))
-    or
-    (-webkit-backdrop-filter:blur(1px))
-){
-
-    .pengumuman-card{
+    .glass,
+    .search-card,
+    .result-card,
+    .loading-box,
+    .error-card,
+    .pengumuman-card,
+    .result-box,
+    .badge-year {
 
         background:
+            rgba(255, 255, 255, .10);
 
-            linear-gradient(
-                165deg,
-                rgba(255,255,255,.12) 0%,
-                rgba(255,255,255,.06) 48%,
-                rgba(255,255,255,.03) 100%
-            );
+        border-color:
+            rgba(255, 255, 255, .25);
 
-        -webkit-backdrop-filter:
-
-            blur(var(--glass-blur))
-            saturate(var(--glass-saturate));
-
-        backdrop-filter:
-
-            blur(var(--glass-blur))
-            saturate(var(--glass-saturate));
-
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, .12),
+            0 4px 12px rgba(0, 0, 0, .06),
+            inset 0 1px 0 rgba(255, 255, 255, .40);
     }
-
 }
 
 
 /* =========================================================
-   PENGUMUMAN SPECULAR
+   36. SAFETY: CONTENT ALWAYS OPAQUE
 ========================================================= */
 
-.pengumuman-card::before{
+/*
+ * Jangan menggunakan:
+ *
+ * opacity: .1;
+ *
+ * pada .glass / card.
+ *
+ * Karena opacity akan membuat seluruh anak/container
+ * ikut transparan.
+ *
+ * Yang dibuat transparan hanya MATERIAL glass-nya melalui
+ * rgba(..., .10).
+ */
 
-    content:'';
+.glass > *,
+.search-card > *,
+.result-card > *,
+.loading-box > *,
+.error-card > *,
+.pengumuman-card > *,
+.result-box > * {
 
-    position:absolute;
+    position:
+        relative;
 
-    inset:0;
-
-    z-index:-1;
-
-    pointer-events:none;
-
-    background:
-
-        radial-gradient(
-            130% 100%
-            at 12% -15%,
-            rgba(255,255,255,.48) 0%,
-            rgba(255,255,255,.12) 34%,
-            rgba(255,255,255,0) 60%
-        );
-
+    z-index:
+        1;
 }
 
 
 /* =========================================================
-   PENGUMUMAN REFRACTION
+   END OF FILE
 ========================================================= */
-
-.pengumuman-card::after{
-
-    content:'';
-
-    position:absolute;
-
-    left:6%;
-
-    right:6%;
-
-    bottom:0;
-
-    height:1px;
-
-    pointer-events:none;
-
-    background:
-
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.32),
-            transparent
-        );
-
-}
-
-
-/* =========================================================
-   PENGUMUMAN HEADER
-========================================================= */
-
-.pengumuman-card-head{
-
-    position:relative;
-
-    z-index:1;
-
-    display:flex;
-
-    align-items:flex-start;
-
-    justify-content:space-between;
-
-    gap:var(--space-md);
-
-}
-
-
-.pengumuman-card-head h3{
-
-    margin:0;
-
-    font-size:var(--font-lg);
-
-    font-weight:var(--weight-bold);
-
-    color:#ffffff;
-
-    letter-spacing:-.01em;
-
-}
-
-
-.pengumuman-date{
-
-    display:block;
-
-    margin-top:.35rem;
-
-    font-size:var(--font-xs);
-
-    color:rgba(255,255,255,.68);
-
-}
-
-
-.pengumuman-body{
-
-    position:relative;
-
-    z-index:1;
-
-    margin:var(--space-sm) 0 0;
-
-    color:rgba(255,255,255,.86);
-
-    line-height:1.65;
-
-    white-space:pre-line;
-
-}
-
-
-/* =========================================================
-   PENGUMUMAN BADGE
-========================================================= */
-
-.pengumuman-badge{
-
-    flex-shrink:0;
-
-    background:
-
-        rgba(220,38,38,.78);
-
-    color:#ffffff;
-
-    font-size:var(--font-xs);
-
-    font-weight:var(--weight-bold);
-
-    text-transform:uppercase;
-
-    letter-spacing:.04em;
-
-    padding:.25rem .65rem;
-
-    border-radius:var(--radius-pill);
-
-    border:
-
-        1px solid rgba(255,255,255,.22);
-
-    box-shadow:
-
-        0 6px 18px
-        rgba(0,0,0,.18),
-
-        inset 0 1px 0
-        rgba(255,255,255,.30);
-
-}
-
-
-/* =========================================================
-   PENGUMUMAN IMPORTANT
-========================================================= */
-
-.pengumuman-card.is-penting{
-
-    border-left-color:
-
-        var(--danger);
-
-    background:
-
-        linear-gradient(
-            165deg,
-            rgba(239,68,68,.12),
-            rgba(198,40,40,.05)
-        );
-
-}
-
-
-/* =========================================================
-   PENGUMUMAN HOVER
-========================================================= */
-
-.pengumuman-card:hover{
-
-    transform:
-
-        translateY(-3px);
-
-    box-shadow:
-
-        0 26px 70px
-        rgba(0,0,0,.28),
-
-        0 4px 12px
-        rgba(0,0,0,.14),
-
-        inset 0 1px 0
-        rgba(255,255,255,.45);
-
-}
-
-
-/* =========================================================
-   EMPTY STATE
-========================================================= */
-
-.pengumuman-empty{
-
-    text-align:center;
-
-    color:rgba(255,255,255,.68);
-
-    padding:var(--space-2xl) 0;
-
-}
-
-
-/* =========================================================
-   BADGE YEAR
-========================================================= */
-
-.badge-year{
-
-    display:inline-block;
-
-    padding:7px 18px;
-
-    margin-bottom:14px;
-
-    border-radius:var(--radius-pill);
-
-    background:
-
-        linear-gradient(
-            180deg,
-            rgba(255,255,255,.22),
-            rgba(255,255,255,.08)
-        );
-
-    border:
-
-        1px solid rgba(255,255,255,.35);
-
-    box-shadow:
-
-        inset 0 1px 0
-        rgba(255,255,255,.40),
-
-        0 4px 14px
-        rgba(0,0,0,.15);
-
-    -webkit-backdrop-filter:
-
-        blur(16px)
-        saturate(160%);
-
-    backdrop-filter:
-
-        blur(16px)
-        saturate(160%);
-
-    font-size:.78rem;
-
-    font-weight:700;
-
-    letter-spacing:.06em;
-
-    text-transform:uppercase;
-
-    color:#ffffff;
-
-}
-
-
-/* =========================================================
-   FORM GLASS INPUT
-========================================================= */
-
-#searchForm input{
-
-    background:
-
-        rgba(255,255,255,.10);
-
-    border:
-
-        1px solid rgba(255,255,255,.28);
-
-    border-radius:
-
-        var(--glass-radius-sm);
-
-    color:#ffffff;
-
-    box-shadow:
-
-        inset 0 1px 4px
-        rgba(0,0,0,.18),
-
-        inset 0 1px 0
-        rgba(255,255,255,.12);
-
-    transition:
-
-        border-color .25s var(--ease-ios),
-
-        box-shadow .25s var(--ease-ios),
-
-        background .25s ease;
-
-}
-
-
-#searchForm input::placeholder{
-
-    color:
-
-        rgba(255,255,255,.55);
-
-}
-
-
-#searchForm input:focus{
-
-    border-color:
-
-        var(--secondary-light);
-
-    background:
-
-        rgba(255,255,255,.16);
-
-    box-shadow:
-
-        inset 0 1px 4px
-        rgba(0,0,0,.18),
-
-        0 0 0 4px
-        rgba(255,213,79,.18);
-
-}
-
-
-/* =========================================================
-   FORM BUTTON
-========================================================= */
-
-#searchForm button{
-
-    position:relative;
-
-    overflow:hidden;
-
-    background:
-
-        linear-gradient(
-            135deg,
-            var(--secondary-light) 0%,
-            var(--secondary) 100%
-        );
-
-    color:
-
-        var(--primary-dark);
-
-    border-radius:
-
-        var(--radius-pill);
-
-    box-shadow:
-
-        0 10px 24px
-        rgba(244,180,0,.35),
-
-        inset 0 1px 0
-        rgba(255,255,255,.60);
-
-    transition:
-
-        transform .3s var(--ease-spring),
-
-        box-shadow .3s var(--ease-ios),
-
-        filter .25s ease;
-
-}
-
-
-#searchForm button::after{
-
-    content:'→';
-
-    display:inline-block;
-
-    margin-left:8px;
-
-    transition:
-
-        transform .3s var(--ease-spring);
-
-}
-
-
-#searchForm button:hover{
-
-    filter:brightness(1.05);
-
-    box-shadow:
-
-        0 14px 30px
-        rgba(244,180,0,.42),
-
-        inset 0 1px 0
-        rgba(255,255,255,.60);
-
-}
-
-
-#searchForm button:hover::after{
-
-    transform:
-
-        translateX(5px);
-
-}
-
-
-#searchForm button:active{
-
-    transform:
-
-        scale(.96);
-
-}
-
-
-#searchForm button:disabled{
-
-    filter:
-
-        saturate(.6)
-        brightness(.9);
-
-    cursor:
-
-        progress;
-
-}
-
-
-#searchForm button:disabled::after{
-
-    display:none;
-
-}
-
-
-/* =========================================================
-   RESULT DETAILS
-========================================================= */
-
-.result-item{
-
-    border-bottom:
-
-        1px solid rgba(255,255,255,.15);
-
-}
-
-
-.result-label{
-
-    color:
-
-        rgba(255,255,255,.70);
-
-}
-
-
-.result-value{
-
-    color:#ffffff;
-
-}
-
-
-.loading-box p{
-
-    color:
-
-        rgba(255,255,255,.85);
-
-}
-
-
-.spinner{
-
-    border:
-
-        4px solid rgba(255,255,255,.18);
-
-    border-top:
-
-        4px solid var(--secondary-light);
-
-}
-
-
-/* =========================================================
-   ERROR CARD
-========================================================= */
-
-.error-card{
-
-    color:#ffffff;
-
-    background:
-
-        linear-gradient(
-            165deg,
-            rgba(239,68,68,.32),
-            rgba(198,40,40,.18)
-        );
-
-    border-color:
-
-        rgba(255,255,255,.25);
-
-}
-
-
-/* =========================================================
-   RESULT NEUTRAL
-========================================================= */
-
-.result-neutral{
-
-    background:
-
-        linear-gradient(
-            165deg,
-            rgba(255,255,255,.22),
-            rgba(255,255,255,.09)
-        );
-
-}
-
-
-.result-neutral .status-note{
-
-    margin-top:20px;
-
-    padding:16px;
-
-    border-radius:var(--radius-md);
-
-    background:
-
-        rgba(255,255,255,.10);
-
-    border:
-
-        1px solid rgba(255,255,255,.15);
-
-    color:
-
-        rgba(255,255,255,.88);
-
-    font-size:.9rem;
-
-    line-height:1.7;
-
-    text-align:left;
-
-}
-
-
-/* =========================================================
-   REDUCED MOTION
-========================================================= */
-
-@media (prefers-reduced-motion:reduce){
-
-    .bg-layer{
-
-        animation:none;
-
-    }
-
-    .pengumuman-card{
-
-        transition:none;
-
-    }
-
-    .pengumuman-card:hover{
-
-        transform:none;
-
-    }
-
-}
