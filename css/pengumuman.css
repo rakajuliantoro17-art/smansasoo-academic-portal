@@ -2,14 +2,8 @@
 ==========================================================
 SMANSASOO Academic Portal
 Pengumuman Page Stylesheet
-Version : 1.0.0
-==========================================================
-Pakai token bersama dari css/variables.css (var(--surface),
-var(--text), dst) -- BUKAN token self-contained seperti
-css/prestasi.css atau css/simulasi-tka.css -- karena halaman
-ini konten inti portal sendiri (bukan tampilan situs pihak
-ketiga), jadi harus otomatis ikut tema gelap/terang seperti
-halaman Nilai dan Rapor Pendidikan.
+Version : 1.1.0
+Glassmorphism Edition
 ==========================================================
 */
 
@@ -24,19 +18,55 @@ halaman Nilai dan Rapor Pendidikan.
 
 .pengumuman-card{
 
-    background:var(--surface);
-    border:1px solid var(--border-light);
+    /*
+    Glassmorphism:
+    10% opacity surface + 90% transparan
+    */
+    background:color-mix(
+        in srgb,
+        var(--surface) 10%,
+        transparent
+    );
+
+    border:1px solid color-mix(
+        in srgb,
+        var(--border-light) 35%,
+        transparent
+    );
+
     border-left:4px solid var(--primary);
+
     border-radius:var(--radius-lg);
+
     padding:var(--space-lg);
-    box-shadow:var(--shadow-sm);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,.12),
+        inset 0 1px 0 rgba(255,255,255,.18);
+
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+
+    /*
+    Mencegah isi kartu ikut transparan
+    */
+    isolation:isolate;
 
 }
 
 .pengumuman-card.is-penting{
 
     border-left-color:var(--danger);
-    background:var(--danger-bg);
+
+    background:color-mix(
+        in srgb,
+        var(--danger-bg) 10%,
+        transparent
+    );
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,.12),
+        inset 0 1px 0 rgba(255,255,255,.18);
 
 }
 
@@ -52,8 +82,11 @@ halaman Nilai dan Rapor Pendidikan.
 .pengumuman-card-head h3{
 
     margin:0;
+
     font-size:var(--font-lg);
+
     font-weight:var(--weight-bold);
+
     color:var(--text);
 
 }
@@ -61,22 +94,40 @@ halaman Nilai dan Rapor Pendidikan.
 .pengumuman-badge{
 
     flex-shrink:0;
-    background:var(--danger);
+
+    background:color-mix(
+        in srgb,
+        var(--danger) 85%,
+        transparent
+    );
+
     color:#ffffff;
+
     font-size:var(--font-xs);
+
     font-weight:var(--weight-bold);
+
     text-transform:uppercase;
+
     letter-spacing:.04em;
+
     padding:.25rem .65rem;
+
     border-radius:var(--radius-pill);
+
+    box-shadow:
+        0 4px 12px rgba(0,0,0,.12);
 
 }
 
 .pengumuman-date{
 
     display:block;
+
     margin-top:.35rem;
+
     font-size:var(--font-xs);
+
     color:var(--text-muted);
 
 }
@@ -84,8 +135,11 @@ halaman Nilai dan Rapor Pendidikan.
 .pengumuman-body{
 
     margin:var(--space-sm) 0 0;
+
     color:var(--text-light);
+
     line-height:1.65;
+
     white-space:pre-line;
 
 }
@@ -93,27 +147,94 @@ halaman Nilai dan Rapor Pendidikan.
 .pengumuman-empty{
 
     text-align:center;
+
     color:var(--text-muted);
+
     padding:var(--space-2xl) 0;
 
 }
 
+
 /* ==========================================
    BACKGROUND FOTO KHUSUS HALAMAN PENGUMUMAN
-   ==========================================
-   Default .bg-layer (css/glass.css) pakai assets/images/scc.jpg.
-   Halaman Pengumuman sengaja pakai foto beda (Skr.jpg) --
-   override di sini (dimuat setelah glass.css, dan lebih
-   spesifik lewat body[data-page="pengumuman"]) supaya TIDAK
-   perlu ubah glass.css yang dipakai bersama halaman lain.
-
-   Cuma background-image yang di-override; position/size/repeat
-   dari css/glass.css (cover, center, no-repeat) tetap berlaku
-   karena tidak disentuh di sini.
-========================================== */
+   ========================================== */
 
 body[data-page="pengumuman"] .bg-layer{
 
     background-image:url("../assets/images/Skr.jpg");
+
+}
+
+
+/* ==========================================
+   GLASS HIGHLIGHT
+   ========================================== */
+
+.pengumuman-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    border-radius:inherit;
+
+    pointer-events:none;
+
+    background:linear-gradient(
+        135deg,
+        rgba(255,255,255,.12),
+        rgba(255,255,255,0) 45%
+    );
+
+    opacity:.7;
+
+}
+
+
+/* ==========================================
+   HOVER
+   ========================================== */
+
+.pengumuman-card{
+
+    position:relative;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
+
+}
+
+.pengumuman-card:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+        0 12px 38px rgba(0,0,0,.18),
+        inset 0 1px 0 rgba(255,255,255,.22);
+
+}
+
+
+/* ==========================================
+   REDUCED MOTION
+   ========================================== */
+
+@media (prefers-reduced-motion:reduce){
+
+    .pengumuman-card{
+
+        transition:none;
+
+    }
+
+    .pengumuman-card:hover{
+
+        transform:none;
+
+    }
 
 }
