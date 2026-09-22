@@ -625,8 +625,19 @@ body.sidebar-open .app-sidebar{
        .app-content), tambahkan classnya ke sini juga.
        (.container dan .tka-main ditambahkan belakangan -- kena
        bug yang sama persis, kelulusan.html & simulasi-tka.html
-       sempat kelihatan "nempel kiri, ketutup sidebar"). */
-    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main){
+       sempat kelihatan "nempel kiri, ketutup sidebar".
+       .settings-trigger/.settings-drawer-overlay/.settings-drawer
+       juga ditambahkan belakangan -- elemen ini ditempel ke
+       <body> oleh js/settings-drawer.js SEBELUM js/shell.js
+       sempat memindahkan isi <body> ke .app-content, jadi ikut
+       "kesapu" masuk .app-content juga lalu kena wildcard ini;
+       akibatnya tombol gear yang harusnya width:48px berubah
+       jadi selebar layar (oval, bukan lingkaran). Pola yang sama
+       berlaku untuk elemen APAPUN yang ditempel ke <body> lewat
+       JS sebelum shell.js jalan -- kalau nanti nambah widget
+       floating baru dengan cara serupa, cek dulu apakah ikut
+       kena masalah ini.) */
+    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -635,7 +646,7 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main){
+    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
