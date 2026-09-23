@@ -637,7 +637,7 @@ body.sidebar-open .app-sidebar{
        JS sebelum shell.js jalan -- kalau nanti nambah widget
        floating baru dengan cara serupa, cek dulu apakah ikut
        kena masalah ini.) */
-    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
+    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.prestasi-bg-layer):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -646,7 +646,7 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
+    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.prestasi-bg-layer):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
