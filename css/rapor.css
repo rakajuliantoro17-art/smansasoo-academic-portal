@@ -33,6 +33,17 @@ CHANGELOG (v3.0.0):
   Blur & saturate dikecilkan sedikit dari token --glass-blur/
   --glass-saturate (yang dipakai glass.css untuk efek dramatis)
   karena permintaannya "glassmorphism sedikit" -- bukan penuh.
+
+CHANGELOG (v3.1.1):
+- Foto latar: blur dinaikkan tipis dari 3px -> 5px (permintaan
+  eksplisit "blur 5px saja").
+- Kaca kartu (.rapor-toolbar, .rapor-summary-card, .rapor-card):
+  opacity fill diturunkan dari ~55-72% jadi 7-10%, menyamai
+  konvensi "Glass tint: 10%" yang sudah didokumentasikan di
+  css/glass.css -- fotonya jadi jauh lebih kelihatan lewat
+  kartu. Border/shadow/backdrop-blur (14-18px) TIDAK diubah,
+  jadi keterbacaan teks gelap tetap terjaga (blur di belakang
+  kartu jauh lebih kuat daripada blur foto itu sendiri).
 ==========================================================
 */
 
@@ -82,7 +93,7 @@ body[data-page="rapor"]::before{
 
     background:url("../assets/images/gtr.jpg") center 30% / cover no-repeat;
 
-    filter:blur(3px) brightness(1.04) saturate(1.05);
+    filter:blur(5px) brightness(1.04) saturate(1.05);
 
     transform:scale(1.08);
 
@@ -119,7 +130,7 @@ body[data-page="rapor"]::after{
     margin-bottom:var(--space-lg);
     padding:var(--space-lg);
     border-radius:var(--radius-xl);
-    background:rgba(255,250,252,.65);
+    background:rgba(255,250,252,.09);
     border:1px solid rgba(255,255,255,.7);
     box-shadow:
         var(--shadow-md),
@@ -130,7 +141,7 @@ body[data-page="rapor"]::after{
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
     .rapor-toolbar{
-        background:linear-gradient(160deg, rgba(255,250,253,.72) 0%, rgba(255,240,247,.44) 100%);
+        background:linear-gradient(160deg, rgba(255,250,253,.10) 0%, rgba(255,240,247,.06) 100%);
         -webkit-backdrop-filter:blur(18px) saturate(160%);
         backdrop-filter:blur(18px) saturate(160%);
     }
@@ -256,7 +267,7 @@ body[data-page="rapor"]::after{
 
 .rapor-summary-card{
     position:relative;
-    background:rgba(255,250,252,.58);
+    background:rgba(255,250,252,.08);
     border:1px solid rgba(255,255,255,.65);
     border-radius:var(--radius-lg);
     padding:var(--space-md) var(--space-lg);
@@ -267,7 +278,7 @@ body[data-page="rapor"]::after{
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
     .rapor-summary-card{
-        background:linear-gradient(160deg, rgba(255,250,253,.66) 0%, rgba(255,240,248,.34) 100%);
+        background:linear-gradient(160deg, rgba(255,250,253,.09) 0%, rgba(255,240,248,.05) 100%);
         -webkit-backdrop-filter:blur(14px) saturate(150%);
         backdrop-filter:blur(14px) saturate(150%);
     }
@@ -311,7 +322,7 @@ body[data-page="rapor"]::after{
 
 .rapor-card{
     position:relative;
-    background:rgba(255,250,252,.62);
+    background:rgba(255,250,252,.08);
     border:1px solid rgba(255,255,255,.7);
     border-top:3px solid var(--border);
     border-radius:var(--radius-lg);
@@ -325,7 +336,7 @@ body[data-page="rapor"]::after{
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
 
     .rapor-card{
-        background:linear-gradient(165deg, rgba(255,250,253,.7) 0%, rgba(255,240,248,.36) 100%);
+        background:linear-gradient(165deg, rgba(255,250,253,.10) 0%, rgba(255,240,248,.06) 100%);
         -webkit-backdrop-filter:blur(16px) saturate(150%);
         backdrop-filter:blur(16px) saturate(150%);
     }

@@ -81,7 +81,7 @@ body{
 
     background: url("../../assets/images/scc.jpg") center center / cover no-repeat;
 
-    filter:blur(22px) brightness(.68) saturate(1.25);
+    filter:blur(5px) brightness(.68) saturate(1.25);
 
     transform:scale(1.06);
 
@@ -108,7 +108,7 @@ body.celebration .bg-layer{
     center center / cover no-repeat;
 
     filter:
-        blur(18px)
+        blur(5px)
         brightness(.72)
         saturate(1.3);
 

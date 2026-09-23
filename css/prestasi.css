@@ -64,7 +64,7 @@ body.prestasi-page{
 
     background:url("../assets/images/gbl.jpg") center center / cover no-repeat;
 
-    filter:blur(4px);
+    filter:blur(5px);
 
 }
 
@@ -135,7 +135,10 @@ body.prestasi-page{
 
 .prestasi-card{
 
-    background:#fff;
+    /* Fallback solid untuk browser tanpa backdrop-filter --
+       lihat blok @supports di bawah untuk versi glass 8%
+       yang dipakai browser modern (konsisten dgn rapor.css). */
+    background:rgba(255,255,255,.94);
 
     border-radius:var(--prestasi-radius);
 
@@ -146,6 +149,21 @@ body.prestasi-page{
     margin-bottom:1.5rem;
 
     scroll-margin-top:calc(var(--prestasi-navbar-h) + 1rem);
+
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))){
+
+    .prestasi-card{
+
+        background:rgba(255,255,255,.08);
+
+        -webkit-backdrop-filter:blur(16px) saturate(150%);
+        backdrop-filter:blur(16px) saturate(150%);
+
+        border:1px solid rgba(255,255,255,.5);
+
+    }
 
 }
 
