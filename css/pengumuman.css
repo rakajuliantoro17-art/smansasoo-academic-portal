@@ -19,18 +19,23 @@ Glassmorphism Edition
 .pengumuman-card{
 
     /*
-    Glassmorphism:
-    10% opacity surface + 90% transparan
+    Glassmorphism, TAPI cukup pekat buat tetap terbaca:
+    88% opacity surface + backdrop-filter blur.
+    (Sebelumnya 10% -- nyaris transparan penuh, di atas foto
+    latar yang ramai teksnya jadi tidak terbaca sama sekali.
+    "isolation:isolate" TIDAK mencegah opacity ikut nurun ke
+    isi kartu -- itu cuma bikin stacking context baru untuk
+    z-index, jadi baris komentarnya dihapus, bukan solusinya.)
     */
     background:color-mix(
         in srgb,
-        var(--surface) 10%,
+        var(--surface) 88%,
         transparent
     );
 
     border:1px solid color-mix(
         in srgb,
-        var(--border-light) 35%,
+        var(--border-light) 60%,
         transparent
     );
 
@@ -47,10 +52,12 @@ Glassmorphism Edition
     backdrop-filter:blur(18px) saturate(140%);
     -webkit-backdrop-filter:blur(18px) saturate(140%);
 
-    /*
-    Mencegah isi kartu ikut transparan
-    */
-    isolation:isolate;
+    position:relative;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease,
+        border-color .25s ease;
 
 }
 
@@ -60,7 +67,7 @@ Glassmorphism Edition
 
     background:color-mix(
         in srgb,
-        var(--danger-bg) 10%,
+        var(--danger-bg) 88%,
         transparent
     );
 
@@ -196,17 +203,6 @@ body[data-page="pengumuman"] .bg-layer{
 /* ==========================================
    HOVER
    ========================================== */
-
-.pengumuman-card{
-
-    position:relative;
-
-    transition:
-        transform .25s ease,
-        box-shadow .25s ease,
-        border-color .25s ease;
-
-}
 
 .pengumuman-card:hover{
 
