@@ -532,112 +532,41 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    /* Elemen level-atas halaman yang PERLU proporsional
-       terhadap layar penuh (bukan area yang sudah dipersempit
-       sidebar): header hero, <main>, .container pembungkus
-       (dipakai kelulusan.html: header+search jadi satu
-       .container), dan footer bersama dari shell.js.
+    /* ==========================================
+       FULL-BLEED: allowlist, bukan blocklist
+       ==========================================
+       Anak langsung .app-content secara DEFAULT ikut margin-left
+       dari .app-content di atas (artinya: center relatif ke area
+       yang sudah dipersempit sidebar -- pas untuk kolom bacaan
+       macam .container yang punya width:min(92%,1100px)+margin:auto
+       sendiri, karena dia memang harus tetap di "area aman" biar
+       tidak ketiban sidebar).
 
-       SENGAJA pakai daftar selector spesifik (bukan wildcard
-       "> *") supaya TIDAK ikut menyentuh elemen fixed-position
-       lain yang juga jadi anak .app-content lewat pemindahan
-       shell.js (.bg-layer, .flash, #balloons, .overlay, audio)
-       -- elemen-elemen itu sudah punya inset/top/left sendiri
-       untuk menutupi seluruh layar, dan margin-left negatif di
-       sini bisa mengacaukannya kalau ikut kena.
+       Elemen yang MEMANG perlu selebar layar penuh (hero, header,
+       footer shell, topbar custom) harus MINTA IZIN eksplisit
+       lewat class .app-fullbleed di HTML-nya -- BUKAN sebaliknya
+       (dulu: semua full-bleed KECUALI yang didaftar di :not(...),
+       gampang lupa didaftar tiap ada elemen baru, ini yang bikin
+       kelulusan/prestasi/simulasi-tka/tombol pengaturan bolak-balik
+       kena bug "nempel kiri, ketutup sidebar" atau "jadi oval").
+       Sekarang kalau lupa nambah .app-fullbleed ke elemen baru,
+       akibatnya paling elemen itu ikut lebar kolom aman (masih
+       kelihatan wajar) -- bukan pecah/ketutup sidebar.
 
-       Tanpa aturan ini: elemen-elemen di bawah jadi ke-tengah
-       relatif ke area yang sudah dipersempit margin-left di
-       atas (viewport dikurangi lebar sidebar) -- BUKAN ke
-       layar penuh -- sehingga logo, kartu pencarian, dan
-       footer semua kelihatan "geser ke kanan", proporsinya
-       tidak pas lagi.
+       .header dan #shellFooter DIMASUKKAN LANGSUNG di selector
+       (tidak perlu class .app-fullbleed manual di tiap halaman)
+       karena keduanya SELALU perlu full-bleed di semua halaman
+       yang memakainya, tanpa pengecualian -- #shellFooter khususnya
+       cuma mount point kosong (diisi shell.js), amannya selalu
+       sama di semua halaman.
 
-       Trik: tiap elemen ditarik balik selebar sidebar
-       (margin-left negatif) + lebarnya ditambah selebar
-       sidebar juga, jadi kembali full-bleed selebar viewport
-       sungguhan. Isinya (biasanya .container dengan
-       width:min(...) + margin:auto) lalu center dengan benar
-       terhadap viewport, bukan terhadap area yang sudah
-       dipotong sidebar.
-
-       Sidebar (position:fixed, z-index lebih tinggi, glass)
-       cuma menimpa sedikit bagian kiri elemen ini secara
-       visual -- pola umum "konten di belakang sidebar tetap",
-       dan hasilnya proporsional baik saat sidebar penuh
-       (250px) maupun saat di-minimize (68px), karena
-       --shell-sidebar-w yang dipakai otomatis ikut berubah
-       lewat class body.sidebar-collapsed di bawah. */
-    /* Elemen level-atas halaman yang PERLU proporsional
-       terhadap layar penuh (bukan area yang sudah dipersempit
-       sidebar): header hero, <main>, .container pembungkus
-       (kelulusan.html), footer bersama shell.js, DAN
-       pembungkus custom milik halaman tertentu (rekap.html
-       pakai .rekap-topbar/.rekap-hero, prestasi.html pakai
-       .prestasi-hero, simulasi-tka.html pakai .tka-hero, dst).
-
-       Supaya TIDAK perlu terus menambah nama class satu-satu
-       tiap kali ada halaman baru dengan pembungkus custom-nya
-       sendiri (rapuh, gampang kelewat -- ini persis yang bikin
-       kelulusan/prestasi/simulasi-tka sempat tidak konsisten),
-       selector di bawah SENGAJA pakai wildcard "> *" yang
-       berlaku ke SEMUA anak langsung .app-content, dikecualikan
-       cuma elemen dekoratif full-screen yang memang harus
-       tetap begini (:not(...)): .bg-layer (foto background),
-       .flash/#balloons/.overlay/audio (lapisan perayaan status
-       NAIK/LULUS), dan <script> (tidak dirender, tidak relevan).
-
-       Tanpa ini: elemen jadi ke-tengah relatif ke area yang
-       sudah dipersempit margin-left di atas (viewport dikurangi
-       lebar sidebar) -- BUKAN ke layar penuh -- sehingga logo,
-       kartu pencarian, dan footer semua kelihatan "geser ke
-       kanan", proporsinya tidak pas lagi.
-
-       Trik: tiap elemen ditarik balik selebar sidebar
-       (margin-left negatif) + lebarnya ditambah selebar
-       sidebar juga, jadi kembali full-bleed selebar viewport
-       sungguhan. Isinya (biasanya .container dengan
-       width:min(...) + margin:auto) lalu center dengan benar
-       terhadap viewport, bukan terhadap area yang sudah
-       dipotong sidebar.
-
-       Sidebar (position:fixed, z-index lebih tinggi, glass)
-       cuma menimpa sedikit bagian kiri elemen ini secara
-       visual -- pola umum "konten di belakang sidebar tetap",
-       dan hasilnya proporsional baik saat sidebar penuh
-       (250px) maupun saat di-minimize (68px), karena
-       --shell-sidebar-w yang dipakai otomatis ikut berubah
-       lewat class body.sidebar-collapsed di bawah.
-
-       PENGECUALIAN TAMBAHAN -- .prestasi-shell-inner &
-       .rekap-shell: berbeda dari .prestasi-hero/.rekap-topbar
-       (yang MEMANG full-bleed, tanpa max-width sendiri), dua
-       elemen ini adalah kolom konten yang punya max-width +
-       margin:auto SENDIRI untuk center di area aman (bukan di
-       layar penuh). Kalau ikut wildcard di atas, margin-left
-       paksaannya menang dari margin:auto milik elemen itu
-       (selector wildcard ini punya :not(#balloons) yang
-       menambah bobot spesifisitas setingkat ID, mengalahkan
-       satu class biasa) -- akibatnya kolom konten malah
-       ketarik balik ke kiri, ketiban sidebar, dan tidak center
-       lagi. Kalau bikin halaman baru dengan pola serupa (kolom
-       konten ber-max-width sebagai anak langsung
-       .app-content), tambahkan classnya ke sini juga.
-       (.container dan .tka-main ditambahkan belakangan -- kena
-       bug yang sama persis, kelulusan.html & simulasi-tka.html
-       sempat kelihatan "nempel kiri, ketutup sidebar".
-       .settings-trigger/.settings-drawer-overlay/.settings-drawer
-       juga ditambahkan belakangan -- elemen ini ditempel ke
-       <body> oleh js/settings-drawer.js SEBELUM js/shell.js
-       sempat memindahkan isi <body> ke .app-content, jadi ikut
-       "kesapu" masuk .app-content juga lalu kena wildcard ini;
-       akibatnya tombol gear yang harusnya width:48px berubah
-       jadi selebar layar (oval, bukan lingkaran). Pola yang sama
-       berlaku untuk elemen APAPUN yang ditempel ke <body> lewat
-       JS sebelum shell.js jalan -- kalau nanti nambah widget
-       floating baru dengan cara serupa, cek dulu apakah ikut
-       kena masalah ini.) */
-    .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.prestasi-bg-layer):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
+       Kalau bikin halaman baru: tambahkan class="app-fullbleed"
+       ke elemen hero/header/footer custom yang perlu selebar
+       layar; JANGAN ditambahkan ke kolom bacaan/kartu konten biasa
+       (biar tetap center di area aman, tidak ketiban sidebar). */
+    .app-content > .header,
+    .app-content > #shellFooter,
+    .app-content > .app-fullbleed{
 
         margin-left:calc(-1 * var(--shell-sidebar-w));
         width:calc(100% + var(--shell-sidebar-w));
@@ -646,7 +575,9 @@ body.sidebar-open .app-sidebar{
 
     }
 
-    body.sidebar-collapsed .app-content > *:not(.bg-layer):not(.flash):not(#balloons):not(.overlay):not(audio):not(script):not(.prestasi-shell-inner):not(.prestasi-bg-layer):not(.rekap-shell):not(.container):not(.tka-main):not(.settings-trigger):not(.settings-drawer-overlay):not(.settings-drawer){
+    body.sidebar-collapsed .app-content > .header,
+    body.sidebar-collapsed .app-content > #shellFooter,
+    body.sidebar-collapsed .app-content > .app-fullbleed{
 
         margin-left:calc(-1 * var(--shell-sidebar-w-collapsed));
         width:calc(100% + var(--shell-sidebar-w-collapsed));
