@@ -78,10 +78,26 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
    NAVBAR (atas, sticky)
 ========================================== */
 
-.app-navbar{
+/* PENTING: yang sticky harus PEMBUNGKUSNYA (#shellNav), bukan
+   cuma .app-navbar di dalamnya. position:sticky hanya bisa
+   menempel di dalam kotak parent-nya; #shellNav tingginya
+   persis setinggi navbar, jadi kalau cuma .app-navbar yang
+   sticky, dia tidak punya ruang untuk menempel -- begitu
+   halaman di-scroll, #shellNav ikut hilang dari layar dan
+   navbar terbawa (ini penyebab navbar "ikut scroll ke atas"
+   di semua halaman). Parent #shellNav adalah <body> yang
+   setinggi seluruh halaman, jadi di sini sticky bisa jalan. */
+#shellNav{
 
     position:sticky;
     top:0;
+    z-index:var(--z-sticky);
+
+}
+
+.app-navbar{
+
+    position:relative;
     z-index:var(--z-sticky);
 
     height:var(--shell-navbar-h);
