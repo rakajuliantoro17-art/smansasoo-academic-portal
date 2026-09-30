@@ -7,7 +7,7 @@ Version : 2.2.0 — "Liquid Glass" (iOS26-style)
 File ini TIDAK menggantikan style.css/animation.css, hanya
 menambah:
 1. Background foto sekolah (blur + saturate + gradient) via
-   #bgLayer/.bg-layer, dengan swap otomatis ke syari.png
+   #bgLayer/.bg-layer, dengan swap otomatis ke syari.jpg
    saat body mendapat class ".celebration".
 2. Material "Liquid Glass": card berlapis (tint gradient +
    specular highlight di sudut atas + border tipis + shadow
@@ -104,7 +104,7 @@ body{
 body.celebration .bg-layer{
 
     background:
-    url("../../assets/images/syari.png")
+    url("../../assets/images/syari.jpg")
     center center / cover no-repeat;
 
     filter:
@@ -584,7 +584,7 @@ body.celebration .bg-layer{
 
     padding:20px;
 
-    background:url('../../assets/images/syari.png') center/cover no-repeat;
+    background:url('../../assets/images/syari.jpg') center/cover no-repeat;
 
     opacity:0;
 
