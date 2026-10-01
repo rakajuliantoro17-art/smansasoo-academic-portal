@@ -234,3 +234,49 @@ body[data-page="pengumuman"] .bg-layer{
     }
 
 }
+
+
+/* ==========================================
+   TABLET & HP
+   ========================================== */
+
+@media (max-width: 768px){
+
+    .pengumuman-card{
+
+        padding:var(--space-md);
+
+    }
+
+    /* Judul + badge "Penting" bisa berdempetan kalau judulnya
+       panjang di layar sempit -- diizinkan turun baris supaya
+       badge tidak menggencet teks judul. */
+    .pengumuman-card-head{
+
+        flex-wrap:wrap;
+
+    }
+
+}
+
+@media (max-width: 480px){
+
+    .pengumuman-card{
+
+        /* Blur berat (18px) lumayan membebani GPU di HP kelas
+           bawah, apalagi kalau pengumumannya banyak dan semua
+           kartu nge-blur barengan saat scroll. Dikurangi khusus
+           layar kecil, baur fotonya tetap kelihatan, cuma lebih
+           ringan dirender. */
+        backdrop-filter:blur(10px) saturate(140%);
+        -webkit-backdrop-filter:blur(10px) saturate(140%);
+
+    }
+
+    .pengumuman-card-head h3{
+
+        font-size:var(--font-md);
+
+    }
+
+}
