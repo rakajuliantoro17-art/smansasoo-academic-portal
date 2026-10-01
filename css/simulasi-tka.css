@@ -258,3 +258,86 @@ body.tka-page{
     }
 
 }
+
+/* ==========================================
+   TABLET (768px ke bawah)
+========================================== */
+
+@media (max-width: 768px){
+
+    .tka-hero{
+        padding:2rem 1.25rem 1.25rem;
+    }
+
+    .tka-main{
+        padding:1.25rem 1rem 2.5rem;
+        gap:1.25rem;
+    }
+
+    .tka-card{
+        padding:1.25rem;
+    }
+
+    /* Di tablet masih cukup ruang vertikal, tapi iframe-nya
+       tetap dikecilkan dikit dari versi desktop (75vh) supaya
+       tidak terlalu mendominasi layar sebelum discroll. */
+    .tka-embed-frame{
+        height:65vh;
+        min-height:440px;
+    }
+
+}
+
+/* ==========================================
+   HP (480px ke bawah)
+========================================== */
+
+@media (max-width: 480px){
+
+    .tka-hero h1{
+        font-size:1.4rem;
+    }
+
+    .tka-hero p{
+        font-size:.85rem;
+    }
+
+    .tka-card{
+        padding:1rem;
+        border-radius:calc(var(--tka-radius) - 2px);
+    }
+
+    .tka-card h2{
+        font-size:1.05rem;
+    }
+
+    .tka-embed-head{
+        flex-direction:column;
+        align-items:stretch;
+    }
+
+    .tka-newtab-link{
+        text-align:center;
+    }
+
+    /* Tombol selebar penuh -- lebih gampang di-tap di HP,
+       dan "Mulai Simulasi" jadi tombol paling menonjol di layar
+       sempit tanpa perlu scroll horizontal. */
+    .tka-start-btn{
+        width:100%;
+    }
+
+    /* Layar HP jauh lebih pendek dari desktop -- 75vh/520px
+       dari versi desktop bisa bikin iframe kepotong aneh atau
+       butuh scroll panjang sebelum konten simulasinya kelihatan.
+       Dikecilkan jadi proporsi yang lebih wajar buat layar HP. */
+    .tka-embed-frame{
+        height:58vh;
+        min-height:360px;
+    }
+
+    .tka-embed-placeholder{
+        padding:2rem 1rem;
+    }
+
+}
