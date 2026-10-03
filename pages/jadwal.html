@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Jadwal Pelajaran | SMANSASOO Academic Portal</title>
+
+    <meta name="description" content="Jadwal pelajaran per kelas SMAN 1 Sooko Mojokerto, Semester Ganjil.">
+
+    <!-- ANTI-FLASH THEME INIT (wajib, jangan dihapus) -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('smansasoo-theme');
+                var theme = saved || ((window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <link rel="icon" href="../assets/logo/favicon.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS wajib di setiap halaman -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/animation.css">
+    <link rel="stylesheet" href="../css/shell.css">
+    <link rel="stylesheet" href="../css/settings-drawer.css">
+    <link rel="stylesheet" href="../css/stats-panel.css">
+
+    <!-- CSS khusus halaman ini -->
+    <link rel="stylesheet" href="../css/jadwal.css">
+
+</head>
+
+<body data-page="jadwal">
+
+    <!-- ================= SHELL: NAV ================= -->
+
+    <div id="shellNav"></div>
+
+    <!-- ================= KONTEN =================
+         Markup di bawah ini sengaja minim -- js/jadwal.js yang
+         mengisi semuanya (opsi kelas, pill hari, tabel jadwal)
+         begitu data/jadwal.json selesai dimuat. Lihat komentar
+         di js/jadwal.js untuk daftar id yang dipakai. -->
+
+    <main>
+
+        <div class="jd">
+
+            <div class="jd-panel">
+
+                <h1 class="jd-title">Jadwal Pelajaran</h1>
+
+                <p class="jd-sub" id="jdSub">Memuat jadwal...</p>
+
+                <div class="jd-controls">
+
+                    <label class="jd-label" for="jdKelas">Kelas</label>
+
+                    <select class="jd-select" id="jdKelas"></select>
+
+                    <div class="jd-pills" id="jdHari" role="tablist" aria-label="Pilih hari"></div>
+
+                </div>
+
+                <p class="jd-note" id="jdNote" hidden></p>
+
+            </div>
+
+            <div class="jd-result" id="jdResult">
+
+                <div class="jd-empty">
+                    <strong>Memuat jadwal...</strong>
+                    <span>Mohon tunggu sebentar.</span>
+                </div>
+
+            </div>
+
+            <p class="jd-foot">
+                <span class="jd-foot-box" id="jdDisahkan"></span>
+            </p>
+
+        </div>
+
+    </main>
+
+    <!-- ================= SHELL: FOOTER ================= -->
+
+    <div id="shellFooter"></div>
+
+    <!-- CONFIG (wajib, dipakai Shell untuk nama sekolah & versi) -->
+    <script src="../js/config.js"></script>
+
+    <!-- UTILS (wajib) -->
+    <script src="../js/utils.js"></script>
+
+    <!-- SHELL (wajib, render nav + footer) -->
+    <script src="../js/shell.js"></script>
+
+    <!-- STATISTIK PENGUNJUNG (panel floating di sidebar) -->
+    <script src="../js/stats-tracker.js"></script>
+    <script src="../js/stats-panel.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN (wajib, jangan dihapus) -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
+
+    <!-- JADWAL PELAJARAN -->
+    <script src="../js/jadwal.js"></script>
+
+</body>
+
+</html>
