@@ -497,3 +497,35 @@ document.addEventListener("DOMContentLoaded", () => {
     Shell.initialize();
 
 });
+
+// ===== Statistik pengunjung: dimuat otomatis di semua halaman =====
+(function loadStats() {
+  if (window.__statsLoaded) return;
+  window.__statsLoaded = true;
+
+  // Hitung base path dari lokasi shell.js sendiri (aman untuk / maupun /pages/)
+  var me = document.currentScript;
+  var base = me && me.src ? me.src.replace(/js\/shell\.js.*$/, '') : '/';
+
+  if (!document.querySelector('link[href*="stats-panel.css"]')) {
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = base + 'css/stats-panel.css';
+    document.head.appendChild(css);
+  }
+
+  function add(src) {
+    return new Promise(function (ok, fail) {
+      var s = document.createElement('script');
+      s.src = base + src;
+      s.onload = ok;
+      s.onerror = fail;
+      document.body.appendChild(s);
+    });
+  }
+
+  // Urutan penting: tracker dulu, baru panel
+  add('js/stats-tracker.js')
+    .then(function () { return add('js/stats-panel.js'); })
+    .catch(function (e) { console.warn('Statistik gagal dimuat', e); });
+})();
