@@ -2,7 +2,7 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell (Navbar + Sidebar + Footer)
-Version : 2.1.0
+Version : 2.2.0
 ==========================================================
 Satu-satunya tempat markup navbar & sidebar situs
 didefinisikan. Setiap halaman (sekarang maupun nanti) cukup
@@ -33,6 +33,9 @@ Shell akan otomatis:
 3. Mengisi #shellFooter seperti biasa.
 4. Memasang sidebar (drawer di mobile, kolom tetap di
    desktop >=1024px) + overlay penutup.
+5. Memuat statistik pengunjung (css/stats-panel.css,
+   js/stats-tracker.js, js/stats-panel.js) secara otomatis,
+   jadi halaman TIDAK perlu menyertakan tag statistik sendiri.
 
 CHANGELOG (v2.0.0):
 - Sebelumnya ada 4 pola navbar berbeda di situs ini: dropdown
@@ -55,15 +58,31 @@ CHANGELOG (v2.1.0):
 - Tiap link sidebar sekarang punya title="" (tooltip native)
   supaya tetap jelas maksudnya saat collapsed jadi ikon saja.
 
+CHANGELOG (v2.2.0):
+- Statistik pengunjung dimuat otomatis dari sini untuk SEMUA
+  halaman (lihat loadStats()). Dijalankan SETELAH
+  Shell.initialize() supaya tombol #statsPanelToggle sudah ada
+  di DOM saat js/stats-panel.js berjalan. Tag statis
+  stats-panel.css / stats-tracker.js / stats-panel.js di tiap
+  halaman sebaiknya dihapus; kalau masih ada, loadStats()
+  mendeteksinya dan tidak memuat ganda.
+- NOTE: karena dimuat setelah DOMContentLoaded, stats-tracker.js
+  dan stats-panel.js harus memakai pola:
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", init);
+    } else { init(); }
+
 Halaman menandai dirinya lewat atribut pada <body>:
-  data-page="home"       -> index.html
-  data-page="nilai"      -> pages/nilai.html
-  data-page="rekap"      -> pages/rekap.html
-  data-page="kelulusan"  -> pages/kelulusan.html
-  data-page="prestasi"   -> pages/prestasi.html
-  data-page="rapor"      -> pages/rapor.html
-  data-page="about"      -> pages/about.html
-  data-page="privacy"    -> pages/privacy.html
+  data-page="home"         -> index.html
+  data-page="pengumuman"   -> pages/pengumuman.html
+  data-page="nilai"        -> pages/nilai.html
+  data-page="rekap"        -> pages/rekap.html
+  data-page="kelulusan"    -> pages/kelulusan.html
+  data-page="prestasi"     -> pages/prestasi.html
+  data-page="rapor"        -> pages/rapor.html
+  data-page="simulasi-tka" -> pages/simulasi-tka.html
+  data-page="about"        -> pages/about.html
+  data-page="privacy"      -> pages/privacy.html
 
 Link baru untuk fitur mendatang TINGGAL ditambahkan ke
 NAV_LINKS di bawah, tidak perlu edit tiap halaman satu-satu.
@@ -85,6 +104,11 @@ lompat "Di Halaman Ini":
   </script>
 ==========================================================
 */
+
+// Harus di top level (bukan di dalam callback) supaya
+// document.currentScript terisi. Dipakai loadStats() untuk
+// menghitung base path yang benar dari / maupun /pages/.
+const SHELL_SCRIPT_SRC = document.currentScript ? document.currentScript.src : "";
 
 window.Shell = (() => {
 
@@ -461,6 +485,53 @@ window.Shell = (() => {
     }
 
     /* ==========================================
+       STATISTIK PENGUNJUNG
+       Dimuat otomatis di semua halaman. Dipanggil
+       SETELAH initialize() supaya #statsPanelToggle
+       sudah ada di DOM saat stats-panel.js berjalan.
+    ========================================== */
+
+    function loadStats() {
+
+        if (window.__statsLoaded) return;
+
+        window.__statsLoaded = true;
+
+        // Base path dari lokasi shell.js sendiri (aman dari / maupun /pages/)
+        const base = SHELL_SCRIPT_SRC
+            ? SHELL_SCRIPT_SRC.replace(/js\/shell\.js.*$/, "")
+            : "/";
+
+        if (!document.querySelector('link[href*="stats-panel.css"]')) {
+
+            const css = document.createElement("link");
+            css.rel = "stylesheet";
+            css.href = base + "css/stats-panel.css";
+            document.head.appendChild(css);
+
+        }
+
+        const load = (file) => new Promise((resolve, reject) => {
+
+            // Kalau halaman masih punya tag statisnya, jangan dimuat lagi
+            if (document.querySelector(`script[src*="${file}"]`)) return resolve();
+
+            const s = document.createElement("script");
+            s.src = base + "js/" + file;
+            s.onload = resolve;
+            s.onerror = reject;
+            document.body.appendChild(s);
+
+        });
+
+        // Urutan penting: tracker dulu, baru panel
+        load("stats-tracker.js")
+            .then(() => load("stats-panel.js"))
+            .catch((e) => console.warn("Statistik gagal dimuat", e));
+
+    }
+
+    /* ==========================================
        INIT
     ========================================== */
 
@@ -486,7 +557,9 @@ window.Shell = (() => {
 
         NAV_LINKS,
 
-        initialize
+        initialize,
+
+        loadStats
 
     };
 
@@ -494,38 +567,7 @@ window.Shell = (() => {
 
 document.addEventListener("DOMContentLoaded", () => {
 
-    Shell.initialize();
+    Shell.initialize();   // sidebar + tombol #statsPanelToggle sudah ada setelah ini
+    Shell.loadStats();    // baru muat tracker & panel statistik
 
 });
-
-// ===== Statistik pengunjung: dimuat otomatis di semua halaman =====
-(function loadStats() {
-  if (window.__statsLoaded) return;
-  window.__statsLoaded = true;
-
-  // Hitung base path dari lokasi shell.js sendiri (aman untuk / maupun /pages/)
-  var me = document.currentScript;
-  var base = me && me.src ? me.src.replace(/js\/shell\.js.*$/, '') : '/';
-
-  if (!document.querySelector('link[href*="stats-panel.css"]')) {
-    var css = document.createElement('link');
-    css.rel = 'stylesheet';
-    css.href = base + 'css/stats-panel.css';
-    document.head.appendChild(css);
-  }
-
-  function add(src) {
-    return new Promise(function (ok, fail) {
-      var s = document.createElement('script');
-      s.src = base + src;
-      s.onload = ok;
-      s.onerror = fail;
-      document.body.appendChild(s);
-    });
-  }
-
-  // Urutan penting: tracker dulu, baru panel
-  add('js/stats-tracker.js')
-    .then(function () { return add('js/stats-panel.js'); })
-    .catch(function (e) { console.warn('Statistik gagal dimuat', e); });
-})();
