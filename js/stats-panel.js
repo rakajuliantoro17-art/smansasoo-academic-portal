@@ -2,7 +2,7 @@
 ==========================================================
 SMANSASOO Academic Portal
 Stats Panel (floating, glassmorphism)
-Version : 1.0.0
+Version : 1.1.0
 ==========================================================
 Dipicu tombol #statsPanelToggle (dirender js/shell.js di
 baris paling bawah sidebar). Begitu diklik, panel floating
@@ -14,9 +14,20 @@ halaman dimuat (itu tugas js/stats-tracker.js yang mengirim
 hit lewat POST) -- supaya tidak ada request tambahan yang
 sia-sia kalau panelnya memang tidak pernah dibuka.
 
-SYARAT: halaman yang memuat file ini HARUS memuat js/shell.js
-duluan (supaya tombol #statsPanelToggle sudah ada di DOM saat
-initialize() jalan).
+SYARAT: file ini dijalankan SETELAH js/shell.js selesai
+initialize() (supaya tombol #statsPanelToggle sudah ada di
+DOM). Sejak shell.js v2.2.0, shell memuat file ini otomatis
+lewat Shell.loadStats() -- yaitu SETELAH DOMContentLoaded --
+jadi inisialisasi di bawah memakai pengecekan readyState,
+bukan hanya listener DOMContentLoaded.
+
+CHANGELOG (v1.1.0):
+- Inisialisasi aman dipanggil kapan saja (sebelum maupun
+  sesudah DOMContentLoaded). Sebelumnya hanya listen
+  DOMContentLoaded, sehingga tidak pernah jalan kalau dimuat
+  dinamis oleh shell.js.
+- Guard anti-inisialisasi ganda.
+- Utils.log tidak lagi wajib ada (fallback ke console.warn).
 ==========================================================
 */
 
@@ -24,7 +35,17 @@ window.StatsPanel = (() => {
 
     let panelEl = null;
     let overlayEl = null;
-    let loaded = false;
+    let initialized = false;
+
+    function log(...args) {
+
+        if (window.Utils && typeof Utils.log === "function") {
+            Utils.log(...args);
+        } else {
+            console.warn(...args);
+        }
+
+    }
 
     function markup() {
 
@@ -118,7 +139,7 @@ window.StatsPanel = (() => {
 
         } catch (error) {
 
-            Utils.log("Gagal memuat statistik pengunjung:", error);
+            log("Gagal memuat statistik pengunjung:", error);
 
             renderContent({ configured: true, success: false, message: "Gagal memuat statistik." });
 
@@ -133,18 +154,8 @@ window.StatsPanel = (() => {
 
         if (toggle) toggle.setAttribute("aria-expanded", "true");
 
-        if (!loaded) {
-
-            loaded = true;
-            loadStats();
-
-        } else {
-
-            // Sudah pernah dibuka sebelumnya -- tetap refresh
-            // supaya angkanya tidak basi kalau dibuka lagi nanti.
-            loadStats();
-
-        }
+        // Selalu refresh saat dibuka supaya angkanya tidak basi.
+        loadStats();
 
     }
 
@@ -159,9 +170,13 @@ window.StatsPanel = (() => {
 
     function initialize() {
 
+        if (initialized) return;
+
         const toggle = document.getElementById("statsPanelToggle");
 
         if (!toggle) return;
+
+        initialized = true;
 
         const wrapper = document.createElement("div");
         wrapper.innerHTML = markup();
@@ -198,12 +213,16 @@ window.StatsPanel = (() => {
 
 })();
 
-document.addEventListener("DOMContentLoaded", () => {
+// Aman dipanggil sebelum maupun sesudah DOMContentLoaded.
+if (document.readyState === "loading") {
 
-    // shell.js juga listen di DOMContentLoaded dan dimuat lebih
-    // dulu (lihat urutan <script> di tiap halaman), jadi sidebar
-    // + tombol #statsPanelToggle sudah pasti ada di DOM saat baris
-    // ini jalan.
+    // shell.js juga listen di DOMContentLoaded dan terdaftar lebih
+    // dulu, jadi sidebar + #statsPanelToggle sudah ada saat ini jalan.
+    document.addEventListener("DOMContentLoaded", () => StatsPanel.initialize());
+
+} else {
+
+    // Dimuat dinamis oleh Shell.loadStats() setelah Shell.initialize().
     StatsPanel.initialize();
 
-});
+}
