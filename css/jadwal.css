@@ -1,0 +1,577 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Jadwal Pelajaran (pages/jadwal.html)
+Version : 1.0.0
+==========================================================
+Semua selector di-scope ke ".jd" supaya tidak bentrok dengan
+halaman lain. Warna mapel datang dari data/jadwal.json (sama
+dengan warna di PDF jadwal asli) lewat custom property --c.
+
+Tema mengikuti atribut data-theme pada <html> (sama seperti
+halaman lain: anti-flash script + js/theme.js).
+==========================================================
+*/
+
+.jd {
+    --jd-ink: #14233a;
+    --jd-muted: #55657d;
+    --jd-panel: rgba(255, 255, 255, 0.94);
+    --jd-card-bg: #ffffff;
+    --jd-line: rgba(20, 35, 58, 0.16);
+    --jd-accent: #0f4c81;
+    --jd-accent-ink: #ffffff;
+    --jd-live: #0f7a56;
+    --jd-live-bg: rgba(15, 122, 86, 0.12);
+
+    box-sizing: border-box;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 3rem;
+    color: var(--jd-ink);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+}
+
+:root[data-theme="dark"] .jd {
+    --jd-ink: #e8eef8;
+    --jd-muted: #a5b4ca;
+    --jd-panel: rgba(14, 24, 40, 0.92);
+    --jd-card-bg: #15233a;
+    --jd-line: rgba(232, 238, 248, 0.18);
+    --jd-accent: #7cc0ff;
+    --jd-accent-ink: #0a1a2e;
+    --jd-live: #5fdaa8;
+    --jd-live-bg: rgba(95, 218, 168, 0.14);
+}
+
+.jd *,
+.jd *::before,
+.jd *::after {
+    box-sizing: border-box;
+}
+
+.jd .jd-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* ---------- Panel: judul + filter ---------- */
+
+.jd .jd-panel {
+    background: var(--jd-panel);
+    border: 1px solid var(--jd-line);
+    border-radius: 16px;
+    padding: 1.1rem 1.1rem 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.jd .jd-title {
+    margin: 0;
+    font-size: clamp(1.55rem, 4.6vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    color: var(--jd-ink);
+}
+
+.jd .jd-sub {
+    margin: 0.35rem 0 0;
+    color: var(--jd-muted);
+    font-size: 0.95rem;
+}
+
+.jd .jd-controls {
+    display: grid;
+    gap: 0.95rem;
+    margin-top: 1.1rem;
+}
+
+@media (min-width: 720px) {
+    .jd .jd-controls {
+        grid-template-columns: minmax(0, 14rem) 1fr;
+        align-items: start;
+        gap: 1.4rem;
+    }
+}
+
+.jd .jd-label {
+    display: block;
+    margin: 0 0 0.35rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--jd-muted);
+}
+
+.jd .jd-select {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 100%;
+    min-height: 44px;
+    padding: 0 2.4rem 0 0.9rem;
+    border: 1px solid var(--jd-line);
+    border-radius: 10px;
+    background-color: var(--jd-card-bg);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1.5l5 5 5-5' fill='none' stroke='%2355657d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    color: var(--jd-ink);
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.jd .jd-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.jd .jd-pill {
+    position: relative;
+    min-height: 44px;
+    padding: 0 1rem;
+    border: 1px solid var(--jd-line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--jd-ink);
+    font: inherit;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.jd .jd-pill[aria-pressed="true"] {
+    background: var(--jd-accent);
+    border-color: var(--jd-accent);
+    color: var(--jd-accent-ink);
+}
+
+/* penanda kecil: hari ini */
+.jd .jd-pill[data-today="1"]::after {
+    content: "";
+    position: absolute;
+    top: 7px;
+    right: 9px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--jd-live);
+}
+
+.jd .jd-select:focus-visible,
+.jd .jd-pill:focus-visible,
+.jd .jd-daylink:focus-visible,
+.jd .jd-link:focus-visible {
+    outline: 3px solid var(--jd-accent);
+    outline-offset: 2px;
+}
+
+/* ---------- Catatan / status ---------- */
+
+.jd .jd-note {
+    margin: 0 0 1rem;
+    padding: 0.7rem 0.95rem;
+    border: 1px solid var(--jd-line);
+    border-left: 5px solid var(--jd-accent);
+    border-radius: 10px;
+    background: var(--jd-panel);
+    font-size: 0.92rem;
+}
+
+.jd .jd-empty {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--jd-muted);
+}
+
+.jd .jd-empty strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--jd-ink);
+    font-size: 1.05rem;
+}
+
+/* ---------- Hasil ---------- */
+
+.jd .jd-result {
+    background: var(--jd-panel);
+    border: 1px solid var(--jd-line);
+    border-radius: 16px;
+    padding: 1.1rem 1.1rem 1.25rem;
+}
+
+.jd .jd-result-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.3rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.jd .jd-h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+
+.jd .jd-summary {
+    margin: 0;
+    color: var(--jd-muted);
+    font-size: 0.9rem;
+    font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Timeline (tampilan per hari) ---------- */
+
+.jd .jd-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.jd .jd-row {
+    display: grid;
+    grid-template-columns: 3.7rem 14px minmax(0, 1fr);
+    column-gap: 0.7rem;
+    padding-bottom: 0.6rem;
+}
+
+.jd .jd-time {
+    padding-top: 0.8rem;
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.15;
+}
+
+.jd .jd-time small {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--jd-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.jd .jd-spine {
+    position: relative;
+}
+
+.jd .jd-spine::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 1.05rem;
+    bottom: -0.6rem;
+    width: 2px;
+    margin-left: -1px;
+    background: var(--jd-line);
+}
+
+.jd .jd-row:last-child .jd-spine::before {
+    display: none;
+}
+
+.jd .jd-spine::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0.85rem;
+    width: 10px;
+    height: 10px;
+    margin-left: -5px;
+    border-radius: 50%;
+    background: var(--jd-card-bg);
+    border: 2px solid var(--jd-ink);
+}
+
+.jd .jd-row--rest .jd-spine::after {
+    width: 8px;
+    height: 8px;
+    margin-left: -4px;
+    top: 0.5rem;
+    border-width: 2px;
+    border-color: var(--jd-muted);
+}
+
+.jd .jd-row--rest .jd-spine::before {
+    top: 0.75rem;
+}
+
+.jd .jd-row--rest .jd-time {
+    padding-top: 0.3rem;
+    font-size: 0.82rem;
+    color: var(--jd-muted);
+    font-weight: 700;
+}
+
+.jd .jd-rest {
+    padding: 0.2rem 0 0.1rem;
+    color: var(--jd-muted);
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.jd .jd-row--khusus .jd-rest {
+    color: var(--jd-ink);
+}
+
+.jd .jd-row.is-now .jd-spine::after {
+    background: var(--jd-live);
+    border-color: var(--jd-live);
+}
+
+/* kartu pelajaran */
+
+.jd .jd-card {
+    --c: #cccccc;
+    position: relative;
+    min-height: calc(3.9rem + (var(--span, 1) - 1) * 1.1rem);
+    padding: 0.7rem 0.9rem 0.75rem 1.2rem;
+    border: 1px solid var(--jd-line);
+    border-radius: 12px;
+    background: var(--jd-card-bg);
+    background: color-mix(in srgb, var(--c) 20%, var(--jd-card-bg));
+    overflow: hidden;
+}
+
+.jd .jd-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    background: var(--c);
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.18), inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.jd .jd-card-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.jd .jd-jam {
+    margin: 0;
+    color: var(--jd-muted);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.jd .jd-kode {
+    flex: none;
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--jd-line);
+    border-radius: 999px;
+    background: var(--jd-card-bg);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.jd .jd-mapel {
+    margin: 0.1rem 0 0;
+    font-size: 1.08rem;
+    font-weight: 800;
+    letter-spacing: -0.005em;
+    line-height: 1.25;
+}
+
+.jd .jd-guru {
+    margin: 0.15rem 0 0;
+    color: var(--jd-muted);
+    font-size: 0.88rem;
+}
+
+.jd .jd-badge {
+    display: inline-block;
+    margin-top: 0.45rem;
+    padding: 0.1rem 0.6rem;
+    border-radius: 999px;
+    background: var(--jd-live-bg);
+    color: var(--jd-live);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.jd .jd-row.is-now .jd-card {
+    border-color: var(--jd-live);
+    box-shadow: 0 0 0 2px var(--jd-live-bg), 0 0 0 3px var(--jd-live);
+}
+
+/* ---------- Tampilan seminggu ---------- */
+
+.jd .jd-week {
+    display: grid;
+    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+
+.jd .jd-day {
+    border: 1px solid var(--jd-line);
+    border-radius: 12px;
+    background: var(--jd-card-bg);
+    overflow: hidden;
+}
+
+.jd .jd-day.is-today {
+    border-color: var(--jd-live);
+}
+
+.jd .jd-day-head {
+    margin: 0;
+    padding: 0;
+}
+
+.jd .jd-daylink {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 44px;
+    padding: 0 0.85rem;
+    border: 0;
+    border-bottom: 1px solid var(--jd-line);
+    background: transparent;
+    color: var(--jd-ink);
+    font: inherit;
+    font-size: 0.98rem;
+    font-weight: 800;
+    text-align: left;
+    cursor: pointer;
+}
+
+.jd .jd-day.is-today .jd-daylink {
+    color: var(--jd-live);
+}
+
+.jd .jd-daylink small {
+    color: var(--jd-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.jd .jd-day.is-today .jd-daylink small {
+    color: var(--jd-live);
+}
+
+.jd .jd-wlist {
+    list-style: none;
+    margin: 0;
+    padding: 0.3rem 0.5rem 0.5rem;
+}
+
+.jd .jd-wi {
+    --c: #cccccc;
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.3rem;
+    padding: 0.35rem 0.5rem 0.35rem 0.85rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--c) 20%, var(--jd-card-bg));
+    font-size: 0.86rem;
+    overflow: hidden;
+}
+
+.jd .jd-wi::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    background: var(--c);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+}
+
+.jd .jd-wi-jam {
+    color: var(--jd-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+}
+
+.jd .jd-wi-mapel {
+    font-weight: 700;
+    line-height: 1.25;
+}
+
+.jd .jd-wi-kode {
+    color: var(--jd-muted);
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+/* ---------- Catatan kaki ---------- */
+
+.jd .jd-foot {
+    margin: 1rem 0 0;
+    color: var(--jd-muted);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.jd .jd-foot,
+.jd .jd-foot a {
+    text-shadow: none;
+}
+
+.jd .jd-link {
+    color: var(--jd-accent);
+    font-weight: 700;
+}
+
+.jd .jd-foot-box {
+    display: inline-block;
+    padding: 0.5rem 0.9rem;
+    border-radius: 10px;
+    background: var(--jd-panel);
+    border: 1px solid var(--jd-line);
+}
+
+@media (max-width: 420px) {
+
+    .jd {
+        padding-left: 0.65rem;
+        padding-right: 0.65rem;
+    }
+
+    .jd .jd-row {
+        grid-template-columns: 3.2rem 12px minmax(0, 1fr);
+        column-gap: 0.5rem;
+    }
+
+    .jd .jd-panel,
+    .jd .jd-result {
+        padding: 0.9rem 0.8rem 1rem;
+    }
+
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+    .jd .jd-row.is-now .jd-spine::after {
+        animation: jd-pulse 2.2s ease-out infinite;
+    }
+
+    @keyframes jd-pulse {
+        0% { box-shadow: 0 0 0 0 var(--jd-live-bg); }
+        70% { box-shadow: 0 0 0 9px rgba(0, 0, 0, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+    }
+
+}
