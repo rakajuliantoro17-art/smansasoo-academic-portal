@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absensi QR | SMAN 1 Sooko Mojokerto</title>
+<meta name="description" content="Kiosk absensi siswa dengan kamera dan QR code.">
+<meta name="robots" content="noindex, nofollow">
+
+<meta name="theme-color" content="#0F4C81">
+
+<!-- ANTI-FLASH THEME INIT -->
+<script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('smansasoo-theme');
+            var theme = saved || ((window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+</script>
+
+<link rel="icon" href="../assets/logo/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- CSS wajib di setiap halaman -->
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/animation.css">
+<link rel="stylesheet" href="../css/shell.css">
+<link rel="stylesheet" href="../css/settings-drawer.css">
+
+<!-- CSS khusus halaman ini -->
+<link rel="stylesheet" href="../css/absensi-scan.css">
+
+</head>
+
+<body data-page="absensi-scan">
+
+    <!-- ================= SHELL: NAVBAR + SIDEBAR ================= -->
+
+    <div id="shellNav"></div>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <img src="../assets/logo/logo.png"
+                 alt="Logo SMAN 1 Sooko"
+                 class="logo">
+
+            <h1>Absensi <span>QR</span></h1>
+
+            <p>Arahkan kartu QR ke kamera untuk mencatat kehadiran</p>
+
+        </div>
+
+    </header>
+
+    <!-- ================= KONTEN ================= -->
+
+    <main class="absensi-scan-main">
+
+        <!-- SETUP SESI -->
+        <section class="absensi-scan-card" id="absensiScanSetup">
+
+            <h2 style="margin-top:0;">Mulai Sesi Absensi</h2>
+            <p style="color:var(--text-muted);margin-top:-0.25rem;">
+                Diisi sekali oleh guru/petugas sebelum kamera dibagikan ke siswa untuk antre scan.
+            </p>
+
+            <div class="absensi-scan-setup-grid">
+
+                <div class="absensi-scan-field">
+                    <label for="absensiScanMapel">Mata Pelajaran</label>
+                    <input type="text" id="absensiScanMapel" placeholder="Contoh: Matematika">
+                </div>
+
+                <div class="absensi-scan-field">
+                    <label for="absensiScanJamKe">Jam Ke-</label>
+                    <input type="text" id="absensiScanJamKe" placeholder="Contoh: 3">
+                </div>
+
+            </div>
+
+            <button type="button" id="absensiScanStartBtn" class="absensi-scan-start-btn">
+                Mulai Sesi &amp; Buka Kamera
+            </button>
+
+        </section>
+
+        <!-- SESI AKTIF -->
+        <section class="absensi-scan-card" id="absensiScanSession" style="display:none;">
+
+            <div class="absensi-scan-session-bar">
+
+                <div class="absensi-scan-session-info">
+                    <strong id="absensiScanSessionMapel">-</strong>
+                    <span>Jam ke- <span id="absensiScanSessionJam">-</span></span>
+                </div>
+
+                <button type="button" id="absensiScanEndBtn" class="absensi-scan-end-btn">Selesai Sesi</button>
+
+            </div>
+
+            <div id="absensiScanReader"></div>
+
+            <div id="absensiScanFeedback" class="absensi-scan-feedback"></div>
+
+            <p id="absensiScanCount" class="absensi-scan-count">0 siswa tercatat pada sesi ini</p>
+
+        </section>
+
+    </main>
+
+    <div id="shellFooter"></div>
+
+    <!-- CONFIG + UTILS + SHELL (wajib) -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/shell.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
+
+    <!-- Library pemindai QR lewat kamera -->
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+    <!-- Fitur Absensi Scan -->
+    <script src="../js/absensi-scan.js"></script>
+
+</body>
+</html>

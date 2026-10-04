@@ -1,0 +1,262 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Absensi Scan (Kiosk) Stylesheet
+Version : 1.0.0
+==========================================================
+Halaman kiosk: satu perangkat (tablet/HP) ditaruh di satu
+titik, siswa antre scan QR kartu masing-masing. Didesain
+tombol besar & feedback kontras tinggi supaya jelas terlihat
+dari jarak antre.
+==========================================================
+*/
+
+:root{
+
+    --tka-scan-ok: var(--success);
+    --tka-scan-warn: var(--warning);
+    --tka-scan-err: var(--danger);
+
+}
+
+.absensi-scan-main{
+
+    max-width:720px;
+    margin:var(--space-lg) auto var(--space-2xl);
+    padding:0 var(--space-md);
+
+}
+
+.absensi-scan-card{
+
+    background:var(--surface);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-lg);
+    padding:var(--space-lg);
+    box-shadow:var(--shadow-sm);
+    margin-bottom:var(--space-md);
+
+}
+
+/* ---------- SETUP SESI ---------- */
+
+.absensi-scan-setup-grid{
+
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:var(--space-md);
+    margin-bottom:var(--space-md);
+
+}
+
+.absensi-scan-field{
+
+    display:flex;
+    flex-direction:column;
+    gap:0.35rem;
+
+}
+
+.absensi-scan-field label{
+
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--text-muted);
+
+}
+
+.absensi-scan-field input,
+.absensi-scan-field select{
+
+    padding:0.65rem 0.85rem;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    font-size:1rem;
+
+}
+
+.absensi-scan-start-btn{
+
+    width:100%;
+    padding:0.9rem;
+    border:none;
+    border-radius:var(--radius-md);
+    background:var(--primary);
+    color:#fff;
+    font-size:1.05rem;
+    font-weight:700;
+    cursor:pointer;
+    transition:filter var(--transition-fast);
+
+}
+
+.absensi-scan-start-btn:hover{
+
+    filter:brightness(1.08);
+
+}
+
+.absensi-scan-start-btn:disabled{
+
+    opacity:0.6;
+    cursor:not-allowed;
+
+}
+
+/* ---------- SESI AKTIF ---------- */
+
+.absensi-scan-session-bar{
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:var(--space-sm);
+    flex-wrap:wrap;
+    margin-bottom:var(--space-md);
+
+}
+
+.absensi-scan-session-info strong{
+
+    display:block;
+    font-size:1.1rem;
+
+}
+
+.absensi-scan-session-info span{
+
+    font-size:0.85rem;
+    color:var(--text-muted);
+
+}
+
+.absensi-scan-end-btn{
+
+    padding:0.55rem 1rem;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    font-weight:600;
+    cursor:pointer;
+
+}
+
+#absensiScanReader{
+
+    width:100%;
+    border-radius:var(--radius-md);
+    overflow:hidden;
+    background:#000;
+    min-height:320px;
+
+}
+
+.absensi-scan-feedback{
+
+    margin-top:var(--space-md);
+    padding:var(--space-md);
+    border-radius:var(--radius-md);
+    text-align:center;
+    font-size:1.3rem;
+    font-weight:700;
+    display:none;
+
+}
+
+.absensi-scan-feedback.show{
+
+    display:block;
+    animation:absensiFeedbackPop 0.25s ease;
+
+}
+
+.absensi-scan-feedback.ok{
+
+    background:color-mix(in srgb, var(--tka-scan-ok) 18%, transparent);
+    color:var(--tka-scan-ok);
+    border:1px solid color-mix(in srgb, var(--tka-scan-ok) 45%, transparent);
+
+}
+
+.absensi-scan-feedback.warn{
+
+    background:color-mix(in srgb, var(--tka-scan-warn) 18%, transparent);
+    color:var(--tka-scan-warn);
+    border:1px solid color-mix(in srgb, var(--tka-scan-warn) 45%, transparent);
+
+}
+
+.absensi-scan-feedback.err{
+
+    background:color-mix(in srgb, var(--tka-scan-err) 18%, transparent);
+    color:var(--tka-scan-err);
+    border:1px solid color-mix(in srgb, var(--tka-scan-err) 45%, transparent);
+
+}
+
+.absensi-scan-feedback small{
+
+    display:block;
+    font-size:0.9rem;
+    font-weight:500;
+    margin-top:0.25rem;
+    opacity:0.85;
+
+}
+
+@keyframes absensiFeedbackPop{
+
+    from{ transform:scale(0.92); opacity:0; }
+    to{ transform:scale(1); opacity:1; }
+
+}
+
+.absensi-scan-count{
+
+    text-align:center;
+    margin-top:var(--space-sm);
+    font-size:0.9rem;
+    color:var(--text-muted);
+
+}
+
+/* ==========================================
+   MOBILE / TABLET
+========================================== */
+
+@media (max-width:768px){
+
+    .absensi-scan-main{
+
+        margin:var(--space-md) auto var(--space-xl);
+
+    }
+
+    .absensi-scan-card{
+
+        padding:var(--space-md);
+
+    }
+
+    .absensi-scan-setup-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    #absensiScanReader{
+
+        min-height:260px;
+
+    }
+
+    .absensi-scan-feedback{
+
+        font-size:1.1rem;
+
+    }
+
+}

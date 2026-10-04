@@ -1,0 +1,200 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Absensi Admin (Generate QR) Stylesheet
+Version : 1.0.0
+==========================================================
+Halaman staf untuk generate & cetak QR code per siswa.
+Pakai token --absensi-* sendiri supaya tidak bercampur
+dengan halaman lain, mengikuti pola prestasi.css /
+simulasi-tka.css.
+==========================================================
+*/
+
+:root{
+
+    --absensi-card-bg: var(--surface);
+    --absensi-card-border: var(--border-light);
+    --absensi-accent: var(--primary);
+
+}
+
+.absensi-admin-main{
+
+    max-width:1200px;
+    margin:var(--space-lg) auto var(--space-2xl);
+    padding:0 var(--space-md);
+
+}
+
+.absensi-admin-card{
+
+    background:var(--absensi-card-bg);
+    border:1px solid var(--absensi-card-border);
+    border-radius:var(--radius-lg);
+    padding:var(--space-lg);
+    box-shadow:var(--shadow-sm);
+
+}
+
+.absensi-admin-toolbar{
+
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:var(--space-sm);
+    margin-bottom:var(--space-md);
+
+}
+
+.absensi-admin-toolbar input{
+
+    flex:1 1 240px;
+    padding:0.6rem 0.9rem;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    font-size:0.95rem;
+
+}
+
+.absensi-admin-count{
+
+    font-size:0.85rem;
+    color:var(--text-muted);
+    white-space:nowrap;
+
+}
+
+.absensi-admin-print-btn{
+
+    padding:0.6rem 1.1rem;
+    border-radius:var(--radius-md);
+    border:none;
+    background:var(--absensi-accent);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:filter var(--transition-fast);
+
+}
+
+.absensi-admin-print-btn:hover{
+
+    filter:brightness(1.08);
+
+}
+
+.absensi-admin-status{
+
+    margin-bottom:var(--space-md);
+
+}
+
+.absensi-admin-grid{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:var(--space-md);
+
+}
+
+.absensi-qr-card{
+
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
+    padding:var(--space-md);
+    text-align:center;
+    background:var(--bg);
+
+}
+
+.absensi-qr-card canvas{
+
+    width:100%;
+    max-width:180px;
+    height:auto;
+    margin:0 auto var(--space-sm);
+
+}
+
+.absensi-qr-card h4{
+
+    font-size:0.95rem;
+    margin:0 0 0.15rem;
+    color:var(--text);
+
+}
+
+.absensi-qr-card p{
+
+    font-size:0.8rem;
+    color:var(--text-muted);
+    margin:0;
+
+}
+
+.absensi-qr-card .absensi-qr-nis{
+
+    font-size:0.75rem;
+    letter-spacing:0.04em;
+    color:var(--text-muted);
+
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width:768px){
+
+    .absensi-admin-main{
+
+        margin:var(--space-md) auto var(--space-xl);
+
+    }
+
+    .absensi-admin-card{
+
+        padding:var(--space-md);
+
+    }
+
+    .absensi-admin-grid{
+
+        grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+
+    }
+
+}
+
+/* ==========================================
+   PRINT: hanya tampilkan grid QR, rapi per siswa
+========================================== */
+
+@media print{
+
+    .app-navbar, .app-sidebar, .app-sidebar-overlay,
+    .shell-footer, .absensi-admin-toolbar,
+    .settings-trigger, .settings-drawer, .settings-drawer-overlay,
+    .absensi-admin-status{
+
+        display:none !important;
+
+    }
+
+    .absensi-admin-grid{
+
+        grid-template-columns:repeat(3, 1fr);
+
+    }
+
+    .absensi-qr-card{
+
+        break-inside:avoid;
+
+    }
+
+}

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generate QR Absensi | SMAN 1 Sooko Mojokerto</title>
+<meta name="description" content="Halaman staf untuk membuat QR code absensi per siswa.">
+<meta name="robots" content="noindex, nofollow">
+
+<meta name="theme-color" content="#0F4C81">
+
+<!-- ANTI-FLASH THEME INIT -->
+<script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('smansasoo-theme');
+            var theme = saved || ((window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+</script>
+
+<link rel="icon" href="../assets/logo/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- CSS wajib di setiap halaman -->
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/animation.css">
+<link rel="stylesheet" href="../css/shell.css">
+<link rel="stylesheet" href="../css/settings-drawer.css">
+
+<!-- CSS khusus halaman ini -->
+<link rel="stylesheet" href="../css/absensi-admin.css">
+
+</head>
+
+<body data-page="absensi-admin">
+
+    <!-- ================= SHELL: NAVBAR + SIDEBAR ================= -->
+
+    <div id="shellNav"></div>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <img src="../assets/logo/logo.png"
+                 alt="Logo SMAN 1 Sooko"
+                 class="logo">
+
+            <h1>Generate <span>QR Absensi</span></h1>
+
+            <p>Khusus staf &middot; cetak/unduh kartu QR per siswa untuk absensi kamera</p>
+
+        </div>
+
+    </header>
+
+    <!-- ================= KONTEN ================= -->
+
+    <main class="absensi-admin-main">
+
+        <section class="absensi-admin-card">
+
+            <div class="absensi-admin-toolbar">
+
+                <input type="text" id="absensiAdminSearch" placeholder="Cari nama / NIS / kelas...">
+
+                <span id="absensiAdminCount" class="absensi-admin-count">Memuat...</span>
+
+                <button type="button" id="absensiAdminPrintBtn" class="absensi-admin-print-btn">Cetak Semua</button>
+
+            </div>
+
+            <div id="absensiAdminStatus" class="absensi-admin-status"></div>
+
+            <div id="absensiAdminGrid" class="absensi-admin-grid"></div>
+
+        </section>
+
+    </main>
+
+    <div id="shellFooter"></div>
+
+    <!-- CONFIG + UTILS + SHELL (wajib) -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/shell.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
+
+    <!-- Library QR code generator -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+
+    <!-- Fitur Absensi Admin -->
+    <script src="../js/absensi-admin.js"></script>
+
+</body>
+</html>
