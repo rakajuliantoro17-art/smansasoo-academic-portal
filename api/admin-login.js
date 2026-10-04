@@ -4,16 +4,23 @@ SMANSASOO Academic Portal
 POST /api/admin-login
 ==========================================================
 Cek username + password admin DI SERVER, lalu kembalikan token
-bertanda tangan (HMAC-SHA256) yang berlaku 8 jam. Username dan
-password TIDAK ada di source code: keduanya dibaca dari
-Environment Variable Vercel.
+bertanda tangan (HMAC-SHA256) yang berlaku 8 jam.
 
-Environment Variable:
-  ADMIN_USERNAME        wajib   mis. admin
-  ADMIN_PASSWORD        wajib
-  ADMIN_SESSION_SECRET  opsional (string acak panjang). Kalau
-                        kosong, rahasia penanda tangan diturunkan
-                        dari ADMIN_PASSWORD.
+Kredensial default (SEMENTARA, supaya tidak perlu mengatur
+Environment Variable di Vercel dulu):
+  username: admin
+  password: ditentukan oleh pemilik portal -- TIDAK dituliskan
+            di source code ini. Yang tersimpan di bawah hanya
+            SHA-256 dari password itu (DEFAULT_PASSWORD_HASH),
+            jadi siapa pun yang membaca file ini tidak langsung
+            tahu passwordnya.
+
+Kalau nanti mau ganti username/password tanpa ubah kode, isi
+Environment Variable di Vercel Project Settings (otomatis
+mengambil alih nilai default di atas):
+  ADMIN_USERNAME        mis. admin
+  ADMIN_PASSWORD        plaintext baru
+  ADMIN_SESSION_SECRET  opsional, string acak panjang
 
 Perlindungan tebak password: maksimal 5 gagal per IP per 10
 menit (disimpan di Upstash kalau UPSTASH_REDIS_REST_* terisi,
@@ -22,7 +29,6 @@ kalau tidak, di memori instance -- cukup sebagai pengaman dasar).
 Body  : { "username": "...", "password": "..." }
 Respon: 200 { success, token, expiresAt, username }
         401 salah | 429 terlalu banyak percobaan
-        503 belum dikonfigurasi di server
 ==========================================================
 */
 
@@ -31,6 +37,13 @@ const crypto = require("crypto");
 const TTL_SECONDS = 8 * 60 * 60;
 const MAX_FAILS = 5;
 const WINDOW_SECONDS = 10 * 60;
+
+// Default sementara -- lihat catatan di atas. Untuk mengganti,
+// isi ADMIN_USERNAME / ADMIN_PASSWORD di Environment Variable
+// Vercel (nilainya akan menggantikan default ini).
+const DEFAULT_USERNAME = "admin";
+const DEFAULT_PASSWORD_HASH = "1c563926e5cd9c53dbb4449cc919ef9d346021b3a1b14e5f1f377ed30eccefe2";
+const DEFAULT_SESSION_SECRET = "108c17f07e9b9bf7e1b7de3b8c047120558cc654c0e563a405b5af129ff3c040";
 
 const memFails = new Map();
 
@@ -52,10 +65,35 @@ function b64url(buffer) {
 
 }
 
+function adminUsername() {
+
+    return process.env.ADMIN_USERNAME || DEFAULT_USERNAME;
+
+}
+
+// Password ADMIN_PASSWORD (kalau diisi) dibandingkan sebagai
+// plaintext seperti biasa; kalau tidak diisi, dibandingkan
+// terhadap hash default di atas (plaintext-nya tidak pernah
+// disimpan di sini).
+function passwordMatches(password) {
+
+    if (process.env.ADMIN_PASSWORD) {
+        return safeEqual(password, process.env.ADMIN_PASSWORD);
+    }
+
+    const given = sha(password);
+    const expected = Buffer.from(DEFAULT_PASSWORD_HASH, "hex");
+
+    return given.length === expected.length && crypto.timingSafeEqual(given, expected);
+
+}
+
 function signingSecret() {
 
-    return process.env.ADMIN_SESSION_SECRET
-        || sha("smansasoo-admin|" + process.env.ADMIN_PASSWORD).toString("hex");
+    if (process.env.ADMIN_SESSION_SECRET) return process.env.ADMIN_SESSION_SECRET;
+    if (process.env.ADMIN_PASSWORD) return sha("smansasoo-admin|" + process.env.ADMIN_PASSWORD).toString("hex");
+
+    return DEFAULT_SESSION_SECRET;
 
 }
 
@@ -161,16 +199,7 @@ module.exports = async function handler(req, res) {
         return res.status(405).json({ success: false, message: "Metode tidak diizinkan." });
     }
 
-    const adminUser = process.env.ADMIN_USERNAME;
-    const adminPass = process.env.ADMIN_PASSWORD;
-
-    if (!adminUser || !adminPass) {
-        return res.status(503).json({
-            success: false,
-            configured: false,
-            message: "Login admin belum dikonfigurasi (ADMIN_USERNAME / ADMIN_PASSWORD belum diatur di Vercel)."
-        });
-    }
+    const adminUser = adminUsername();
 
     const key = "adminfail:" + clientIp(req);
 
@@ -187,7 +216,7 @@ module.exports = async function handler(req, res) {
 
     // keduanya selalu dihitung (tanpa short-circuit) supaya waktu respons seragam
     const userOk = safeEqual(username, adminUser);
-    const passOk = safeEqual(password, adminPass);
+    const passOk = passwordMatches(password);
 
     if (!(userOk && passOk)) {
 

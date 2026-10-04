@@ -10,9 +10,11 @@ oleh tiga halaman Absensi QR:
 ## Cara kerja
 
 1. **Server** (`api/admin-login.js`) memeriksa username + password terhadap
-   `ADMIN_USERNAME` / `ADMIN_PASSWORD` (Environment Variable Vercel, bukan
-   hardcode di source code). Kalau benar, server membalas token yang
-   ditandatangani HMAC-SHA256, berlaku 8 jam.
+   kredensial default yang tertanam di kode (hanya hash-nya, lihat bagian
+   "Kredensial saat ini" di bawah), atau terhadap `ADMIN_USERNAME` /
+   `ADMIN_PASSWORD` kalau Environment Variable itu diisi di Vercel. Kalau
+   benar, server membalas token yang ditandatangani HMAC-SHA256, berlaku
+   8 jam.
 2. **Browser** (`js/admin-auth.js`) menyimpan token itu di `sessionStorage`
    (hilang saat tab ditutup). Halaman dengan atribut `data-require-admin`
    pada tag `<script src="/js/admin-auth.js">` akan disembunyikan
@@ -27,17 +29,32 @@ oleh tiga halaman Absensi QR:
    `js/settings-panel.js`) jadi menu cepat ke tiga halaman di atas; klik
    menu akan memunculkan overlay login kalau belum ada sesi aktif.
 
-## Env var yang dibutuhkan
+## Kredensial saat ini
+
+Login admin **sudah aktif tanpa perlu mengatur apa pun di Vercel**.
+Username dan password sementara ditentukan langsung di kode
+(`api/admin-login.js`) supaya tidak perlu bolak-balik ke dashboard
+Vercel dulu. Yang tersimpan di file itu **hanya hash SHA-256** dari
+password, bukan teks aslinya — jadi siapa pun yang membuka source
+code (termasuk siapa pun dengan akses ke repo GitHub) tidak langsung
+melihat passwordnya. Username & password hanya diketahui oleh pemilik
+portal.
+
+Kalau suatu saat mau **mengganti** username/password tanpa mengubah
+kode (disarankan untuk pemakaian jangka panjang, karena hash di kode
+tidak bisa "dicabut" dari riwayat git), isi Environment Variable di
+Vercel Project Settings — nilainya otomatis mengambil alih default di
+kode:
 
 | Variabel | Wajib? | Keterangan |
 |---|---|---|
-| `ADMIN_USERNAME` | Ya (untuk aktifkan proteksi) | Username admin, mis. `admin` |
-| `ADMIN_PASSWORD` | Ya | Password admin |
-| `ADMIN_SESSION_SECRET` | Opsional | String acak untuk menandatangani token. Kalau kosong, diturunkan otomatis dari `ADMIN_PASSWORD`. |
+| `ADMIN_USERNAME` | Tidak (opsional) | Kalau diisi, menggantikan default `admin`. |
+| `ADMIN_PASSWORD` | Tidak (opsional) | Kalau diisi, menggantikan password default. |
+| `ADMIN_SESSION_SECRET` | Opsional | String acak untuk menandatangani token. Kalau kosong, diturunkan otomatis dari `ADMIN_PASSWORD` (atau dari secret default kalau `ADMIN_PASSWORD` juga kosong). |
 
-**Kalau `ADMIN_USERNAME`/`ADMIN_PASSWORD` dikosongkan**, seluruh proteksi
-otomatis nonaktif (halaman & API tetap bisa diakses langsung seperti
-sebelum fitur ini ada) — jadi aman untuk di-deploy bertahap.
+Proteksi di `api/absensi.js`, `api/absensi-rekap.js`, dan
+`api/absensi-students.js` selalu aktif sekarang (tidak ada mode
+"nonaktif otomatis" lagi, karena sudah ada kredensial default).
 
 ## Melindungi endpoint API lain
 

@@ -5,17 +5,24 @@ GET /api/admin-verify
 ==========================================================
 Memeriksa token admin dari header:  Authorization: Bearer <token>
 
+Kredensial (default sementara + cara override lewat Environment
+Variable) didokumentasikan di api/admin-login.js dan di
+docs/ADMIN-AUTH.md -- signingSecret() di bawah HARUS selalu
+sama dengan punya admin-login.js supaya tanda tangan token cocok.
+
 Respon: 200 { valid: true,  username, expiresAt }
         401 { valid: false }
-        503 { valid: false, configured: false }
 
-Untuk melindungi endpoint LAIN (mis. yang menulis absensi),
-salin fungsi verifyAdmin() di bawah ke file endpoint itu dan
-panggil di awal handler -- lihat panduan di docs/ADMIN-AUTH.md.
+Endpoint lain yang perlu dilindungi (mis. yang menulis absensi)
+memakai verifyAdmin() yang di-export di bawah -- lihat panduan
+di docs/ADMIN-AUTH.md.
 ==========================================================
 */
 
 const crypto = require("crypto");
+
+// Harus identik dengan DEFAULT_SESSION_SECRET di api/admin-login.js.
+const DEFAULT_SESSION_SECRET = "108c17f07e9b9bf7e1b7de3b8c047120558cc654c0e563a405b5af129ff3c040";
 
 function sha(value) {
 
@@ -25,14 +32,14 @@ function sha(value) {
 
 function signingSecret() {
 
-    return process.env.ADMIN_SESSION_SECRET
-        || sha("smansasoo-admin|" + process.env.ADMIN_PASSWORD).toString("hex");
+    if (process.env.ADMIN_SESSION_SECRET) return process.env.ADMIN_SESSION_SECRET;
+    if (process.env.ADMIN_PASSWORD) return sha("smansasoo-admin|" + process.env.ADMIN_PASSWORD).toString("hex");
+
+    return DEFAULT_SESSION_SECRET;
 
 }
 
 function verifyAdmin(req) {
-
-    if (!process.env.ADMIN_PASSWORD) return { ok: false, configured: false };
 
     const header = String(req.headers.authorization || "");
     const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
