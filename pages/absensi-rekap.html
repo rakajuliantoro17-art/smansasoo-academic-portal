@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rekap Absensi | SMAN 1 Sooko Mojokerto</title>
+<meta name="description" content="Rekap kehadiran siswa berdasarkan log absensi QR.">
+<meta name="robots" content="noindex, nofollow">
+
+<meta name="theme-color" content="#0F4C81">
+
+<!-- ANTI-FLASH THEME INIT -->
+<script>
+    (function () {
+        try {
+            var saved = localStorage.getItem('smansasoo-theme');
+            var theme = saved || ((window.matchMedia &&
+                window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        } catch (e) {
+            document.documentElement.setAttribute('data-theme', 'light');
+        }
+    })();
+</script>
+
+<link rel="icon" href="../assets/logo/favicon.ico">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- CSS wajib di setiap halaman -->
+<link rel="stylesheet" href="../css/variables.css">
+<link rel="stylesheet" href="../css/theme.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/responsive.css">
+<link rel="stylesheet" href="../css/animation.css">
+<link rel="stylesheet" href="../css/shell.css">
+<link rel="stylesheet" href="../css/settings-drawer.css">
+
+<!-- CSS khusus halaman ini -->
+<link rel="stylesheet" href="../css/absensi-rekap.css">
+
+</head>
+
+<body data-page="absensi-rekap">
+
+    <!-- ================= SHELL: NAVBAR + SIDEBAR ================= -->
+
+    <div id="shellNav"></div>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="header">
+
+        <div class="container">
+
+            <img src="../assets/logo/logo.png"
+                 alt="Logo SMAN 1 Sooko"
+                 class="logo">
+
+            <h1>Rekap <span>Absensi</span></h1>
+
+            <p>Lihat kehadiran siswa berdasarkan tanggal, kelas, dan jam pelajaran</p>
+
+        </div>
+
+    </header>
+
+    <!-- ================= KONTEN ================= -->
+
+    <main class="absensi-rekap-main">
+
+        <div class="absensi-rekap-links">
+            <a href="/pages/absensi-admin.html">&larr; Generate QR Siswa</a>
+            <a href="/pages/absensi-scan.html">Mulai Sesi Scan &rarr;</a>
+        </div>
+
+        <section class="absensi-rekap-card">
+
+            <div class="absensi-rekap-filters">
+
+                <div class="absensi-rekap-field">
+                    <label for="absensiRekapTanggal">Tanggal</label>
+                    <input type="date" id="absensiRekapTanggal">
+                </div>
+
+                <div class="absensi-rekap-field">
+                    <label for="absensiRekapKelas">Kelas</label>
+                    <select id="absensiRekapKelas">
+                        <option value="SEMUA">Semua Kelas</option>
+                    </select>
+                </div>
+
+                <div class="absensi-rekap-field">
+                    <label for="absensiRekapMapel">Mapel (opsional)</label>
+                    <input type="text" id="absensiRekapMapel" placeholder="Contoh: Matematika">
+                </div>
+
+                <div class="absensi-rekap-field">
+                    <label for="absensiRekapJamKe">Jam Ke- (opsional)</label>
+                    <input type="text" id="absensiRekapJamKe" placeholder="Contoh: 3">
+                </div>
+
+            </div>
+
+            <div class="absensi-rekap-actions">
+                <button type="button" id="absensiRekapApplyBtn" class="absensi-rekap-btn">Tampilkan</button>
+                <button type="button" id="absensiRekapExportBtn" class="absensi-rekap-btn secondary">Export CSV</button>
+            </div>
+
+        </section>
+
+        <div id="absensiRekapStatus"></div>
+
+        <section class="absensi-rekap-card">
+
+            <div id="absensiRekapSummary" class="absensi-rekap-summary"></div>
+
+            <div id="absensiRekapTableWrap"></div>
+
+        </section>
+
+        <section class="absensi-rekap-card" id="absensiRekapBelumSection" style="display:none;">
+
+            <h3 style="margin-top:0;">Belum Absen pada Sesi Ini</h3>
+            <p style="color:var(--text-muted);font-size:0.85rem;margin-top:-0.5rem;">
+                Hanya terisi kalau Kelas, Mapel, dan Jam Ke- semuanya dipilih.
+            </p>
+
+            <div id="absensiRekapBelumList" class="absensi-rekap-belum-list"></div>
+
+        </section>
+
+    </main>
+
+    <div id="shellFooter"></div>
+
+    <!-- CONFIG + UTILS + SHELL (wajib) -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/shell.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
+
+    <!-- Fitur Rekap Absensi -->
+    <script src="../js/absensi-rekap.js"></script>
+
+</body>
+</html>

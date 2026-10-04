@@ -1,0 +1,265 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+Absensi Rekap Stylesheet
+Version : 1.0.0
+==========================================================
+*/
+
+.absensi-rekap-main{
+
+    max-width:1200px;
+    margin:var(--space-lg) auto var(--space-2xl);
+    padding:0 var(--space-md);
+
+}
+
+.absensi-rekap-links{
+
+    display:flex;
+    gap:var(--space-sm);
+    margin-bottom:var(--space-md);
+    flex-wrap:wrap;
+
+}
+
+.absensi-rekap-links a{
+
+    font-size:0.85rem;
+    color:var(--primary);
+    text-decoration:none;
+    font-weight:600;
+
+}
+
+.absensi-rekap-links a:hover{
+
+    text-decoration:underline;
+
+}
+
+.absensi-rekap-card{
+
+    background:var(--surface);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-lg);
+    padding:var(--space-lg);
+    box-shadow:var(--shadow-sm);
+    margin-bottom:var(--space-md);
+
+}
+
+.absensi-rekap-filters{
+
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:var(--space-sm);
+    margin-bottom:var(--space-sm);
+
+}
+
+.absensi-rekap-field{
+
+    display:flex;
+    flex-direction:column;
+    gap:0.3rem;
+
+}
+
+.absensi-rekap-field label{
+
+    font-size:0.78rem;
+    font-weight:600;
+    color:var(--text-muted);
+
+}
+
+.absensi-rekap-field input,
+.absensi-rekap-field select{
+
+    padding:0.55rem 0.75rem;
+    border-radius:var(--radius-md);
+    border:1px solid var(--border);
+    background:var(--bg);
+    color:var(--text);
+    font-size:0.92rem;
+
+}
+
+.absensi-rekap-actions{
+
+    display:flex;
+    gap:var(--space-sm);
+    flex-wrap:wrap;
+
+}
+
+.absensi-rekap-btn{
+
+    padding:0.6rem 1.1rem;
+    border-radius:var(--radius-md);
+    border:none;
+    background:var(--primary);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    font-size:0.9rem;
+
+}
+
+.absensi-rekap-btn.secondary{
+
+    background:var(--bg);
+    color:var(--text);
+    border:1px solid var(--border);
+
+}
+
+/* ---------- SUMMARY CARDS ---------- */
+
+.absensi-rekap-summary{
+
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:var(--space-sm);
+    margin-bottom:var(--space-md);
+
+}
+
+.absensi-rekap-stat{
+
+    background:var(--bg);
+    border:1px solid var(--border-light);
+    border-radius:var(--radius-md);
+    padding:var(--space-md);
+    text-align:center;
+
+}
+
+.absensi-rekap-stat span{
+
+    display:block;
+    font-size:0.78rem;
+    color:var(--text-muted);
+    margin-bottom:0.25rem;
+
+}
+
+.absensi-rekap-stat strong{
+
+    font-size:1.5rem;
+    color:var(--primary);
+
+}
+
+/* ---------- TABLE ---------- */
+
+.absensi-rekap-table-wrap{
+
+    overflow-x:auto;
+
+}
+
+.absensi-rekap-table{
+
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.9rem;
+
+}
+
+.absensi-rekap-table th,
+.absensi-rekap-table td{
+
+    padding:0.55rem 0.7rem;
+    text-align:left;
+    border-bottom:1px solid var(--border-light);
+    white-space:nowrap;
+
+}
+
+.absensi-rekap-table th{
+
+    color:var(--text-muted);
+    font-size:0.78rem;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+
+}
+
+.absensi-rekap-empty{
+
+    text-align:center;
+    color:var(--text-muted);
+    padding:var(--space-lg);
+
+}
+
+/* ---------- BELUM ABSEN ---------- */
+
+.absensi-rekap-belum-list{
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:0.4rem;
+
+}
+
+.absensi-rekap-belum-chip{
+
+    background:color-mix(in srgb, var(--danger) 14%, transparent);
+    color:var(--danger);
+    border:1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+    border-radius:999px;
+    padding:0.3rem 0.75rem;
+    font-size:0.82rem;
+
+}
+
+/* ==========================================
+   MOBILE / TABLET
+========================================== */
+
+@media (max-width:900px){
+
+    .absensi-rekap-filters{
+
+        grid-template-columns:repeat(2, 1fr);
+
+    }
+
+    .absensi-rekap-summary{
+
+        grid-template-columns:repeat(3, 1fr);
+
+    }
+
+}
+
+@media (max-width:600px){
+
+    .absensi-rekap-main{
+
+        margin:var(--space-md) auto var(--space-xl);
+
+    }
+
+    .absensi-rekap-card{
+
+        padding:var(--space-md);
+
+    }
+
+    .absensi-rekap-filters{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .absensi-rekap-summary{
+
+        grid-template-columns:1fr;
+
+    }
+
+}
