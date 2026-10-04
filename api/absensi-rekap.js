@@ -31,6 +31,7 @@ Response:
 */
 
 const { fetchSheetRows, cleanNIS } = require("./_lib/gsheet");
+const { verifyAdmin } = require("./admin-verify");
 
 const SHEET_STUDENTS = "STUDENTS";
 const SHEET_ABSENSI = "ABSENSI";
@@ -42,6 +43,16 @@ function todayJakarta() {
 module.exports = async (req, res) => {
 
     res.setHeader("Cache-Control", "no-store");
+
+    // Rekap kehadiran berisi data pribadi siswa -- hanya sesi admin yang
+    // boleh melihatnya. Nonaktif otomatis kalau ADMIN_USERNAME/PASSWORD
+    // belum diatur di Vercel.
+    const auth = verifyAdmin(req);
+
+    if (auth.configured && !auth.ok) {
+        res.status(401).json({ success: false, configured: true, message: "Sesi admin tidak valid, silakan login ulang.", data: null });
+        return;
+    }
 
     const spreadsheetId = process.env.GOOGLE_SHEET_ID_ABSENSI;
 

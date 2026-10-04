@@ -19,12 +19,23 @@ TIDAK butuh Service Account.
 */
 
 const { fetchSheetRows, cleanNIS } = require("./_lib/gsheet");
+const { verifyAdmin } = require("./admin-verify");
 
 const SHEET_NAME = "STUDENTS";
 
 module.exports = async (req, res) => {
 
     res.setHeader("Cache-Control", "no-store");
+
+    // Dipakai untuk cetak kartu QR -- data NIS lengkap, jadi dibatasi
+    // untuk sesi admin saja. Nonaktif otomatis kalau ADMIN_USERNAME/
+    // ADMIN_PASSWORD belum diatur di Vercel.
+    const auth = verifyAdmin(req);
+
+    if (auth.configured && !auth.ok) {
+        res.status(401).json({ success: false, configured: true, message: "Sesi admin tidak valid, silakan login ulang.", data: [] });
+        return;
+    }
 
     const spreadsheetId = process.env.GOOGLE_SHEET_ID_ABSENSI;
 

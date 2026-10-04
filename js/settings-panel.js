@@ -32,10 +32,19 @@ navbar dirender, jadi halaman tidak perlu menambah tag apa pun.
             title: "Absensi Scan",
             desc: "Scan kartu QR siswa dengan kamera",
             href: "/pages/absensi-scan"
+        },
+        {
+            key: "absensi-admin",
+            title: "Generate QR Siswa",
+            desc: "Buat & cetak kartu QR absen per siswa",
+            href: "/pages/absensi-admin"
+        },
+        {
+            key: "absensi-rekap",
+            title: "Rekap Absensi",
+            desc: "Lihat kehadiran siswa per sesi",
+            href: "/pages/absensi-rekap"
         }
-        // Contoh menu lain yang bisa ditambahkan:
-        // { key: "absensi-admin", title: "Generate QR Siswa", desc: "Cetak kartu absen", href: "/pages/absensi-admin" },
-        // { key: "absensi-rekap", title: "Rekap Absensi", desc: "Lihat kehadiran siswa", href: "/pages/absensi-rekap" }
     ];
 
     const GEAR = `

@@ -32,6 +32,7 @@ Response:
 
 const { fetchSheetRows, cleanNIS } = require("./_lib/gsheet");
 const { appendRow } = require("./_lib/gsheet-write");
+const { verifyAdmin } = require("./admin-verify");
 
 const SHEET_STUDENTS = "STUDENTS";
 const SHEET_ABSENSI = "ABSENSI";
@@ -78,6 +79,16 @@ module.exports = async (req, res) => {
     if (req.method !== "POST") {
         res.setHeader("Allow", "POST");
         res.status(405).json({ success: false, message: "Method tidak didukung, gunakan POST." });
+        return;
+    }
+
+    // Hanya sesi admin (lewat js/admin-auth.js di halaman kios) yang boleh
+    // menulis absensi. Kalau ADMIN_USERNAME/ADMIN_PASSWORD belum diatur di
+    // Vercel, proteksi ini otomatis nonaktif (configured === false).
+    const auth = verifyAdmin(req);
+
+    if (auth.configured && !auth.ok) {
+        res.status(401).json({ success: false, status: "unauthorized", message: "Sesi admin tidak valid, silakan login ulang." });
         return;
     }
 

@@ -530,6 +530,12 @@ window.Shell = (() => {
             .then(() => load("stats-panel.js"))
             .catch((e) => console.warn("Statistik gagal dimuat", e));
 
+        // Menu admin (ikon gerigi di navbar) -- admin-auth.js dulu supaya
+        // window.AdminAuth tersedia saat settings-panel.js dibangun.
+        load("admin-auth.js")
+            .then(() => load("settings-panel.js"))
+            .catch((e) => console.warn("Menu admin gagal dimuat", e));
+
     }
 
     /* ==========================================
