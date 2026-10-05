@@ -19,7 +19,7 @@ TIDAK butuh Service Account.
 */
 
 const { fetchSheetRows, cleanNIS } = require("./_lib/gsheet");
-const { verifyAdmin } = require("./admin-verify");
+const { verifyAdmin } = require("./admin-auth");
 
 const SHEET_NAME = "STUDENTS";
 

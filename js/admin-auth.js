@@ -15,9 +15,9 @@ Cara pakai:
                    Tanpa login, halaman tertutup overlay.
 
 Username & password TIDAK ada di file ini. Pemeriksaan dilakukan
-oleh server (/api/admin-login). Browser hanya menyimpan token
-bertanda tangan di sessionStorage (hilang saat tab ditutup, dan
-kedaluwarsa 8 jam).
+oleh server (/api/admin-auth, method POST). Browser hanya menyimpan
+token bertanda tangan di sessionStorage (hilang saat tab ditutup,
+dan kedaluwarsa 8 jam).
 
 Selama sesi admin aktif, setiap fetch ke /api/absensi-* otomatis
 membawa header Authorization: Bearer <token>, jadi server bisa
@@ -30,8 +30,11 @@ menolak permintaan tanpa login (lihat docs/ADMIN-AUTH.md).
     if (window.AdminAuth) return;
 
     const SESSION_KEY = "smansasoo-admin-session";
-    const LOGIN_URL = "/api/admin-login";
-    const VERIFY_URL = "/api/admin-verify";
+    // Login (POST) dan verifikasi (GET) sekarang satu endpoint yang sama
+    // -- lihat api/admin-auth.js (digabung supaya tidak melebihi batas
+    // 12 Serverless Functions di paket Vercel Hobby).
+    const LOGIN_URL = "/api/admin-auth";
+    const VERIFY_URL = "/api/admin-auth";
     const PROTECTED_API = /^\/api\/absensi-/;
 
     const thisScript = document.currentScript;
@@ -479,7 +482,7 @@ menolak permintaan tanpa login (lihat docs/ADMIN-AUTH.md).
                     if (response.status === 503) {
                         showError(result.message || "Login admin belum dikonfigurasi di server.");
                     } else if (response.status === 404) {
-                        showError("Endpoint /api/admin-login tidak ditemukan. Pastikan file api/admin-login.js sudah ter-deploy.");
+                        showError("Endpoint /api/admin-auth tidak ditemukan. Pastikan file api/admin-auth.js sudah ter-deploy.");
                     } else {
                         showError(result.message || "Login gagal (HTTP " + response.status + ").");
                     }

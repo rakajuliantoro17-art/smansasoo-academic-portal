@@ -7,14 +7,23 @@ oleh tiga halaman Absensi QR:
 - `pages/absensi-scan.html` (kios scan kamera)
 - `pages/absensi-rekap.html` (rekap kehadiran)
 
+> **Catatan batas Vercel Hobby:** paket Hobby membatasi maksimal 12
+> Serverless Functions per deployment. Karena itu login (POST) dan
+> verifikasi (GET) sengaja digabung jadi SATU file, `api/admin-auth.js`
+> (bukan dua file terpisah), dibedakan lewat `req.method`. Sebelum
+> menambah file baru di folder `api/`, hitung dulu jumlah file `.js`
+> langsung di `api/` (bukan yang di `api/_lib/`) — kalau sudah 12,
+> gabungkan dua endpoint lain atau hapus yang sudah tidak dipakai,
+> jangan langsung menambah file baru.
+
 ## Cara kerja
 
-1. **Server** (`api/admin-login.js`) memeriksa username + password terhadap
-   kredensial default yang tertanam di kode (hanya hash-nya, lihat bagian
-   "Kredensial saat ini" di bawah), atau terhadap `ADMIN_USERNAME` /
-   `ADMIN_PASSWORD` kalau Environment Variable itu diisi di Vercel. Kalau
-   benar, server membalas token yang ditandatangani HMAC-SHA256, berlaku
-   8 jam.
+1. **Server** (`api/admin-auth.js`, method **POST**) memeriksa username +
+   password terhadap kredensial default yang tertanam di kode (hanya
+   hash-nya, lihat bagian "Kredensial saat ini" di bawah), atau terhadap
+   `ADMIN_USERNAME` / `ADMIN_PASSWORD` kalau Environment Variable itu
+   diisi di Vercel. Kalau benar, server membalas token yang
+   ditandatangani HMAC-SHA256, berlaku 8 jam.
 2. **Browser** (`js/admin-auth.js`) menyimpan token itu di `sessionStorage`
    (hilang saat tab ditutup). Halaman dengan atribut `data-require-admin`
    pada tag `<script src="/js/admin-auth.js">` akan disembunyikan
@@ -22,9 +31,10 @@ oleh tiga halaman Absensi QR:
 3. Setelah login, setiap `fetch()` ke `/api/absensi-*` dari halaman itu
    otomatis membawa header `Authorization: Bearer <token>` (lewat patch
    `window.fetch`), jadi tidak perlu menambah kode apa pun di halaman.
-4. **Server lagi** (`api/admin-verify.js`, fungsi `verifyAdmin(req)`) — kalau
-   dipakai di endpoint lain, kode harus benar-benar memeriksa tanda tangan
-   token, bukan percaya begitu saja pada header yang dikirim browser.
+4. **Server lagi** (`api/admin-auth.js`, method **GET** -> fungsi
+   `verifyAdmin(req)`, di-export untuk dipakai endpoint lain) — benar-benar
+   memeriksa tanda tangan token, bukan percaya begitu saja pada header
+   yang dikirim browser.
 5. Ikon gerigi "Pengaturan" di navbar (dimuat otomatis oleh `js/shell.js` ->
    `js/settings-panel.js`) jadi menu cepat ke tiga halaman di atas; klik
    menu akan memunculkan overlay login kalau belum ada sesi aktif.
@@ -33,7 +43,7 @@ oleh tiga halaman Absensi QR:
 
 Login admin **sudah aktif tanpa perlu mengatur apa pun di Vercel**.
 Username dan password sementara ditentukan langsung di kode
-(`api/admin-login.js`) supaya tidak perlu bolak-balik ke dashboard
+(`api/admin-auth.js`) supaya tidak perlu bolak-balik ke dashboard
 Vercel dulu. Yang tersimpan di file itu **hanya hash SHA-256** dari
 password, bukan teks aslinya — jadi siapa pun yang membuka source
 code (termasuk siapa pun dengan akses ke repo GitHub) tidak langsung
@@ -63,7 +73,7 @@ Endpoint yang sudah dilindungi: `api/absensi.js`, `api/absensi-rekap.js`,
 tempel pola berikut di awal handler-nya:
 
 ```js
-const { verifyAdmin } = require("./admin-verify");
+const { verifyAdmin } = require("./admin-auth");
 // ...
 const auth = verifyAdmin(req);
 
@@ -75,7 +85,7 @@ if (auth.configured && !auth.ok) {
 
 ## Percobaan password salah
 
-`api/admin-login.js` membatasi maksimal 5 percobaan gagal per alamat IP
+`api/admin-auth.js` membatasi maksimal 5 percobaan gagal per alamat IP
 per 10 menit. Kalau `UPSTASH_REDIS_REST_URL`/`TOKEN` sudah diisi (lihat
 `.env.example`), batas ini tersimpan di Upstash (bertahan lintas
 instance serverless); kalau tidak, disimpan di memori instance saja

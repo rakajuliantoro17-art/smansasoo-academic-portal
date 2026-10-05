@@ -32,7 +32,7 @@ Response:
 
 const { fetchSheetRows, cleanNIS } = require("./_lib/gsheet");
 const { appendRow } = require("./_lib/gsheet-write");
-const { verifyAdmin } = require("./admin-verify");
+const { verifyAdmin } = require("./admin-auth");
 
 const SHEET_STUDENTS = "STUDENTS";
 const SHEET_ABSENSI = "ABSENSI";

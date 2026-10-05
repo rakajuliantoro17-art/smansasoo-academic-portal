@@ -1,10 +1,16 @@
 /*
 ==========================================================
 SMANSASOO Academic Portal
-POST /api/admin-login
+POST /api/admin-auth  (login)
+GET  /api/admin-auth  (verify token)
 ==========================================================
-Cek username + password admin DI SERVER, lalu kembalikan token
-bertanda tangan (HMAC-SHA256) yang berlaku 8 jam.
+Digabung jadi SATU file (dulu dua: admin-login.js +
+admin-verify.js) karena paket Vercel Hobby membatasi
+maksimal 12 Serverless Functions per deployment -- lihat
+docs/ADMIN-AUTH.md.
+
+POST: cek username + password admin DI SERVER, lalu kembalikan
+token bertanda tangan (HMAC-SHA256) yang berlaku 8 jam.
 
 Kredensial default (SEMENTARA, supaya tidak perlu mengatur
 Environment Variable di Vercel dulu):
@@ -26,9 +32,17 @@ Perlindungan tebak password: maksimal 5 gagal per IP per 10
 menit (disimpan di Upstash kalau UPSTASH_REDIS_REST_* terisi,
 kalau tidak, di memori instance -- cukup sebagai pengaman dasar).
 
-Body  : { "username": "...", "password": "..." }
-Respon: 200 { success, token, expiresAt, username }
-        401 salah | 429 terlalu banyak percobaan
+POST body  : { "username": "...", "password": "..." }
+POST respon: 200 { success, token, expiresAt, username }
+             401 salah | 429 terlalu banyak percobaan
+
+GET header : Authorization: Bearer <token>
+GET respon : 200 { valid: true, username, expiresAt }
+             401 { valid: false }
+
+Endpoint LAIN yang perlu dilindungi (mis. yang menulis absensi)
+memakai verifyAdmin() yang di-export di bawah -- lihat panduan
+di docs/ADMIN-AUTH.md.
 ==========================================================
 */
 
@@ -105,6 +119,52 @@ function signToken(payload) {
     return body + "." + b64url(mac);
 
 }
+
+/* ==========================================
+   VERIFIKASI TOKEN (dipakai GET di bawah,
+   dan di-export untuk endpoint lain)
+========================================== */
+
+function verifyAdmin(req) {
+
+    const header = String(req.headers.authorization || "");
+    const token = header.startsWith("Bearer ") ? header.slice(7).trim() : "";
+    const parts = token.split(".");
+
+    if (parts.length !== 2) return { ok: false, configured: true };
+
+    const expected = crypto.createHmac("sha256", signingSecret()).update(parts[0]).digest();
+    let given;
+
+    try {
+        given = Buffer.from(parts[1], "base64url");
+    } catch (e) {
+        return { ok: false, configured: true };
+    }
+
+    if (given.length !== expected.length || !crypto.timingSafeEqual(given, expected)) {
+        return { ok: false, configured: true };
+    }
+
+    let payload;
+
+    try {
+        payload = JSON.parse(Buffer.from(parts[0], "base64url").toString("utf8"));
+    } catch (e) {
+        return { ok: false, configured: true };
+    }
+
+    if (!payload || !payload.exp || Math.floor(Date.now() / 1000) >= payload.exp) {
+        return { ok: false, configured: true };
+    }
+
+    return { ok: true, configured: true, username: payload.u, expiresAt: payload.exp };
+
+}
+
+/* ==========================================
+   LOGIN (POST) -- pembatas percobaan gagal
+========================================== */
 
 function clientIp(req) {
 
@@ -190,14 +250,7 @@ function readBody(req) {
 
 }
 
-module.exports = async function handler(req, res) {
-
-    res.setHeader("Cache-Control", "no-store");
-
-    if (req.method !== "POST") {
-        res.setHeader("Allow", "POST");
-        return res.status(405).json({ success: false, message: "Metode tidak diizinkan." });
-    }
+async function handleLogin(req, res) {
 
     const adminUser = adminUsername();
 
@@ -239,4 +292,30 @@ module.exports = async function handler(req, res) {
         username: adminUser
     });
 
+}
+
+function handleVerify(req, res) {
+
+    const result = verifyAdmin(req);
+
+    if (!result.ok) {
+        return res.status(401).json({ valid: false });
+    }
+
+    return res.status(200).json({ valid: true, username: result.username, expiresAt: result.expiresAt });
+
+}
+
+module.exports = async function handler(req, res) {
+
+    res.setHeader("Cache-Control", "no-store");
+
+    if (req.method === "POST") return handleLogin(req, res);
+    if (req.method === "GET") return handleVerify(req, res);
+
+    res.setHeader("Allow", "GET, POST");
+    return res.status(405).json({ success: false, message: "Metode tidak diizinkan." });
+
 };
+
+module.exports.verifyAdmin = verifyAdmin;
