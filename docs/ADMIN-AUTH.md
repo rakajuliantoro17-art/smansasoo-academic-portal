@@ -35,9 +35,11 @@ oleh tiga halaman Absensi QR:
    `verifyAdmin(req)`, di-export untuk dipakai endpoint lain) — benar-benar
    memeriksa tanda tangan token, bukan percaya begitu saja pada header
    yang dikirim browser.
-5. Ikon gerigi "Pengaturan" di navbar (dimuat otomatis oleh `js/shell.js` ->
-   `js/settings-panel.js`) jadi menu cepat ke tiga halaman di atas; klik
-   menu akan memunculkan overlay login kalau belum ada sesi aktif.
+5. Tombol gear di pojok kanan bawah (`js/settings-drawer.js`, dimuat statis
+   di setiap halaman -- satu-satunya tombol gear di situs, dipakai juga
+   untuk toggle tema gelap/terang) membuka panel Pengaturan yang sekarang
+   juga berisi menu cepat ke tiga halaman di atas; klik menu akan
+   memunculkan overlay login kalau belum ada sesi aktif.
 
 ## Kredensial saat ini
 

@@ -530,11 +530,12 @@ window.Shell = (() => {
             .then(() => load("stats-panel.js"))
             .catch((e) => console.warn("Statistik gagal dimuat", e));
 
-        // Menu admin (ikon gerigi di navbar) -- admin-auth.js dulu supaya
-        // window.AdminAuth tersedia saat settings-panel.js dibangun.
+        // admin-auth.js -- menyediakan window.AdminAuth untuk menu admin
+        // di dalam Settings Drawer (js/settings-drawer.js, satu-satunya
+        // tombol gear di situs). Drawer-nya sendiri dimuat statis lewat
+        // <script src="js/settings-drawer.js"> di setiap halaman.
         load("admin-auth.js")
-            .then(() => load("settings-panel.js"))
-            .catch((e) => console.warn("Menu admin gagal dimuat", e));
+            .catch((e) => console.warn("Modul admin-auth gagal dimuat", e));
 
     }
 

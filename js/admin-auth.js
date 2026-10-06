@@ -4,8 +4,9 @@ SMANSASOO Academic Portal
 Admin Auth (overlay login + penjaga halaman)
 Version : 1.0.0
 ==========================================================
-Dipakai oleh js/settings-panel.js (menu Pengaturan) dan oleh
-halaman khusus admin.
+Dipakai oleh js/settings-drawer.js (menu admin di dalam panel
+Pengaturan, dibuka lewat tombol gear yang sama dengan toggle
+tema) dan oleh halaman khusus admin.
 
 Cara pakai:
 - Overlay login:   AdminAuth.openLogin({ dismissible: true })
