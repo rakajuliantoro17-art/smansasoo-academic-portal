@@ -13,6 +13,16 @@ halaman lain: anti-flash script + js/theme.js).
 ==========================================================
 */
 
+/* Default .bg-layer (css/glass.css) pakai assets/images/scc.jpg.
+   Di-override ke foto yang sama dengan pages/pengumuman.html
+   supaya tampilan background halaman ini sama -- lihat
+   css/pengumuman.css untuk rule serupa. Cuma background-image
+   yang di-override; position/size/repeat/blur tetap dari
+   glass.css. */
+body[data-page="jadwal"] .bg-layer {
+    background-image: url("../assets/images/Skr.jpg");
+}
+
 .jd {
     --jd-ink: #14233a;
     --jd-muted: #55657d;

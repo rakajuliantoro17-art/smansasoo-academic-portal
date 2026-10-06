@@ -34,9 +34,18 @@ body.tka-page{
 
     margin:0;
     font-family:'Plus Jakarta Sans',sans-serif;
-    background:var(--tka-bg);
+    /* Background foto (blur) dari css/glass.css -- lihat .bg-layer
+       di bawah. Warna --tka-bg lama disimpan sebagai fallback kalau
+       glass.css gagal dimuat. */
+    background:transparent;
     color:var(--tka-text);
 
+}
+
+/* Foto background, sama dengan pages/nilai.html -- lihat css/glass.css
+   untuk .bg-layer dan css/nilai.css untuk pola override serupa. */
+body[data-page="simulasi-tka"] .bg-layer{
+    background-image:url("../assets/images/tyr.jpg");
 }
 
 /* ==========================================
@@ -47,7 +56,10 @@ body.tka-page{
 
     padding:2.5rem 1.5rem 1.5rem;
     text-align:center;
-    background:linear-gradient(160deg, var(--tka-primary) 0%, var(--tka-primary-dark) 100%);
+    /* Transparan supaya foto background (.bg-layer) kelihatan,
+       sama seperti .header di css/style.css pada halaman lain.
+       Teks sudah putih/opacity jadi tetap kebaca di atas foto. */
+    background:transparent;
     color:#ffffff;
 
 }
