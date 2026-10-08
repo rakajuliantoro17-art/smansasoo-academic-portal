@@ -2,7 +2,7 @@
 ==========================================================
 SMANSASOO Academic Portal
 Shell (Navbar + Sidebar + Footer)
-Version : 2.2.0
+Version : 2.3.0
 ==========================================================
 Satu-satunya tempat markup navbar & sidebar situs
 didefinisikan. Setiap halaman (sekarang maupun nanti) cukup
@@ -72,6 +72,12 @@ CHANGELOG (v2.2.0):
         document.addEventListener("DOMContentLoaded", init);
     } else { init(); }
 
+CHANGELOG (v2.3.0):
+- Shell.loadStats() juga memuat js/admin-auth.js dan
+  js/settings-panel.js. Hasilnya: tombol roda gigi "Pengaturan" di
+  navbar (menu khusus admin, mis. Absensi Scan) muncul di semua
+  halaman tanpa mengubah halaman satu per satu.
+
 Halaman menandai dirinya lewat atribut pada <body>:
   data-page="home"         -> index.html
   data-page="pengumuman"   -> pages/pengumuman.html
@@ -81,6 +87,8 @@ Halaman menandai dirinya lewat atribut pada <body>:
   data-page="prestasi"     -> pages/prestasi.html
   data-page="rapor"        -> pages/rapor.html
   data-page="simulasi-tka" -> pages/simulasi-tka.html
+  data-page="jadwal"       -> pages/jadwal.html
+  data-page="rasionalisasi"-> pages/rasionalisasi.html
   data-page="about"        -> pages/about.html
   data-page="privacy"      -> pages/privacy.html
 
@@ -120,12 +128,13 @@ window.Shell = (() => {
     const NAV_LINKS = [
         { key: "home", label: "Beranda", href: "/index.html", icon: "🏠" },
         { key: "pengumuman", label: "Pengumuman", href: "/pages/pengumuman.html", icon: "📢" },
-        { key: "jadwal", label: "Jadwal Pelajaran", href: "/pages/jadwal.html", icon: "🗓️" },
         { key: "nilai", label: "Nilai", href: "/pages/nilai.html", icon: "📝" },
         { key: "kelulusan", label: "Kelulusan", href: "/pages/kelulusan.html", icon: "🎓" },
         { key: "prestasi", label: "Prestasi", href: "/pages/prestasi.html", icon: "🏆" },
         { key: "rapor", label: "Rapor Pendidikan", href: "/pages/rapor.html", icon: "📈" },
-        { key: "simulasi-tka", label: "Simulasi TKA", href: "/pages/simulasi-tka.html", icon: "🧠" }
+        { key: "simulasi-tka", label: "Simulasi TKA", href: "/pages/simulasi-tka.html", icon: "🧠" },
+        { key: "jadwal", label: "Jadwal Pelajaran", href: "/pages/jadwal.html", icon: "🗓️" },
+        { key: "rasionalisasi", label: "Rasionalisasi SNBP", href: "/pages/rasionalisasi.html", icon: "🎯" }
     ];
 
     // Ditambahkan di footer saja (tidak memenuhi navbar/sidebar utama).
@@ -525,17 +534,13 @@ window.Shell = (() => {
 
         });
 
-        // Urutan penting: tracker dulu, baru panel
+        // Urutan penting: tracker dulu, baru panel; lalu Pengaturan (butuh admin-auth)
         load("stats-tracker.js")
             .then(() => load("stats-panel.js"))
-            .catch((e) => console.warn("Statistik gagal dimuat", e));
-
-        // admin-auth.js -- menyediakan window.AdminAuth untuk menu admin
-        // di dalam Settings Drawer (js/settings-drawer.js, satu-satunya
-        // tombol gear di situs). Drawer-nya sendiri dimuat statis lewat
-        // <script src="js/settings-drawer.js"> di setiap halaman.
-        load("admin-auth.js")
-            .catch((e) => console.warn("Modul admin-auth gagal dimuat", e));
+            .catch((e) => console.warn("Statistik gagal dimuat", e))
+            .then(() => load("admin-auth.js"))
+            .then(() => load("settings-panel.js"))
+            .catch((e) => console.warn("Panel Pengaturan gagal dimuat", e));
 
     }
 
