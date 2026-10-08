@@ -285,6 +285,129 @@ halaman lain. Tema mengikuti data-theme pada <html>.
 
 .rs-fine { margin: 1.2rem 0 0; color: var(--rs-muted); font-size: 0.82rem; line-height: 1.55; }
 
+/* ---------- target (jurusan/kampus impian + rumpun minat) ---------- */
+
+.rs-target {
+    margin-top: 0.9rem;
+    padding: 0.85rem 1rem;
+    border: 1px dashed var(--rs-line);
+    border-radius: 12px;
+}
+
+.rs-target-label { display: block; color: var(--rs-muted); font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; }
+.rs-target-text { margin: 0.2rem 0 0; font-size: 1.02rem; font-weight: 700; }
+
+/* ---------- mapel: tag + tombol tambah ---------- */
+
+.rs-mapel-tools { margin-bottom: 0.9rem; }
+
+.rs-mapel-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.7rem; }
+
+.rs-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.4rem 0.3rem 0.75rem;
+    border: 1px solid var(--rs-line);
+    border-radius: 999px;
+    background: var(--rs-card);
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.rs-tag-x {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    background: var(--rs-line);
+    color: var(--rs-ink);
+    font-size: 0.85rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.rs-mapel-add { display: flex; gap: 0.5rem; }
+.rs-mapel-add .rs-input { flex: 1; }
+
+/* ---------- akordeon per semester ---------- */
+
+.rs-sem-accordion {
+    margin-top: 0.8rem;
+    border: 1px solid var(--rs-line);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.rs-sem-accordion + .rs-sem-accordion { margin-top: 0.6rem; }
+
+.rs-sem-summary {
+    padding: 0.75rem 0.9rem;
+    background: var(--rs-card);
+    font-weight: 800;
+    font-size: 0.98rem;
+    cursor: pointer;
+}
+
+.rs-sem-accordion .rs-grid { padding: 0.9rem; }
+
+.rs-bar--mapel { grid-template-columns: minmax(7rem, 11rem) 1fr 3rem; }
+.rs-bar--mapel > span:first-child { font-size: 0.85rem; line-height: 1.25; }
+
+/* ---------- riwayat tersimpan ---------- */
+
+.rs-history {
+    margin-top: 1.4rem;
+    padding: 1rem 1.1rem 1.15rem;
+    border: 1px solid var(--rs-line);
+    border-radius: 16px;
+    background: var(--rs-panel);
+}
+
+.rs-history-head { display: flex; align-items: center; justify-content: space-between; gap: 0.6rem; }
+
+.rs-h3 { margin: 0; font-size: 1.05rem; font-weight: 800; }
+
+.rs-link-btn {
+    border: none;
+    background: none;
+    padding: 0;
+    color: var(--rs-accent);
+    font: inherit;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.rs-history-chart { margin: 0.6rem 0; color: var(--rs-accent); }
+
+.rs-history-list { list-style: none; margin: 0.3rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+
+.rs-history-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--rs-line);
+    border-radius: 10px;
+    background: var(--rs-card);
+}
+
+.rs-history-item-main { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
+.rs-history-date { font-size: 0.78rem; font-weight: 700; color: var(--rs-muted); }
+.rs-history-sub { font-size: 0.88rem; font-weight: 600; }
+
+.rs-badge--mini { flex: none; padding: 0.15rem 0.55rem; font-size: 0.72rem; }
+.rs-badge--aman { background: var(--rs-good-bg); color: var(--rs-good); }
+.rs-badge--tipis { background: var(--rs-warn-bg); color: var(--rs-warn); }
+.rs-badge--luar { background: var(--rs-bad-bg); color: var(--rs-bad); }
+.rs-badge--kosong { background: var(--rs-line); color: var(--rs-muted); }
+
 @media print {
-    .rs-actions, .rs-more { display: none !important; }
+    .rs-actions, .rs-more, .rs-history { display: none !important; }
 }

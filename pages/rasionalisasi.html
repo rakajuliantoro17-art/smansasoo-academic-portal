@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#0F4C81">
     <title>Rasionalisasi SNBP | SMAN 1 Sooko Mojokerto</title>
-    <meta name="description" content="Ukur posisimu untuk jalur SNBP: cek peluang masuk kuota siswa eligible berdasarkan nilai rapor dan peringkat di sekolah.">
+    <meta name="description" content="Ukur posisimu untuk jalur SNBP: cek peluang masuk kuota siswa eligible berdasarkan nilai rapor per mata pelajaran dan peringkat di sekolah.">
 
     <link rel="stylesheet" href="../css/shell.css">
     <link rel="stylesheet" href="../css/rasionalisasi.css">
@@ -45,6 +45,22 @@
                 <button type="button" class="rs-btn rs-btn--primary rs-btn--block" id="rsMulai" disabled>Masukkan Nilai Rapor</button>
             </div>
 
+            <!-- ===== RIWAYAT TERSIMPAN (muncul kalau ada riwayat di perangkat ini) ===== -->
+            <section class="rs-history" id="rsHistoryBox" hidden aria-labelledby="rsHistoryTitle">
+
+                <div class="rs-history-head">
+                    <h2 class="rs-h3" id="rsHistoryTitle">Riwayat di perangkat ini</h2>
+                    <button type="button" class="rs-link-btn" id="rsHistoryClear">Hapus semua</button>
+                </div>
+
+                <p class="rs-help">Tersimpan hanya di browser ini (tidak dikirim ke server). Bisa dihapus kapan saja.</p>
+
+                <div class="rs-history-chart" id="rsHistoryChart" aria-hidden="true"></div>
+
+                <ul class="rs-history-list" id="rsHistoryList"></ul>
+
+            </section>
+
             <div class="rs-more">
                 <p>Cari tahu selengkapnya tentang Rasionalisasi SNBP</p>
                 <a class="rs-btn" id="rsInfo" href="https://snpmb.id" target="_blank" rel="noopener">Lihat di sini</a>
@@ -61,13 +77,39 @@
             <div class="rs-error" id="rsError" role="alert" hidden></div>
 
             <fieldset class="rs-card">
-                <legend>1. Rata-rata nilai rapor per semester</legend>
-                <p class="rs-help">Isi rata-rata semua mata pelajaran (0 sampai 100). Kosongkan semester yang belum ada.</p>
-                <div class="rs-grid" id="rsSemester"></div>
+                <legend>1. Target &amp; minat (opsional)</legend>
+                <p class="rs-help">Dipakai untuk catatan strategi di hasil, bukan untuk memprediksi lolos di jurusan tertentu.</p>
+
+                <div class="rs-field">
+                    <label class="rs-label" for="rsRumpun">Rumpun minat</label>
+                    <select class="rs-select" id="rsRumpun">
+                        <option value="">Belum tahu / lewati</option>
+                    </select>
+                </div>
+
+                <div class="rs-field">
+                    <label class="rs-label" for="rsImpian">Jurusan &amp; kampus impian</label>
+                    <input class="rs-input" id="rsImpian" type="text" placeholder="mis. Teknik Informatika, Universitas Airlangga" autocomplete="off">
+                </div>
             </fieldset>
 
             <fieldset class="rs-card">
-                <legend>2. Posisimu di sekolah</legend>
+                <legend>2. Nilai rapor per mata pelajaran</legend>
+                <p class="rs-help">Isi nilai tiap mapel per semester (0 sampai 100). Boleh dikosongkan kalau belum ada nilainya.</p>
+
+                <div class="rs-mapel-tools">
+                    <div class="rs-mapel-tags" id="rsMapelTags"></div>
+                    <div class="rs-mapel-add">
+                        <input class="rs-input" id="rsMapelBaru" type="text" placeholder="Tambah mapel lain (mis. Ekonomi)" autocomplete="off">
+                        <button type="button" class="rs-btn" id="rsMapelTambah">Tambah</button>
+                    </div>
+                </div>
+
+                <div id="rsSemesterWrap"></div>
+            </fieldset>
+
+            <fieldset class="rs-card">
+                <legend>3. Posisimu di sekolah</legend>
                 <p class="rs-help">Peringkat bisa ditanyakan ke wali kelas atau bagian kurikulum.</p>
 
                 <div class="rs-field">
@@ -115,9 +157,10 @@
                 <button type="button" class="rs-btn" id="rsUbah">Ubah data</button>
                 <button type="button" class="rs-btn" id="rsUlang">Mulai ulang</button>
                 <button type="button" class="rs-btn" id="rsCetak">Cetak</button>
+                <button type="button" class="rs-btn rs-btn--primary" id="rsUnduhKartu">Unduh kartu hasil</button>
             </div>
 
-            <p class="rs-fine">Hasil ini adalah gambaran awal berdasarkan aturan kuota siswa eligible, bukan prediksi diterimanya kamu di PTN atau prodi tertentu. Penetapan siswa eligible dilakukan sekolah, dan seleksi akhir oleh PTN melalui SNPMB. Data yang kamu isi hanya diproses di browser ini, tidak dikirim atau disimpan.</p>
+            <p class="rs-fine">Hasil ini adalah gambaran awal berdasarkan aturan kuota siswa eligible, bukan prediksi diterimanya kamu di PTN atau prodi tertentu, dan kartu hasilnya bukan pengumuman resmi apa pun. Penetapan siswa eligible dilakukan sekolah, dan seleksi akhir oleh PTN melalui SNPMB. Data yang kamu isi hanya diproses di browser ini; hasilnya baru tersimpan di perangkat ini (localStorage) kalau kamu tidak menghapus riwayat, dan tidak pernah dikirim ke server mana pun.</p>
 
         </section>
 

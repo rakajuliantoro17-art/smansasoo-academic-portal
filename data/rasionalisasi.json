@@ -1,5 +1,5 @@
 {
-  "versi": "1.0.0",
+  "versi": "2.0.0",
   "tahun_seleksi": 2027,
   "info_url": "https://snpmb.id",
   "kuota": { "A": 40, "B": 25, "C": 5, "lainnya": 5 },
@@ -11,5 +11,24 @@
     "erapor": false,
     "jumlah_siswa": { "X": null, "XI": null, "XII": null }
   },
-  "semester": { "X": [1], "XI": [1, 2, 3], "XII": [1, 2, 3, 4, 5] }
+  "semester": { "X": [1], "XI": [1, 2, 3], "XII": [1, 2, 3, 4, 5] },
+  "mapel_default": [
+    "Bahasa Indonesia",
+    "Bahasa Inggris",
+    "Matematika",
+    "PKN/Pendidikan Pancasila",
+    "Pendidikan Agama",
+    "Sejarah Indonesia",
+    "PJOK",
+    "Seni Budaya",
+    "Informatika"
+  ],
+  "rumpun_minat": [
+    { "id": "saintek_tech", "label": "Saintek: Teknologi & Teknik" },
+    { "id": "saintek_med", "label": "Saintek: Kedokteran & Kesehatan" },
+    { "id": "saintek_pure", "label": "Saintek: MIPA (Sains Murni)" },
+    { "id": "soshum_eco", "label": "Soshum: Ekonomi & Bisnis" },
+    { "id": "soshum_soc", "label": "Soshum: Sosial, Hukum & Politik" },
+    { "id": "soshum_art", "label": "Soshum: Seni & Kreatif" }
+  ]
 }
