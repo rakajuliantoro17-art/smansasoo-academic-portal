@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F4C81">
+    <title>Rasionalisasi SNBP | SMAN 1 Sooko Mojokerto</title>
+    <meta name="description" content="Ukur posisimu untuk jalur SNBP: cek peluang masuk kuota siswa eligible berdasarkan nilai rapor dan peringkat di sekolah.">
+
+    <link rel="stylesheet" href="../css/shell.css">
+    <link rel="stylesheet" href="../css/rasionalisasi.css">
+</head>
+
+<body data-page="rasionalisasi">
+
+    <div id="shellNav"></div>
+
+    <main class="rs" id="rsApp">
+
+        <!-- ===== LANGKAH 1: PILIH KELAS ===== -->
+        <section id="rsIntro" aria-labelledby="rsHello">
+
+            <header class="rs-hero">
+                <h1 class="rs-hello" id="rsHello" tabindex="-1">Halo, calon penerus bangsa!</h1>
+                <p class="rs-lead">Ukur peluangmu lebih awal untuk masuk ke kampus impianmu</p>
+            </header>
+
+            <div class="rs-alert" role="note">
+                <span class="rs-alert-ico" aria-hidden="true">i</span>
+                <p>Cek prediksi peluang kamu untuk lolos PTN lewat jalur SNBP. Pastikan kamu termasuk siswa yang <i>eligible</i> di sekolahmu ya!</p>
+            </div>
+
+            <div class="rs-panel">
+                <h2 class="rs-h2">Cari tahu peluangmu, yuk!</h2>
+                <p class="rs-sub">Hanya butuh waktu 10 menit saja</p>
+
+                <label class="rs-label" for="rsKelas">Pilih kelas</label>
+                <select class="rs-select" id="rsKelas">
+                    <option value="">Pilih kelas</option>
+                    <option value="X">Kelas X</option>
+                    <option value="XI">Kelas XI</option>
+                    <option value="XII">Kelas XII</option>
+                </select>
+
+                <button type="button" class="rs-btn rs-btn--primary rs-btn--block" id="rsMulai" disabled>Masukkan Nilai Rapor</button>
+            </div>
+
+            <div class="rs-more">
+                <p>Cari tahu selengkapnya tentang Rasionalisasi SNBP</p>
+                <a class="rs-btn" id="rsInfo" href="https://snpmb.id" target="_blank" rel="noopener">Lihat di sini</a>
+            </div>
+
+        </section>
+
+        <!-- ===== LANGKAH 2: FORM ===== -->
+        <section id="rsForm" hidden aria-labelledby="rsFormTitle">
+
+            <h2 class="rs-h2" id="rsFormTitle" tabindex="-1">Masukkan data kamu</h2>
+            <p class="rs-sub" id="rsFormSub"></p>
+
+            <div class="rs-error" id="rsError" role="alert" hidden></div>
+
+            <fieldset class="rs-card">
+                <legend>1. Rata-rata nilai rapor per semester</legend>
+                <p class="rs-help">Isi rata-rata semua mata pelajaran (0 sampai 100). Kosongkan semester yang belum ada.</p>
+                <div class="rs-grid" id="rsSemester"></div>
+            </fieldset>
+
+            <fieldset class="rs-card">
+                <legend>2. Posisimu di sekolah</legend>
+                <p class="rs-help">Peringkat bisa ditanyakan ke wali kelas atau bagian kurikulum.</p>
+
+                <div class="rs-field">
+                    <label class="rs-label" for="rsAkreditasi">Akreditasi sekolah</label>
+                    <select class="rs-select" id="rsAkreditasi">
+                        <option value="">Pilih akreditasi</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="lainnya">Lainnya / belum terakreditasi</option>
+                    </select>
+                </div>
+
+                <label class="rs-check">
+                    <input type="checkbox" id="rsErapor">
+                    <span>Sekolah memakai e-rapor di PDSS (tambahan kuota 5%)</span>
+                </label>
+
+                <div class="rs-field">
+                    <label class="rs-label" for="rsJumlah">Jumlah siswa seangkatan</label>
+                    <input class="rs-input" id="rsJumlah" type="number" inputmode="numeric" min="1" step="1" placeholder="mis. 360">
+                </div>
+
+                <div class="rs-field">
+                    <label class="rs-label" for="rsPeringkat">Peringkatmu di angkatan (berdasarkan nilai rapor)</label>
+                    <input class="rs-input" id="rsPeringkat" type="number" inputmode="numeric" min="1" step="1" placeholder="mis. 45">
+                </div>
+            </fieldset>
+
+            <div class="rs-actions">
+                <button type="button" class="rs-btn" id="rsKembali">Kembali</button>
+                <button type="button" class="rs-btn rs-btn--primary" id="rsHitung">Lihat hasil</button>
+            </div>
+
+        </section>
+
+        <!-- ===== LANGKAH 3: HASIL ===== -->
+        <section id="rsHasil" hidden aria-labelledby="rsHasilTitle">
+
+            <h2 class="rs-h2" id="rsHasilTitle" tabindex="-1">Hasil rasionalisasi</h2>
+
+            <div id="rsHasilIsi"></div>
+
+            <div class="rs-actions">
+                <button type="button" class="rs-btn" id="rsUbah">Ubah data</button>
+                <button type="button" class="rs-btn" id="rsUlang">Mulai ulang</button>
+                <button type="button" class="rs-btn" id="rsCetak">Cetak</button>
+            </div>
+
+            <p class="rs-fine">Hasil ini adalah gambaran awal berdasarkan aturan kuota siswa eligible, bukan prediksi diterimanya kamu di PTN atau prodi tertentu. Penetapan siswa eligible dilakukan sekolah, dan seleksi akhir oleh PTN melalui SNPMB. Data yang kamu isi hanya diproses di browser ini, tidak dikirim atau disimpan.</p>
+
+        </section>
+
+    </main>
+
+    <div id="shellFooter"></div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/shell.js"></script>
+    <script src="../js/rasionalisasi.js"></script>
+
+</body>
+</html>
