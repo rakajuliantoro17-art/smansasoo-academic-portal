@@ -1,0 +1,15 @@
+{
+  "versi": "1.0.0",
+  "tahun_seleksi": 2027,
+  "info_url": "https://snpmb.id",
+  "kuota": { "A": 40, "B": 25, "C": 5, "lainnya": 5 },
+  "bonus_erapor": 5,
+  "catatan_aturan": "Persentase kuota mengikuti ketentuan SNBP 2025 (A 40%, B 25%, C dan lainnya 5%, tambahan 5% bila sekolah memakai e-rapor). Ketentuan SNBP 2027 belum dirilis resmi; sesuaikan angka di berkas ini setelah SNPMB mengumumkan.",
+  "sekolah": {
+    "nama": "SMAN 1 Sooko Mojokerto",
+    "akreditasi": "",
+    "erapor": false,
+    "jumlah_siswa": { "X": null, "XI": null, "XII": null }
+  },
+  "semester": { "X": [1], "XI": [1, 2, 3], "XII": [1, 2, 3, 4, 5] }
+}
