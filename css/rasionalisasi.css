@@ -9,6 +9,15 @@ halaman lain. Tema mengikuti data-theme pada <html>.
 ==========================================================
 */
 
+/* Foto background (blur), sama dengan pages/pengumuman.html dan
+   pages/jadwal.html -- lihat css/glass.css untuk .bg-layer dan
+   css/jadwal.css untuk pola override serupa. Panel/card di
+   halaman ini sudah pakai rgba tembus pandang dari awal, jadi
+   tidak perlu diubah supaya fotonya kelihatan. */
+body[data-page="rasionalisasi"] .bg-layer {
+    background-image: url("../assets/images/Skr.jpg");
+}
+
 .rs {
     --rs-ink: #14233a;
     --rs-muted: #55657d;
