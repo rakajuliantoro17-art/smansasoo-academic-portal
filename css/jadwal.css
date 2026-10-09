@@ -184,6 +184,95 @@ body[data-page="jadwal"] .bg-layer {
     outline-offset: 2px;
 }
 
+/* ---------- Cari jadwal guru ---------- */
+
+.jd .jd-field-guru {
+    position: relative;
+    grid-column: 1 / -1;
+    padding-top: 0.15rem;
+    border-top: 1px dashed var(--jd-line);
+}
+
+.jd .jd-guru-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.jd .jd-guru-input { flex: 1; font-weight: 600; }
+
+.jd .jd-guru-clear {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--jd-line);
+    border-radius: 50%;
+    background: var(--jd-card-bg);
+    color: var(--jd-ink);
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.jd .jd-guru-clear:focus-visible {
+    outline: 3px solid var(--jd-accent);
+    outline-offset: 2px;
+}
+
+.jd .jd-guru-suggest {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 0.5rem;
+    padding: 0.4rem;
+    border: 1px solid var(--jd-line);
+    border-radius: 12px;
+    background: var(--jd-card-bg);
+    max-height: 17rem;
+    overflow-y: auto;
+}
+
+.jd .jd-guru-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.05rem;
+    padding: 0.5rem 0.65rem;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--jd-ink);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.jd .jd-guru-item:hover,
+.jd .jd-guru-item:focus-visible {
+    background: var(--jd-panel);
+    outline: none;
+}
+
+.jd .jd-guru-item-nama { font-size: 0.92rem; font-weight: 700; }
+.jd .jd-guru-item-mapel { font-size: 0.78rem; font-weight: 600; color: var(--jd-muted); }
+
+.jd .jd-guru-empty {
+    padding: 0.6rem 0.65rem;
+    color: var(--jd-muted);
+    font-size: 0.88rem;
+}
+
+.jd .jd-wi--empty {
+    background: transparent;
+    color: var(--jd-muted);
+    font-style: italic;
+}
+
+.jd .jd-wi--empty::before { background: transparent; box-shadow: none; }
+
 /* ---------- Catatan / status ---------- */
 
 .jd .jd-note {

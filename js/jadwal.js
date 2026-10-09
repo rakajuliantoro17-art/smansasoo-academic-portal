@@ -33,8 +33,9 @@ halaman lain; file ini tidak bergantung pada shell.
     var WEEKDAY_INDEX = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4, Sat: 5, Sun: 6 };
 
     var data = null;
-    var state = { kelas: "", hari: "" };
+    var state = { kelas: "", hari: "", guru: "" };
     var tick = null;
+    var guruIndex = [];       // [{kode, nama, mapel}], diisi di buildGuruIndex()
 
     /* ==========================================
        UTIL
@@ -354,6 +355,99 @@ halaman lain; file ini tidak bergantung pada shell.
     }
 
     /* ==========================================
+       RENDER: CARI JADWAL GURU
+    ========================================== */
+
+    // Jadwal mengajar satu guru di semua kelas, dikelompokkan per hari.
+    // kode = kode 2 huruf di data.guru (sama yang dipakai di r.kode timeline).
+    function findGuruSchedule(kode) {
+
+        var out = {};
+
+        HARI.forEach(function (hari) { out[hari] = []; });
+
+        Object.keys(data.jadwal).forEach(function (kelas) {
+
+            HARI.forEach(function (hari) {
+
+                (data.jadwal[kelas][hari] || []).forEach(function (e) {
+
+                    if (String(e[2]).split(" ")[0] === kode) {
+                        out[hari].push({ dari: e[0], sampai: e[1], kelas: kelas, mapel: data.mapel[e[3]] });
+                    }
+
+                });
+
+            });
+
+        });
+
+        HARI.forEach(function (hari) { out[hari].sort(function (a, b) { return a.dari - b.dari; }); });
+
+        return out;
+
+    }
+
+    function renderGuru(root, kode) {
+
+        var guru = data.guru[kode];
+        var now = nowWIB();
+        var sched = findGuruSchedule(kode);
+        var totalJam = 0;
+
+        HARI.forEach(function (hari) { sched[hari].forEach(function (it) { totalJam += it.sampai - it.dari + 1; }); });
+
+        var head = h("div", "jd-result-head");
+        head.appendChild(h("h2", "jd-h2", guru.n));
+        head.appendChild(h("p", "jd-summary", (guru.m ? guru.m + " · " : "") + totalJam + " jam pelajaran seminggu, di semua kelas"));
+        root.appendChild(head);
+
+        var grid = h("div", "jd-week");
+
+        HARI.forEach(function (hari, di) {
+
+            var box = h("section", "jd-day");
+
+            if (now.hari === di) box.classList.add("is-today");
+
+            var title = h("h3", "jd-day-head");
+            title.appendChild(h("span", "jd-daylink", hari + (now.hari === di ? " (hari ini)" : "")));
+            box.appendChild(title);
+
+            var ul = h("ul", "jd-wlist");
+
+            if (!sched[hari].length) {
+
+                var li = h("li", "jd-wi jd-wi--empty");
+                li.appendChild(h("span", "", "Tidak mengajar"));
+                ul.appendChild(li);
+
+            } else {
+
+                sched[hari].forEach(function (it) {
+
+                    var liEl = h("li", "jd-wi");
+
+                    liEl.style.setProperty("--c", it.mapel.warna);
+                    liEl.appendChild(h("span", "jd-wi-jam", it.dari === it.sampai ? String(it.dari) : it.dari + "–" + it.sampai));
+                    liEl.appendChild(h("span", "jd-wi-mapel", it.mapel.nama));
+                    liEl.appendChild(h("span", "jd-wi-kode", it.kelas));
+                    ul.appendChild(liEl);
+
+                });
+
+            }
+
+            box.appendChild(ul);
+            grid.appendChild(box);
+
+        });
+
+        root.appendChild(grid);
+
+    }
+
+    /* ==========================================
        RENDER: UTAMA
     ========================================== */
 
@@ -363,13 +457,25 @@ halaman lain; file ini tidak bergantung pada shell.
 
         if (!root || !data) return;
 
+        if (state.guru && !data.guru[state.guru]) state.guru = "";
+
         root.textContent = "";
+
+        if (state.guru) {
+
+            root.className = "jd-result";
+            renderGuru(root, state.guru);
+            updatePills();
+
+            return;
+
+        }
 
         if (!state.kelas) {
 
             var empty = h("div", "jd-empty");
             empty.appendChild(h("strong", "", "Pilih kelas dulu"));
-            empty.appendChild(h("span", "", "Jadwal akan muncul di sini setelah kelasnya dipilih."));
+            empty.appendChild(h("span", "", "Atau cari lewat nama guru di atas."));
             root.className = "";
             root.appendChild(empty);
 
@@ -451,7 +557,8 @@ halaman lain; file ini tidak bergantung pada shell.
 
         Array.prototype.forEach.call(byId("jdHari").children, function (b) {
 
-            b.setAttribute("aria-pressed", b.getAttribute("data-hari") === state.hari ? "true" : "false");
+            var active = !state.guru && b.getAttribute("data-hari") === state.hari;
+            b.setAttribute("aria-pressed", active ? "true" : "false");
 
         });
 
@@ -463,19 +570,22 @@ halaman lain; file ini tidak bergantung pada shell.
 
     function readUrl() {
 
-        var out = { kelas: "", hari: "" };
+        var out = { kelas: "", hari: "", guru: "" };
 
         try {
 
             var q = new URLSearchParams(window.location.search);
             var kelas = (q.get("kelas") || "").replace("-", " ").toUpperCase();
             var hari = (q.get("hari") || "").toLowerCase();
+            var guru = q.get("guru") || "";
 
             if (data.jadwal[kelas]) out.kelas = kelas;
 
             if (hari === "semua" || hari === SEMUA.toLowerCase()) out.hari = SEMUA;
 
             HARI.forEach(function (n) { if (n.toLowerCase() === hari) out.hari = n; });
+
+            if (guru && data.guru[guru]) out.guru = guru;
 
         } catch (e) {
             // URL tidak bisa dibaca -- pakai bawaan.
@@ -493,9 +603,17 @@ halaman lain; file ini tidak bergantung pada shell.
 
             var q = new URLSearchParams();
 
-            if (state.kelas) q.set("kelas", state.kelas.replace(" ", "-"));
+            if (state.guru) {
 
-            q.set("hari", state.hari === SEMUA ? "semua" : state.hari.toLowerCase());
+                q.set("guru", state.guru);
+
+            } else {
+
+                if (state.kelas) q.set("kelas", state.kelas.replace(" ", "-"));
+
+                q.set("hari", state.hari === SEMUA ? "semua" : state.hari.toLowerCase());
+
+            }
 
             history.replaceState(null, "", window.location.pathname + "?" + q.toString());
 
@@ -536,6 +654,32 @@ halaman lain; file ini tidak bergantung pada shell.
         if (next.kelas !== undefined) state.kelas = next.kelas;
         if (next.hari !== undefined) state.hari = next.hari;
 
+        if (next.guru !== undefined) {
+
+            state.guru = next.guru;
+
+            // jaga kotak pencarian guru tetap sinkron, termasuk saat dipulihkan dari URL
+            var gInput = byId("jdGuruSearch");
+            var gClear = byId("jdGuruClear");
+
+            if (gInput) {
+
+                if (state.guru && data.guru[state.guru]) {
+
+                    gInput.value = data.guru[state.guru].n;
+                    if (gClear) gClear.hidden = false;
+
+                } else {
+
+                    gInput.value = "";
+                    if (gClear) gClear.hidden = true;
+
+                }
+
+            }
+
+        }
+
         byId("jdKelas").value = state.kelas;
 
         if (state.kelas) saveKelas(state.kelas);
@@ -545,11 +689,146 @@ halaman lain; file ini tidak bergantung pada shell.
 
     }
 
+    /* ==========================================
+       CARI JADWAL GURU: index + pencarian
+    ========================================== */
+
+    function buildGuruIndex() {
+
+        guruIndex = Object.keys(data.guru).map(function (kode) {
+
+            var g = data.guru[kode];
+
+            return { kode: kode, nama: g.n, mapel: g.m };
+
+        }).sort(function (a, b) { return a.nama.localeCompare(b.nama, "id"); });
+
+    }
+
+    function cariGuru(query) {
+
+        var q = query.trim().toLowerCase();
+
+        if (!q) return [];
+
+        return guruIndex.filter(function (g) { return g.nama.toLowerCase().indexOf(q) !== -1; });
+
+    }
+
+    function wireGuruSearch() {
+
+        var input = byId("jdGuruSearch");
+        var suggest = byId("jdGuruSuggest");
+        var clearBtn = byId("jdGuruClear");
+
+        function tutupSaran() {
+
+            suggest.hidden = true;
+            suggest.textContent = "";
+
+        }
+
+        function pilihGuru(kode, nama) {
+
+            input.value = nama;
+            clearBtn.hidden = false;
+            tutupSaran();
+            setState({ kelas: "", guru: kode });
+
+        }
+
+        function tampilkanSaran(query) {
+
+            var matches = cariGuru(query).slice(0, 8);
+
+            suggest.textContent = "";
+
+            if (!query.trim()) { tutupSaran(); return; }
+
+            if (!matches.length) {
+
+                suggest.hidden = false;
+                suggest.appendChild(h("div", "jd-guru-empty", "Tidak ada guru dengan nama itu."));
+
+                return;
+
+            }
+
+            suggest.hidden = false;
+
+            matches.forEach(function (g) {
+
+                var btn = h("button", "jd-guru-item");
+
+                btn.type = "button";
+                btn.appendChild(h("span", "jd-guru-item-nama", g.nama));
+
+                if (g.mapel) btn.appendChild(h("span", "jd-guru-item-mapel", g.mapel));
+
+                btn.addEventListener("click", function () { pilihGuru(g.kode, g.nama); });
+                suggest.appendChild(btn);
+
+            });
+
+        }
+
+        function kosongkanPencarian() {
+
+            input.value = "";
+            clearBtn.hidden = true;
+            tutupSaran();
+
+            if (state.guru) setState({ guru: "" });
+
+        }
+
+        input.addEventListener("input", function (ev) {
+
+            clearBtn.hidden = !ev.target.value;
+
+            // user mengetik ulang (bukan habis pilih dari saran) -> keluar dari mode guru lama
+            if (state.guru) state.guru = "";
+
+            tampilkanSaran(ev.target.value);
+
+        });
+
+        input.addEventListener("keydown", function (ev) {
+
+            if (ev.key === "Enter") {
+
+                ev.preventDefault();
+
+                var matches = cariGuru(input.value);
+
+                if (matches.length) pilihGuru(matches[0].kode, matches[0].nama);
+
+            } else if (ev.key === "Escape") {
+
+                kosongkanPencarian();
+
+            }
+
+        });
+
+        input.addEventListener("focus", function () { if (input.value) tampilkanSaran(input.value); });
+
+        clearBtn.addEventListener("click", function () { kosongkanPencarian(); input.focus(); });
+
+        // tutup daftar saran kalau klik di luar kotak pencarian
+        document.addEventListener("click", function (ev) {
+
+            if (!ev.target.closest(".jd-field-guru")) tutupSaran();
+
+        });
+
+    }
+
     function wire() {
 
         byId("jdKelas").addEventListener("change", function (ev) {
 
-            setState({ kelas: ev.target.value });
+            setState({ kelas: ev.target.value, guru: "" });
 
         });
 
@@ -557,7 +836,7 @@ halaman lain; file ini tidak bergantung pada shell.
 
             var b = ev.target.closest("button[data-hari]");
 
-            if (b) setState({ hari: b.getAttribute("data-hari") });
+            if (b) setState({ hari: b.getAttribute("data-hari"), guru: "" });
 
         });
 
@@ -568,17 +847,20 @@ halaman lain; file ini tidak bergantung pada shell.
 
             if (b) {
 
-                setState({ hari: b.getAttribute("data-hari") });
+                setState({ hari: b.getAttribute("data-hari"), guru: "" });
                 byId("jdResult").scrollIntoView({ block: "start", behavior: "smooth" });
 
             }
 
         });
 
+        wireGuruSearch();
+
         // penanda "sedang berlangsung" ikut bergeser saat jam berganti
         tick = window.setInterval(function () {
 
-            if (state.kelas && state.hari !== SEMUA) render();
+            if (state.guru) render();
+            else if (state.kelas && state.hari !== SEMUA) render();
 
         }, 30000);
 
@@ -649,14 +931,23 @@ halaman lain; file ini tidak bergantung pada shell.
                 fillMeta();
                 buildKelasSelect();
                 buildPills();
+                buildGuruIndex();
                 wire();
 
                 var fromUrl = readUrl();
 
-                setState({
-                    kelas: fromUrl.kelas || savedKelas(),
-                    hari: fromUrl.hari || defaultHari()
-                });
+                if (fromUrl.guru) {
+
+                    setState({ guru: fromUrl.guru, kelas: "" });
+
+                } else {
+
+                    setState({
+                        kelas: fromUrl.kelas || savedKelas(),
+                        hari: fromUrl.hari || defaultHari()
+                    });
+
+                }
 
             })
             .catch(function (err) {
