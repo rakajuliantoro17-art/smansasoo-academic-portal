@@ -415,6 +415,18 @@ hamburger di navbar (overlay dari kiri, klik overlay = tutup).
 
 }
 
+/* Penanda link navigasi yang membuka situs lain (target="_blank"),
+   mis. menu E-Learning yang menuju IP publik server e-learning
+   sekolah, bukan halaman di portal ini. */
+.app-sidebar nav a .app-sidebar-ext-ico{
+
+    margin-left:auto;
+    flex-shrink:0;
+    opacity:.55;
+    font-size:var(--font-xs);
+
+}
+
 .app-sidebar nav a:hover{
 
     background:var(--surface-alt);
@@ -629,6 +641,7 @@ body.sidebar-open .app-sidebar{
 
     body.sidebar-collapsed .app-sidebar-title,
     body.sidebar-collapsed .app-sidebar nav a .label,
+    body.sidebar-collapsed .app-sidebar nav a .app-sidebar-ext-ico,
     body.sidebar-collapsed .app-sidebar-external{
 
         display:none;
