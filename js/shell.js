@@ -89,14 +89,16 @@ Halaman menandai dirinya lewat atribut pada <body>:
   data-page="simulasi-tka" -> pages/simulasi-tka.html
   data-page="jadwal"       -> pages/jadwal.html
   data-page="rasionalisasi"-> pages/rasionalisasi.html
+  data-page="elearning"    -> pages/elearning.html
   data-page="about"        -> pages/about.html
   data-page="privacy"      -> pages/privacy.html
 
 Link baru untuk fitur mendatang TINGGAL ditambahkan ke
 NAV_LINKS di bawah, tidak perlu edit tiap halaman satu-satu.
-Untuk link yang menuju situs LAIN (bukan halaman di portal
-ini, mis. "elearning" ke IP publik server e-learning sekolah),
-tambahkan "external: true" -- otomatis dibuka di tab baru
+Untuk link yang menuju situs LAIN secara langsung (bukan
+ditampilkan lewat iframe di dalam portal, lihat
+pages/elearning.html untuk pola iframe-nya), tambahkan
+"external: true" -- otomatis dibuka di tab baru
 (target="_blank" rel="noopener") dan diberi ikon panah kecil.
 
 Sidebar per-halaman tambahan (opsional, dipasang oleh halaman
@@ -139,7 +141,7 @@ window.Shell = (() => {
         { key: "simulasi-tka", label: "Simulasi TKA", href: "/pages/simulasi-tka.html", icon: "🧠" },
         { key: "jadwal", label: "Jadwal Pelajaran", href: "/pages/jadwal.html", icon: "🗓️" },
         { key: "rasionalisasi", label: "Rasionalisasi SNBP", href: "/pages/rasionalisasi.html", icon: "🎯" },
-        { key: "elearning", label: "E-Learning", href: "http://182.253.144.97/", icon: "💻", external: true }
+        { key: "elearning", label: "E-Learning", href: "/pages/elearning.html", icon: "💻" }
     ];
 
     // Ditambahkan di footer saja (tidak memenuhi navbar/sidebar utama).

@@ -1,0 +1,160 @@
+/*
+==========================================================
+SMANSASOO Academic Portal
+E-Learning (pages/elearning.html)
+Version : 1.0.0
+==========================================================
+Halaman ini menampilkan portal e-learning sekolah
+(http://182.253.144.97/) lewat <iframe>, supaya guru/siswa
+tidak perlu pindah tab. Semua selector di-scope ke ".el"
+supaya tidak bentrok dengan halaman lain.
+
+CATATAN PENTING (jangan dihapus):
+Server e-learning masih HTTP, sedangkan portal ini HTTPS.
+Sebagian browser modern memblokir "mixed active content"
+seperti ini (iframe HTTP di halaman HTTPS) secara default,
+sehingga iframe bisa tampil kosong meskipun server e-learning
+sendiri normal. Itu sebabnya halaman ini SELALU menampilkan
+tombol "Buka di tab baru" di samping iframe, bukan cuma kalau
+iframe gagal -- karena kegagalan akibat pemblokiran semacam
+ini tidak bisa dideteksi lewat JavaScript (cross-origin).
+Solusi permanen: aktifkan HTTPS di server e-learning (mis.
+reverse proxy + sertifikat Let's Encrypt, atau Cloudflare).
+==========================================================
+*/
+
+.el {
+    --el-ink: #14233a;
+    --el-muted: #55657d;
+    --el-panel: rgba(255, 255, 255, 0.94);
+    --el-line: rgba(20, 35, 58, 0.16);
+    --el-accent: #0f4c81;
+    --el-accent-ink: #ffffff;
+    --el-warn-bg: rgba(255, 183, 3, 0.14);
+    --el-warn-ink: #7a5600;
+    --el-warn-line: rgba(255, 183, 3, 0.4);
+
+    box-sizing: border-box;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 1.25rem 1rem 2rem;
+    color: var(--el-ink);
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.5;
+}
+
+:root[data-theme="dark"] .el {
+    --el-ink: #e8eef8;
+    --el-muted: #a5b4ca;
+    --el-panel: rgba(14, 24, 40, 0.92);
+    --el-line: rgba(232, 238, 248, 0.18);
+    --el-accent: #7cc0ff;
+    --el-accent-ink: #0a1a2e;
+    --el-warn-bg: rgba(255, 193, 7, 0.1);
+    --el-warn-ink: #ffd466;
+    --el-warn-line: rgba(255, 193, 7, 0.3);
+}
+
+.el *,
+.el *::before,
+.el *::after {
+    box-sizing: border-box;
+}
+
+.el-panel {
+    background: var(--el-panel);
+    border: 1px solid var(--el-line);
+    border-radius: 16px;
+    padding: 1.1rem 1.1rem 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.el-title {
+    margin: 0;
+    font-size: clamp(1.55rem, 4.6vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+}
+
+.el-sub {
+    margin: .3rem 0 0;
+    color: var(--el-muted);
+    font-size: .95rem;
+}
+
+.el-warn {
+    display: flex;
+    align-items: flex-start;
+    gap: .6rem;
+    margin: .9rem 0 0;
+    padding: .75rem .9rem;
+    background: var(--el-warn-bg);
+    border: 1px solid var(--el-warn-line);
+    border-radius: 12px;
+}
+
+.el-warn-ico {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--el-warn-ink);
+    color: var(--el-panel);
+    font-weight: 800;
+    font-size: .8rem;
+    font-style: italic;
+}
+
+.el-warn p {
+    margin: 0;
+    color: var(--el-warn-ink);
+    font-size: .88rem;
+}
+
+.el-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    margin-top: .9rem;
+    padding: .6rem 1.1rem;
+    background: var(--el-accent);
+    color: var(--el-accent-ink);
+    border: none;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: .92rem;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.el-btn:hover {
+    filter: brightness(1.06);
+}
+
+.el-frame-wrap {
+    position: relative;
+    width: 100%;
+    height: 78vh;
+    min-height: 480px;
+    background: var(--el-panel);
+    border: 1px solid var(--el-line);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.el-frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .el-frame-wrap {
+        height: 70vh;
+        border-radius: 12px;
+    }
+}
