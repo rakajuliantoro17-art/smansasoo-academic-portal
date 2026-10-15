@@ -93,6 +93,10 @@ reverse proxy + sertifikat Let's Encrypt, atau Cloudflare).
     border-radius: 12px;
 }
 
+.el-warn[hidden] {
+    display: none;
+}
+
 .el-warn-ico {
     flex-shrink: 0;
     display: inline-flex;

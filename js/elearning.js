@@ -23,6 +23,17 @@ selalu ditampilkan, bukan cuma sebagai fallback kondisional.
 
         if (!frame) return;
 
+        // Peringatan "masih HTTP" hanya relevan selama alamat
+        // e-learning belum HTTPS. Begitu src iframe diganti ke
+        // https://..., peringatannya disembunyikan otomatis.
+        var warn = document.getElementById("elWarn");
+
+        if (warn && /^https:\/\//i.test(frame.getAttribute("src") || "")) {
+
+            warn.hidden = true;
+
+        }
+
         // Catatan: event "load" pada iframe tetap terpicu walau
         // kontennya diblokir browser (mixed content) atau ditolak
         // server (X-Frame-Options/CSP) -- jadi tidak dipakai untuk
