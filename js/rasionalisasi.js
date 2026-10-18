@@ -2,7 +2,7 @@
 ==========================================================
 SMANSASOO Academic Portal
 Rasionalisasi SNBP (pages/rasionalisasi.html)
-Version : 2.0.0
+Version : 2.1.0
 ==========================================================
 Alur: pilih kelas -> isi target/minat + nilai rapor per mapel
 per semester + posisi di sekolah -> hasil.
@@ -24,6 +24,17 @@ Fitur tambahan (v2.0.0):
   (bisa dihapus kapan saja lewat tombol "Hapus semua")
 - kartu hasil bisa diunduh sebagai gambar PNG lewat <canvas>,
   jelas dilabeli "simulasi pribadi, bukan pengumuman resmi"
+
+Fitur tambahan (v2.1.0): hasil TKA (opsional, diisi siswa sendiri)
+- 3 mata uji wajib + mata uji pilihan, masing-masing skor dan
+  daya serap (%) kalau tertera di hasil TKA
+- "Agen" ini BERBASIS ATURAN (tanpa LLM/API): catatan dibuat dari
+  aturan di data/rasionalisasi.json (blok "tka"), yaitu: kecocokan
+  mapel pilihan dengan rumpun minat, apakah mapel pilihan ada di
+  rapor (minimal N semester), selisih nilai rapor vs skor TKA,
+  mata uji TKA terendah/tertinggi, dan daya serap terendah
+- Blok "tka" tidak ada di DEFAULTS: kalau berkas JSON gagal dimuat,
+  bagian TKA disembunyikan, bagian lain tetap jalan
 
 Angka persentase & data sekolah dibaca dari data/rasionalisasi.json
 (bisa diubah tanpa menyentuh kode). Semua perhitungan terjadi di
@@ -284,6 +295,120 @@ browser; tidak ada data yang dikirim ke server mana pun.
 
     }
 
+    /* ==========================================
+       TKA: FORM INPUT (opsional, diisi siswa sendiri)
+    ========================================== */
+
+    function tkaCfg() { return cfg.tka || null; }
+
+    function tkaId(key, field) { return "rsTka_" + key + "_" + field; }
+
+    // skor TKA bisa desimal (mis. 683,33), jadi tampilkan 2 desimal hanya kalau perlu
+    function fmtSkor(n) { return Number.isInteger(n) ? fmt(n, 0) : fmt(n, 2); }
+
+    function tkaNumInput(key, field, placeholder, ariaLabel) {
+
+        var input = h("input", "rs-input");
+
+        input.type = "text";
+        input.inputMode = "decimal";
+        input.autocomplete = "off";
+        input.placeholder = placeholder;
+        input.id = tkaId(key, field);
+        input.setAttribute("aria-label", ariaLabel);
+
+        return input;
+
+    }
+
+    function tkaColsHeader(t) {
+
+        var cols = h("div", "rs-tka-cols");
+
+        cols.setAttribute("aria-hidden", "true");
+        cols.appendChild(h("span", "", "Mata uji"));
+        cols.appendChild(h("span", "", "Skor (" + t.skor_min + "-" + t.skor_max + ")"));
+        cols.appendChild(h("span", "", "Daya serap (%)"));
+
+        return cols;
+
+    }
+
+    function tkaRowWajib(nama, key) {
+
+        var row = h("div", "rs-tka-row");
+
+        row.appendChild(h("span", "rs-tka-name", nama));
+        row.appendChild(tkaNumInput(key, "skor", "mis. 640", "Skor TKA " + nama));
+        row.appendChild(tkaNumInput(key, "daya", "mis. 72", "Daya serap " + nama + " (persen)"));
+
+        return row;
+
+    }
+
+    function tkaRowPilihan(t, key, no) {
+
+        var row = h("div", "rs-tka-row");
+        var wrap = h("div", "rs-field-pick");
+        var sel = h("select", "rs-select");
+        var first = document.createElement("option");
+
+        first.value = "";
+        first.textContent = "Pilih mata uji pilihan " + no;
+        sel.appendChild(first);
+
+        t.pilihan.forEach(function (p) {
+            var opt = document.createElement("option");
+            opt.value = p.nama;
+            opt.textContent = p.nama;
+            sel.appendChild(opt);
+        });
+
+        sel.id = tkaId(key, "nama");
+        sel.setAttribute("aria-label", "Mata uji pilihan " + no);
+
+        wrap.appendChild(sel);
+        row.appendChild(wrap);
+        row.appendChild(tkaNumInput(key, "skor", "mis. 640", "Skor TKA mata uji pilihan " + no));
+        row.appendChild(tkaNumInput(key, "daya", "mis. 72", "Daya serap mata uji pilihan " + no + " (persen)"));
+
+        return row;
+
+    }
+
+    function buildTka() {
+
+        var card = $("rsTkaCard");
+        var wrap = $("rsTkaWrap");
+        var t = tkaCfg();
+
+        if (!card || !wrap) return;
+
+        // tanpa konfigurasi TKA (JSON gagal dimuat) bagian ini disembunyikan, form lain tetap jalan
+        if (!t) { card.hidden = true; return; }
+
+        card.hidden = false;
+        $("rsTkaNote").hidden = state.kelas === "XII";
+        wrap.textContent = "";
+
+        var gw = h("div", "rs-tka-group");
+
+        gw.appendChild(h("h3", "", "Mata uji wajib"));
+        gw.appendChild(tkaColsHeader(t));
+        t.wajib.forEach(function (nama, i) { gw.appendChild(tkaRowWajib(nama, "w" + i)); });
+        wrap.appendChild(gw);
+
+        var gp = h("div", "rs-tka-group");
+
+        gp.appendChild(h("h3", "", "Mata uji pilihan (maksimal " + t.jumlah_pilihan + ")"));
+        gp.appendChild(tkaColsHeader(t));
+
+        for (var i = 0; i < t.jumlah_pilihan; i++) gp.appendChild(tkaRowPilihan(t, "p" + i, i + 1));
+
+        wrap.appendChild(gp);
+
+    }
+
     function openForm() {
 
         $("rsFormSub").textContent = "Kelas " + state.kelas + ". Isi sejujur mungkin supaya gambarannya akurat.";
@@ -291,6 +416,7 @@ browser; tidak ada data yang dikirim ke server mana pun.
 
         buildMapelTags();
         buildSemesterWrap();
+        buildTka();
         prefillSchool();
 
         show("rsForm", "rsFormTitle");
@@ -306,6 +432,83 @@ browser; tidak ada data yang dikirim ke server mana pun.
         if (value === "" || value === null || value === undefined) return NaN;
 
         return Number(String(value).replace(",", "."));
+
+    }
+
+    function readTka(errors) {
+
+        var t = tkaCfg();
+        var result = { entries: [], pilihan: [] };
+
+        if (!t || $("rsTkaCard").hidden) return result;
+
+        var slots = [];
+        var badSkor = false;
+        var badDaya = false;
+        var needPick = false;
+        var dup = false;
+        var seen = {};
+
+        t.wajib.forEach(function (nama, i) { slots.push({ key: "w" + i, nama: nama, jenis: "wajib", sel: null }); });
+
+        for (var i = 0; i < t.jumlah_pilihan; i++) {
+
+            var sel = $(tkaId("p" + i, "nama"));
+
+            sel.removeAttribute("aria-invalid");
+            slots.push({ key: "p" + i, nama: sel.value, jenis: "pilihan", sel: sel });
+
+            if (sel.value) {
+                if (seen[sel.value]) dup = true;
+                seen[sel.value] = true;
+                result.pilihan.push(sel.value);
+            }
+
+        }
+
+        slots.forEach(function (s) {
+
+            var skorEl = $(tkaId(s.key, "skor"));
+            var dayaEl = $(tkaId(s.key, "daya"));
+
+            skorEl.removeAttribute("aria-invalid");
+            dayaEl.removeAttribute("aria-invalid");
+
+            if (skorEl.value === "" && dayaEl.value === "") return;
+
+            if (!s.nama) {
+                needPick = true;
+                s.sel.setAttribute("aria-invalid", "true");
+                return;
+            }
+
+            var skor = skorEl.value === "" ? null : parseNum(skorEl.value);
+            var daya = dayaEl.value === "" ? null : parseNum(dayaEl.value);
+
+            if (skor !== null && (isNaN(skor) || skor < t.skor_min || skor > t.skor_max)) {
+                skorEl.setAttribute("aria-invalid", "true");
+                badSkor = true;
+                skor = null;
+            }
+
+            if (daya !== null && (isNaN(daya) || daya < 0 || daya > 100)) {
+                dayaEl.setAttribute("aria-invalid", "true");
+                badDaya = true;
+                daya = null;
+            }
+
+            if (skor === null && daya === null) return;
+
+            result.entries.push({ nama: s.nama, jenis: s.jenis, skor: skor, daya: daya });
+
+        });
+
+        if (badSkor) errors.push("Skor TKA harus berupa angka " + t.skor_min + " sampai " + t.skor_max + ".");
+        if (badDaya) errors.push("Daya serap TKA harus berupa angka 0 sampai 100.");
+        if (needPick) errors.push("Pilih dulu mata uji pilihan TKA sebelum mengisi skor atau daya serapnya.");
+        if (dup) errors.push("Dua mata uji pilihan TKA tidak boleh sama.");
+
+        return result;
 
     }
 
@@ -373,10 +576,14 @@ browser; tidak ada data yang dikirim ke server mana pun.
             $("rsPeringkat").setAttribute("aria-invalid", "true");
         }
 
+        var tka = readTka(errors);
+
         return {
             errors: errors,
             data: {
                 kelas: state.kelas,
+                tka: tka.entries,
+                tkaPilihan: tka.pilihan,
                 semesters: semesters,
                 mapelAgg: mapelAgg,
                 akreditasi: akre,
@@ -387,6 +594,94 @@ browser; tidak ada data yang dikirim ke server mana pun.
                 impian: ($("rsImpian").value || "").trim()
             }
         };
+
+    }
+
+    /* ==========================================
+       TKA: ANALISIS BERBASIS ATURAN
+    ========================================== */
+
+    // label kategori dari config (saat ini cuma "Istimewa" >= 725; rentang lain belum diketahui)
+    function kategoriTka(skor) {
+
+        var t = tkaCfg();
+
+        if (!t || skor === null) return "";
+
+        var list = (t.kategori || []).slice().sort(function (a, b) { return b.min - a.min; });
+
+        for (var i = 0; i < list.length; i++) {
+            if (skor >= list[i].min) return list[i].label;
+        }
+
+        return "";
+
+    }
+
+    // cari mapel rapor yang namanya memuat potongan nama (mis. "Pancasila" cocok dengan
+    // "PKN/Pendidikan Pancasila"); kalau ada beberapa, pakai yang semesternya paling banyak
+    function findRapor(d, frag) {
+
+        var f = String(frag || "").toLowerCase();
+        var best = null;
+
+        if (!f) return null;
+
+        Object.keys(d.mapelAgg).forEach(function (name) {
+
+            if (name.toLowerCase().indexOf(f) === -1) return;
+
+            var a = d.mapelAgg[name];
+
+            if (!best || a.count > best.count) best = { mapel: name, avg: a.sum / a.count, count: a.count };
+
+        });
+
+        return best;
+
+    }
+
+    function raporFragFor(jenis, nama) {
+
+        var t = tkaCfg();
+
+        if (jenis === "wajib") return nama;
+
+        var p = ((t && t.pilihan) || []).filter(function (x) { return x.nama === nama; })[0];
+
+        return p ? p.rapor : nama;
+
+    }
+
+    function tkaAnalyze(d) {
+
+        var t = tkaCfg();
+        var list = [];
+
+        if (t) {
+
+            (d.tka || []).forEach(function (e) {
+
+                var pos = e.skor === null ? null : (e.skor - t.skor_min) / (t.skor_max - t.skor_min) * 100;
+
+                list.push({
+                    nama: e.nama,
+                    jenis: e.jenis,
+                    skor: e.skor,
+                    daya: e.daya,
+                    pos: pos,
+                    kategori: kategoriTka(e.skor),
+                    rapor: findRapor(d, raporFragFor(e.jenis, e.nama))
+                });
+
+            });
+
+        }
+
+        var scored = list.filter(function (e) { return e.skor !== null; })
+            .sort(function (a, b) { return a.skor - b.skor; });
+
+        return { list: list, scored: scored };
 
     }
 
@@ -415,8 +710,14 @@ browser; tidak ada data yang dikirim ke server mana pun.
             return { mapel: name, avg: a.sum / a.count };
         }).sort(function (a, b) { return a.avg - b.avg; });
 
+        var tka = tkaAnalyze(d);
+
         return {
             d: d,
+            tkaList: tka.list,
+            tkaScored: tka.scored,
+            tkaLowest: tka.scored.length ? tka.scored[0] : null,
+            tkaHighest: tka.scored.length ? tka.scored[tka.scored.length - 1] : null,
             avg: avg,
             persen: persen,
             kuota: kuota,
@@ -509,6 +810,111 @@ browser; tidak ada data yang dikirim ke server mana pun.
 
     }
 
+    // Catatan strategi TKA: murni aturan (tanpa LLM). Semua ambang ada di data/rasionalisasi.json (blok "tka").
+    function tkaCatatan(r) {
+
+        var t = tkaCfg();
+        var notes = [];
+
+        if (!t) return notes;
+
+        var d = r.d;
+        var minSem = t.min_semester_rapor || 2;
+        var semAvail = (cfg.semester[d.kelas] || [1]).length;
+        var rumpun = d.rumpun ? rumpunLabel(d.rumpun) : "";
+        var rec = d.rumpun && t.rekomendasi_rumpun ? t.rekomendasi_rumpun[d.rumpun] : null;
+
+        if (!r.tkaList.length && d.kelas === "XII") {
+            notes.push("Kamu belum mengisi hasil TKA. Pada SNBP, TKA dipakai untuk mencocokkan dengan nilai rapor, jadi isi bagian TKA kalau hasilnya sudah ada.");
+        }
+
+        // 1. mata uji terendah / tertinggi dan predikat
+        if (r.tkaScored.length >= 2) {
+            notes.push("Mata uji TKA terendahmu: " + r.tkaLowest.nama + " (" + fmtSkor(r.tkaLowest.skor) + "), tertinggi: " + r.tkaHighest.nama + " (" + fmtSkor(r.tkaHighest.skor) + "). Prioritaskan persiapan di mata uji terendah, terutama kalau itu mata uji wajib.");
+        }
+
+        var byKat = {};
+
+        r.tkaScored.forEach(function (e) {
+            if (!e.kategori) return;
+            if (!byKat[e.kategori]) byKat[e.kategori] = [];
+            byKat[e.kategori].push(e.nama);
+        });
+
+        Object.keys(byKat).forEach(function (k) {
+            notes.push("Predikat " + k + " di: " + byKat[k].join(", ") + ".");
+        });
+
+        // 2. daya serap terendah
+        var dayaList = r.tkaList.filter(function (e) { return e.daya !== null; })
+            .sort(function (a, b) { return a.daya - b.daya; });
+
+        if (dayaList.length) {
+            notes.push("Daya serap terendahmu: " + dayaList[0].nama + " (" + fmtSkor(dayaList[0].daya) + "%). Buka rincian daya serap per bagian materi di tka.kemendikdasmen.go.id, lalu pelajari ulang bagian yang paling lemah.");
+        }
+
+        // 3. rapor vs TKA (perbandingan kasar: posisi skor pada skala TKA vs rata-rata rapor)
+        var gaps = [];
+
+        r.tkaScored.forEach(function (e) {
+            if (e.rapor && e.pos !== null) gaps.push({ e: e, diff: e.rapor.avg - e.pos });
+        });
+
+        gaps.sort(function (a, b) { return Math.abs(b.diff) - Math.abs(a.diff); });
+
+        gaps.slice(0, 2).forEach(function (g) {
+
+            var e = g.e;
+            var banding = "rapor " + e.rapor.mapel + " rata-rata " + fmt(e.rapor.avg, 1) + " vs skor TKA " + e.nama + " " + fmtSkor(e.skor) + " (sekitar " + fmt(e.pos, 0) + "% dari skala)";
+
+            if (g.diff >= t.selisih_wajar) {
+                notes.push("Selisih cukup besar: " + banding + ". Karena TKA dipakai untuk mencocokkan dengan rapor, selisih seperti ini bisa terlihat kurang konsisten, jadi perkuat penguasaan materinya. Ini perbandingan kasar, bukan aturan resmi.");
+            } else if (g.diff <= -t.selisih_wajar) {
+                notes.push("Skor TKA-mu lebih tinggi dari nilai rapornya: " + banding + ". Kemampuanmu melebihi yang terlihat di rapor, jadi jaga agar nilai rapor semester berikutnya ikut naik. Ini perbandingan kasar, bukan aturan resmi.");
+            }
+
+        });
+
+        // 4. mata uji pilihan harus ada di rapor (minimal N semester, aturan SNBP 2025)
+        d.tkaPilihan.forEach(function (nama) {
+
+            var rap = findRapor(d, raporFragFor("pilihan", nama));
+
+            if (!rap) {
+                notes.push("Mata uji pilihan " + nama + " belum ada nilainya di rapor yang kamu isi. Pada SNBP, mapel pilihan TKA sebaiknya tercantum di rapor minimal " + minSem + " semester (aturan SNBP 2025; cek ketentuan 2027 di SNPMB).");
+            } else if (semAvail >= minSem && rap.count < minSem) {
+                notes.push("Mata uji pilihan " + nama + " baru terisi " + rap.count + " semester di rapor. Sebaiknya minimal " + minSem + " semester (aturan SNBP 2025; cek ketentuan 2027 di SNPMB).");
+            }
+
+        });
+
+        // 5. mata uji pilihan vs rumpun minat
+        if (rec && rec.length) {
+
+            if (!d.tkaPilihan.length) {
+
+                notes.push("Untuk minat " + rumpun + ", mata uji pilihan yang umum dipilih: " + rec.join(", ") + ". Pastikan sesuai syarat prodi tujuan dan ada di rapormu.");
+
+            } else {
+
+                var cocok = d.tkaPilihan.filter(function (n) { return rec.indexOf(n) !== -1; });
+
+                if (!cocok.length) {
+                    notes.push("Mata uji pilihanmu (" + d.tkaPilihan.join(", ") + ") kurang sejalan dengan minat " + rumpun + ". Yang umum dipilih: " + rec.join(", ") + ". Cek syarat prodi tujuan sebelum memutuskan.");
+                } else if (cocok.length < d.tkaPilihan.length) {
+                    notes.push("Sebagian mata uji pilihanmu sejalan dengan minat " + rumpun + " (" + cocok.join(", ") + "). Pastikan yang lain juga punya rekam nilai di rapor.");
+                } else {
+                    notes.push("Mata uji pilihanmu sejalan dengan minat " + rumpun + ". Lanjutkan dengan memastikan nilai rapor mapel itu juga kuat.");
+                }
+
+            }
+
+        }
+
+        return notes;
+
+    }
+
     function renderResult(r) {
 
         var root = $("rsHasilIsi");
@@ -591,6 +997,54 @@ browser; tidak ada data yang dikirim ke server mana pun.
             });
 
             root.appendChild(mbars);
+
+        }
+
+        if (r.tkaList.length) {
+
+            var t = tkaCfg();
+            var tb = h("div", "rs-bars");
+
+            tb.appendChild(h("h3", "", "Hasil TKA"));
+
+            r.tkaList.forEach(function (e) {
+
+                var row = h("div", "rs-bar rs-bar--tka");
+                var track = h("span", "rs-bar-track");
+                var fill = h("span", "rs-bar-fill");
+                var bits = [];
+
+                fill.style.width = (e.pos === null ? 0 : Math.max(0, Math.min(100, e.pos))) + "%";
+                track.appendChild(fill);
+
+                row.appendChild(h("span", "", e.nama + (e.jenis === "pilihan" ? " (pilihan)" : "")));
+                row.appendChild(track);
+                row.appendChild(h("span", "rs-bar-v", e.skor === null ? "-" : fmtSkor(e.skor)));
+                tb.appendChild(row);
+
+                if (e.kategori) bits.push("Predikat " + e.kategori);
+                if (e.daya !== null) bits.push("Daya serap " + fmtSkor(e.daya) + "%");
+
+                if (bits.length) tb.appendChild(h("p", "rs-tka-sub", bits.join(" · ")));
+
+            });
+
+            tb.appendChild(h("p", "rs-tka-sub", "Skala skor TKA SMA " + t.skor_min + "-" + t.skor_max + ". Panjang batang = posisi skor pada skala itu."));
+            root.appendChild(tb);
+
+        }
+
+        var tkaNotes = tkaCatatan(r);
+
+        if (tkaNotes.length) {
+
+            var tn = h("div", "rs-next");
+            var tul = h("ul");
+
+            tn.appendChild(h("h3", "", "Catatan hasil TKA"));
+            tkaNotes.forEach(function (t2) { tul.appendChild(h("li", "", t2)); });
+            tn.appendChild(tul);
+            root.appendChild(tn);
 
         }
 
@@ -876,6 +1330,14 @@ browser; tidak ada data yang dikirim ke server mana pun.
 
         if (r.mapelLowest) statRow("Mapel perlu perhatian", r.mapelLowest.mapel + " (" + fmt(r.mapelLowest.avg, 1) + ")");
 
+        if (r.tkaHighest) {
+
+            statRow(r.tkaScored.length > 1 ? "TKA tertinggi" : "Hasil TKA", r.tkaHighest.nama + " (" + fmtSkor(r.tkaHighest.skor) + ")");
+
+            if (r.tkaScored.length > 1) statRow("TKA terendah", r.tkaLowest.nama + " (" + fmtSkor(r.tkaLowest.skor) + ")");
+
+        }
+
         if (r.d.impian) {
 
             ctx.font = "600 20px 'Plus Jakarta Sans', sans-serif";
@@ -1000,6 +1462,9 @@ browser; tidak ada data yang dikirim ke server mana pun.
 
                 // kalau siswa belum mulai isi form, pakai daftar mapel dari konfigurasi terbaru
                 if (!state.kelas && cfg.mapel_default) state.mapel = cfg.mapel_default.slice();
+
+                // form terlanjur terbuka sebelum JSON selesai dimuat: tampilkan bagian TKA sekarang
+                if (state.kelas && !$("rsForm").hidden) buildTka();
 
             })
             .catch(function (e) {

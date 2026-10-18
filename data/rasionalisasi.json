@@ -1,5 +1,5 @@
 {
-  "versi": "2.0.0",
+  "versi": "2.1.0",
   "tahun_seleksi": 2027,
   "info_url": "https://snpmb.id",
   "kuota": { "A": 40, "B": 25, "C": 5, "lainnya": 5 },
@@ -30,5 +30,45 @@
     { "id": "soshum_eco", "label": "Soshum: Ekonomi & Bisnis" },
     { "id": "soshum_soc", "label": "Soshum: Sosial, Hukum & Politik" },
     { "id": "soshum_art", "label": "Soshum: Seni & Kreatif" }
-  ]
+  ],
+  "tka": {
+    "catatan": "Daftar mapel, skala skor, dan predikat Istimewa dirangkum dari pemberitaan TKA SMA 2026 (bukan dokumen resmi). Rentang kategori Baik/Memadai/Kurang untuk SMA belum ditemukan, jadi tidak ditampilkan. Cek pengumuman resmi Kemendikdasmen/SNPMB, lalu sesuaikan berkas ini. Pemetaan 'rekomendasi_rumpun' adalah contoh umum, bukan ketentuan resmi per prodi.",
+    "skor_min": 200,
+    "skor_max": 800,
+    "kategori": [
+      { "min": 725, "label": "Istimewa" }
+    ],
+    "min_semester_rapor": 2,
+    "selisih_wajar": 20,
+    "wajib": ["Matematika", "Bahasa Indonesia", "Bahasa Inggris"],
+    "jumlah_pilihan": 2,
+    "pilihan": [
+      { "nama": "Matematika Tingkat Lanjut", "rapor": "Matematika" },
+      { "nama": "Bahasa Indonesia Tingkat Lanjut", "rapor": "Bahasa Indonesia" },
+      { "nama": "Bahasa Inggris Tingkat Lanjut", "rapor": "Bahasa Inggris" },
+      { "nama": "Fisika", "rapor": "Fisika" },
+      { "nama": "Kimia", "rapor": "Kimia" },
+      { "nama": "Biologi", "rapor": "Biologi" },
+      { "nama": "Ekonomi", "rapor": "Ekonomi" },
+      { "nama": "Geografi", "rapor": "Geografi" },
+      { "nama": "Sosiologi", "rapor": "Sosiologi" },
+      { "nama": "Sejarah", "rapor": "Sejarah" },
+      { "nama": "Pendidikan Pancasila dan Kewarganegaraan", "rapor": "Pancasila" },
+      { "nama": "Antropologi", "rapor": "Antropologi" },
+      { "nama": "Bahasa Prancis", "rapor": "Prancis" },
+      { "nama": "Bahasa Jerman", "rapor": "Jerman" },
+      { "nama": "Bahasa Jepang", "rapor": "Jepang" },
+      { "nama": "Bahasa Mandarin", "rapor": "Mandarin" },
+      { "nama": "Bahasa Korea", "rapor": "Korea" },
+      { "nama": "Bahasa Arab", "rapor": "Arab" }
+    ],
+    "rekomendasi_rumpun": {
+      "saintek_tech": ["Matematika Tingkat Lanjut", "Fisika", "Kimia"],
+      "saintek_med": ["Biologi", "Kimia", "Fisika"],
+      "saintek_pure": ["Matematika Tingkat Lanjut", "Fisika", "Kimia", "Biologi"],
+      "soshum_eco": ["Ekonomi", "Geografi", "Sosiologi", "Matematika Tingkat Lanjut"],
+      "soshum_soc": ["Sosiologi", "Sejarah", "Pendidikan Pancasila dan Kewarganegaraan", "Geografi", "Antropologi"],
+      "soshum_art": ["Bahasa Indonesia Tingkat Lanjut", "Bahasa Inggris Tingkat Lanjut", "Sejarah", "Antropologi"]
+    }
+  }
 }
