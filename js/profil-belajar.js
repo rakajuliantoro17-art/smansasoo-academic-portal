@@ -860,6 +860,48 @@ rumpun minat secara otomatis.
 
     }
 
+    /* ---------- cetak / simpan PDF ---------- */
+
+    // Menyusun lembar rekap lengkap (ringkasan, rencana, dan hasil tiap
+    // modul) lalu memanggil dialog cetak browser; siswa/guru bisa memilih
+    // "Simpan sebagai PDF". Tidak ada yang dikirim ke server.
+    function printAll() {
+
+        var s = loadStore();
+        var map = { kesiapan: resultKesiapan, gaya: resultGaya, minat: resultMinat, ct: resultCT, kebiasaan: resultKebiasaan };
+        var tgl = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
+        var rows = summaryRows(s).map(function (r) {
+            return "<div class=\"pb-sum-row\"><span class=\"pb-sum-k\">" + esc(r[0]) + "</span><span class=\"pb-sum-v\">" + esc(r[1]) + "</span></div>";
+        }).join("");
+        var plan = weeklyPlan(s);
+        var html = "<div class=\"pb-print-head\"><h1>Profil Belajar</h1><p>SMAN 1 Sooko Mojokerto · dicetak " + esc(tgl) + "</p>"
+            + "<div class=\"pb-print-id\"><span>Nama:</span><span>Kelas:</span></div></div>"
+            + "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">Ringkasan</h3>" + rows + "</div>";
+
+        if (plan.length) {
+            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">Rencana belajar minggu ini</h3><ol>"
+                + plan.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>";
+        }
+
+        MODS.forEach(function (m) {
+            if (s[m.key]) html += "<h2 class=\"pb-h2\" style=\"margin-top:1.2rem\">" + esc(m.judul) + "</h2>" + map[m.key](s[m.key]);
+        });
+
+        html += "<p class=\"pb-fine\">Refleksi diri pribadi, bukan tes psikologi dan bukan penentu jurusan. Preferensi bersifat campuran dan bisa berubah.</p>";
+
+        $("pbPrint").innerHTML = html;
+        document.body.classList.add("pb-printing");
+
+        var cleanup = function () {
+            document.body.classList.remove("pb-printing");
+            window.removeEventListener("afterprint", cleanup);
+        };
+
+        window.addEventListener("afterprint", cleanup);
+        window.print();
+
+    }
+
     /* ---------- kartu PNG ---------- */
 
     function roundRectPath(ctx, x, y, w, hh, r) {
@@ -1057,7 +1099,7 @@ rumpun minat secara otomatis.
         });
 
         $("pbUnduh").addEventListener("click", downloadCard);
-        $("pbCetak").addEventListener("click", function () { window.print(); });
+        $("pbCetak").addEventListener("click", printAll);
 
         $("pbHapus").addEventListener("click", function () {
 

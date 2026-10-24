@@ -298,7 +298,27 @@ body[data-page="profil-belajar"] .bg-layer {
     .pb-actions .pb-btn { flex: 1 1 auto; }
 }
 
+/* ---------- lembar cetak (Cetak / Simpan sebagai PDF) ---------- */
+
+.pb-print { display: none; }
+
+.pb-print-head { margin-bottom: 0.8rem; padding-bottom: 0.6rem; border-bottom: 2px solid #000; }
+.pb-print-head h1 { margin: 0; font-size: 1.5rem; }
+.pb-print-head p { margin: 0.2rem 0 0; font-size: 0.9rem; }
+.pb-print-id { display: flex; gap: 1.5rem; margin-top: 0.8rem; font-size: 0.95rem; }
+.pb-print-id span { flex: 1; padding-bottom: 0.1rem; border-bottom: 1px solid #000; }
+
 @media print {
-    .pb-actions, .pb-mods { display: none !important; }
-    .pb { max-width: none; color: #000; }
+    body.pb-printing #shellNav,
+    body.pb-printing #shellFooter,
+    body.pb-printing .bg-layer,
+    body.pb-printing #pbHub,
+    body.pb-printing #pbRun,
+    body.pb-printing #pbResult { display: none !important; }
+
+    body.pb-printing { background: #fff !important; }
+    body.pb-printing .pb { max-width: none; padding: 0; color: #000; --pb-ink: #000; --pb-muted: #333; --pb-panel: #fff; --pb-card: #fff; --pb-line: #999; --pb-accent: #000; --pb-accent-soft: #ddd; --pb-good: #000; }
+    body.pb-printing .pb-print { display: block !important; }
+    body.pb-printing .pb-res { break-inside: avoid; border-color: #999; }
+    body.pb-printing .pb-bar-fill { background: #444 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
