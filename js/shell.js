@@ -89,6 +89,7 @@ Halaman menandai dirinya lewat atribut pada <body>:
   data-page="simulasi-tka" -> pages/simulasi-tka.html
   data-page="jadwal"       -> pages/jadwal.html
   data-page="rasionalisasi"-> pages/rasionalisasi.html
+  data-page="profil-belajar" -> pages/profil-belajar.html
   data-page="about"        -> pages/about.html
   data-page="privacy"      -> pages/privacy.html
 
@@ -139,6 +140,7 @@ window.Shell = (() => {
         { key: "simulasi-tka", label: "Simulasi TKA", href: "/pages/simulasi-tka.html", icon: "🧠" },
         { key: "jadwal", label: "Jadwal Pelajaran", href: "/pages/jadwal.html", icon: "🗓️" },
         { key: "rasionalisasi", label: "Rasionalisasi SNBP", href: "/pages/rasionalisasi.html", icon: "🎯" },
+        { key: "profil-belajar", label: "Profil Belajar", href: "/pages/profil-belajar.html", icon: "🧭" },
         { key: "elearning", label: "E-Learning", href: "http://lms.sman1sooko.sch.id/elearning/", icon: "💻", external: true }
     ];
 

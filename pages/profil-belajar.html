@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F4C81">
+    <title>Profil Belajar | SMAN 1 Sooko Mojokerto</title>
+    <meta name="description" content="Kenali kesiapan, gaya belajar, minat, dan kebiasaan belajarmu untuk mendukung pembelajaran berdiferensiasi dan arah pilihan SNBP.">
+
+    <!-- ANTI-FLASH THEME INIT (wajib, jangan dihapus) -->
+    <script>
+        (function () {
+            try {
+                var saved = localStorage.getItem('smansasoo-theme');
+                var theme = saved || ((window.matchMedia &&
+                    window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+                document.documentElement.setAttribute('data-theme', theme);
+            } catch (e) {
+                document.documentElement.setAttribute('data-theme', 'light');
+            }
+        })();
+    </script>
+
+    <link rel="icon" href="../assets/logo/favicon.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS wajib di setiap halaman -->
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/theme.css">
+    <link rel="stylesheet" href="../css/glass.css">
+    <link rel="stylesheet" href="../css/shell.css">
+    <link rel="stylesheet" href="../css/settings-drawer.css">
+    <link rel="stylesheet" href="../css/stats-panel.css">
+
+    <!-- CSS khusus halaman ini -->
+    <link rel="stylesheet" href="../css/profil-belajar.css">
+</head>
+
+<body data-page="profil-belajar">
+
+    <!-- Foto background (blur), pola sama dengan pages/rasionalisasi.html;
+         gambarnya di-override lewat css/profil-belajar.css. -->
+    <div class="bg-layer" aria-hidden="true"></div>
+
+    <div id="shellNav"></div>
+
+    <main class="pb" id="pbApp">
+
+        <!-- ===== BERANDA: PILIH MODUL ===== -->
+        <section id="pbHub" aria-labelledby="pbHello">
+
+            <header class="pb-hero">
+                <h1 class="pb-hello" id="pbHello" tabindex="-1">Profil Belajar</h1>
+                <p class="pb-lead">Kenali dirimu, belajar jadi lebih pas. Hasilnya membantu kamu dan gurumu memilih cara belajar yang sesuai.</p>
+            </header>
+
+            <div class="pb-alert" role="note">
+                <span class="pb-alert-ico" aria-hidden="true">i</span>
+                <p>Ini alat <b>refleksi diri</b>, bukan tes psikologi dan bukan label permanen. Jawab jujur sesuai kebiasaanmu sekarang, tidak ada jawaban benar atau salah. Jawabanmu <b>tidak dikirim ke server</b>, hanya tersimpan di browser ini.</p>
+            </div>
+
+            <div class="pb-mods" id="pbMods"></div>
+
+            <section class="pb-panel" id="pbSummary" hidden aria-labelledby="pbSummaryTitle">
+                <h2 class="pb-h2" id="pbSummaryTitle">Ringkasan profilmu</h2>
+                <div id="pbSummaryBody"></div>
+                <div class="pb-actions">
+                    <button type="button" class="pb-btn pb-btn--primary" id="pbUnduh">Unduh kartu profil</button>
+                    <button type="button" class="pb-btn" id="pbCetak">Cetak</button>
+                    <button type="button" class="pb-btn pb-btn--danger" id="pbHapus">Hapus semua data</button>
+                </div>
+            </section>
+
+            <p class="pb-fine">Pembelajaran berdiferensiasi menyesuaikan cara belajar berdasarkan kesiapan, minat, dan profil belajar siswa. Preferensi gaya belajar bersifat campuran dan bisa berubah, jadi dipakai sebagai petunjuk untuk mencoba cara belajar, bukan sebagai kotak yang membatasi. Kaitan minat dengan rumpun SNBP hanyalah gambaran awal, bukan penentu jurusan atau kelulusan. Guru dapat mengubah butir, bobot, dan daftar topik di berkas data/profil-belajar.json.</p>
+
+        </section>
+
+        <!-- ===== MENGERJAKAN MODUL ===== -->
+        <section id="pbRun" hidden aria-labelledby="pbRunTitle">
+
+            <div class="pb-run-head">
+                <h2 class="pb-h2" id="pbRunTitle" tabindex="-1"></h2>
+                <p class="pb-sub" id="pbRunSub"></p>
+                <div class="pb-progress" id="pbProgressWrap" aria-hidden="true">
+                    <div class="pb-progress-fill" id="pbProgress"></div>
+                </div>
+                <p class="pb-progress-text" id="pbProgressText" aria-live="polite"></p>
+            </div>
+
+            <div class="pb-error" id="pbError" role="alert" hidden></div>
+
+            <div id="pbRunBody"></div>
+
+            <div class="pb-actions">
+                <button type="button" class="pb-btn" id="pbBack">Kembali</button>
+                <button type="button" class="pb-btn pb-btn--primary" id="pbNext">Lanjut</button>
+            </div>
+
+        </section>
+
+        <!-- ===== HASIL MODUL ===== -->
+        <section id="pbResult" hidden aria-labelledby="pbResultTitle">
+
+            <h2 class="pb-h2" id="pbResultTitle" tabindex="-1"></h2>
+
+            <div id="pbResultBody"></div>
+
+            <div class="pb-actions">
+                <button type="button" class="pb-btn" id="pbUlang">Isi ulang modul ini</button>
+                <button type="button" class="pb-btn pb-btn--primary" id="pbKeHub">Kembali ke menu</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <div id="shellFooter"></div>
+
+    <!-- CONFIG (wajib, dipakai Shell untuk nama sekolah & versi) -->
+    <script src="../js/config.js"></script>
+
+    <!-- UTILS (wajib) -->
+    <script src="../js/utils.js"></script>
+
+    <!-- SHELL (wajib, render nav + footer) -->
+    <script src="../js/shell.js"></script>
+
+    <!-- STATISTIK PENGUNJUNG (panel floating di sidebar) -->
+    <script src="../js/stats-tracker.js"></script>
+    <script src="../js/stats-panel.js"></script>
+
+    <!-- TEMA (dark/light) + DRAWER PENGATURAN (wajib, jangan dihapus) -->
+    <script src="../js/theme.js"></script>
+    <script src="../js/settings-drawer.js"></script>
+
+    <!-- PROFIL BELAJAR -->
+    <script src="../js/profil-belajar.js"></script>
+
+</body>
+</html>

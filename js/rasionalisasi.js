@@ -284,6 +284,36 @@ browser; tidak ada data yang dikirim ke server mana pun.
 
     }
 
+    // Isi rumpun minat dari hasil modul "Minat & Bakat" di Profil Belajar
+    // (disimpan di localStorage browser ini oleh js/profil-belajar.js).
+    // Tidak menimpa pilihan yang sudah diisi siswa.
+    function prefillRumpun() {
+
+        var hint = $("rsRumpunHint");
+        var sel = $("rsRumpun");
+        var top = "";
+
+        try {
+            var raw = localStorage.getItem("smansasoo_profil_belajar");
+            var obj = raw ? JSON.parse(raw) : null;
+            top = (obj && obj.minat && obj.minat.rumpunTop) || "";
+        } catch (e) {
+            top = "";
+        }
+
+        var valid = top && (cfg.rumpun_minat || []).some(function (r) { return r.id === top; });
+
+        if (valid && !sel.value) {
+            sel.value = top;
+            if (hint) hint.innerHTML = "Terisi dari hasil tes minatmu di <a href=\"/pages/profil-belajar.html\">Profil Belajar</a>. Boleh kamu ganti.";
+        } else if (hint && !sel.value) {
+            hint.innerHTML = "Belum tahu minatmu? Coba tes minat di <a href=\"/pages/profil-belajar.html\">Profil Belajar</a>.";
+        } else if (hint) {
+            hint.textContent = "";
+        }
+
+    }
+
     function prefillSchool() {
 
         var s = cfg.sekolah || {};
@@ -418,6 +448,7 @@ browser; tidak ada data yang dikirim ke server mana pun.
         buildSemesterWrap();
         buildTka();
         prefillSchool();
+        prefillRumpun();
 
         show("rsForm", "rsFormTitle");
 
@@ -1464,7 +1495,7 @@ browser; tidak ada data yang dikirim ke server mana pun.
                 if (!state.kelas && cfg.mapel_default) state.mapel = cfg.mapel_default.slice();
 
                 // form terlanjur terbuka sebelum JSON selesai dimuat: tampilkan bagian TKA sekarang
-                if (state.kelas && !$("rsForm").hidden) buildTka();
+                if (state.kelas && !$("rsForm").hidden) { buildTka(); prefillRumpun(); }
 
             })
             .catch(function (e) {

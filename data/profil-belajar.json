@@ -1,0 +1,791 @@
+{
+  "versi": "1.0.0",
+  "catatan": "Konten dibuat orisinal untuk portal ini (bukan salinan tes mana pun). Ini alat refleksi diri untuk mendukung pembelajaran berdiferensiasi, bukan tes psikologi dan bukan label permanen. Bobot, ambang, dan daftar topik bisa diubah di berkas ini.",
+  "skala": [
+    {
+      "v": 1,
+      "label": "Tidak sesuai"
+    },
+    {
+      "v": 2,
+      "label": "Kurang sesuai"
+    },
+    {
+      "v": 3,
+      "label": "Cukup sesuai"
+    },
+    {
+      "v": 4,
+      "label": "Sangat sesuai"
+    }
+  ],
+  "merata_selisih": 12,
+  "gaya": {
+    "dimensi": [
+      {
+        "id": "visual",
+        "nama": "Visual",
+        "ikon": "👁️",
+        "ringkas": "Kamu mudah menangkap materi lewat gambar, warna, diagram, dan bentuk.",
+        "kuat": "Cepat melihat gambaran besar dan hubungan antar-konsep.",
+        "tantangan": "Penjelasan lisan panjang tanpa gambar bisa terasa cepat hilang.",
+        "strategi": [
+          "Ubah catatan menjadi peta pikiran, diagram alur, atau tabel berwarna.",
+          "Gambar soal cerita (sketsa, grafik, garis bilangan) sebelum menghitung.",
+          "Pakai satu warna untuk satu jenis informasi, mis. biru untuk rumus, merah untuk kesalahan."
+        ]
+      },
+      {
+        "id": "auditori",
+        "nama": "Auditori",
+        "ikon": "👂",
+        "ringkas": "Kamu menyerap materi lewat mendengar, berbicara, dan berdiskusi.",
+        "kuat": "Cepat menangkap penjelasan lisan dan pandai menyampaikan ide.",
+        "tantangan": "Membaca diam dalam waktu lama bisa membuat fokus turun.",
+        "strategi": [
+          "Jelaskan materi dengan suara keras seolah mengajar, lalu rekam jika perlu.",
+          "Ikut diskusi atau tanya jawab, dan dengarkan ulang penjelasan yang sulit.",
+          "Ubah rumus atau poin penting menjadi kalimat yang mudah diucapkan."
+        ]
+      },
+      {
+        "id": "bacatulis",
+        "nama": "Baca-Tulis",
+        "ikon": "✍️",
+        "ringkas": "Kamu paling nyaman belajar lewat teks: membaca, mencatat, dan merangkum.",
+        "kuat": "Rapi menyusun ringkasan dan menuangkan pikiran secara tertulis.",
+        "tantangan": "Bisa terjebak menyalin catatan tanpa mengujinya lewat soal.",
+        "strategi": [
+          "Tulis ulang materi dengan kata-katamu sendiri, bukan menyalin.",
+          "Buat daftar langkah dan kartu rumus ringkas untuk tiap bab.",
+          "Setelah merangkum, tutup catatan dan coba tulis ulang dari ingatan."
+        ]
+      },
+      {
+        "id": "kinestetik",
+        "nama": "Kinestetik",
+        "ikon": "🖐️",
+        "ringkas": "Kamu belajar paling baik lewat melakukan, mencoba, dan bergerak.",
+        "kuat": "Cepat paham saat praktik dan mudah mengingat langkah yang pernah dikerjakan.",
+        "tantangan": "Teori panjang tanpa kegiatan terasa membosankan.",
+        "strategi": [
+          "Kerjakan soal langsung, jangan hanya membaca contoh.",
+          "Pakai benda nyata atau alat peraga (kertas lipat, koin, dadu, aplikasi simulasi).",
+          "Belajar dalam sesi pendek lalu bergerak sebentar di antara sesi."
+        ]
+      },
+      {
+        "id": "logis",
+        "nama": "Logis-Matematis",
+        "ikon": "🧮",
+        "ringkas": "Kamu suka penalaran, aturan, urutan, dan alasan di balik sebuah konsep.",
+        "kuat": "Kuat dalam menalar bertahap dan menemukan keteraturan.",
+        "tantangan": "Bisa kurang sabar dengan materi yang bersifat hafalan atau opini.",
+        "strategi": [
+          "Cari tahu 'mengapa' sebuah rumus bekerja, bukan hanya cara memakainya.",
+          "Kelompokkan soal berdasarkan jenis dan catat pola penyelesaiannya.",
+          "Buat bagan sebab-akibat atau bagan keputusan untuk materi yang bersifat hafalan."
+        ]
+      },
+      {
+        "id": "sosial",
+        "nama": "Sosial",
+        "ikon": "🤝",
+        "ringkas": "Kamu berkembang saat belajar bersama, berbagi, dan saling menjelaskan.",
+        "kuat": "Mudah bekerja sama dan makin paham lewat mengajari orang lain.",
+        "tantangan": "Belajar sendirian lama bisa menurunkan semangat.",
+        "strategi": [
+          "Bentuk kelompok belajar kecil (3-4 orang) dengan giliran menjelaskan.",
+          "Ajari satu teman satu konsep, lalu minta ia mengulang penjelasanmu.",
+          "Bagi tugas: tiap orang menyiapkan satu bagian materi untuk dipresentasikan."
+        ]
+      },
+      {
+        "id": "mandiri",
+        "nama": "Mandiri",
+        "ikon": "🧘",
+        "ringkas": "Kamu paling fokus saat belajar sendiri dengan ritme dan target pilihanmu.",
+        "kuat": "Disiplin menentukan arah belajar dan mampu merenungkan materi secara mendalam.",
+        "tantangan": "Bisa enggan bertanya, padahal bertanya mempercepat pemahaman.",
+        "strategi": [
+          "Tulis target belajar mingguan sendiri dan centang saat selesai.",
+          "Sediakan waktu hening khusus tanpa gangguan untuk materi sulit.",
+          "Tetap catat pertanyaan, lalu tanyakan ke guru atau teman satu kali per minggu."
+        ]
+      },
+      {
+        "id": "naturalis",
+        "nama": "Naturalis",
+        "ikon": "🌿",
+        "ringkas": "Kamu paham lewat contoh nyata, pengamatan, dan keterkaitan dengan lingkungan.",
+        "kuat": "Peka terhadap pola dan perubahan di sekitar serta pandai mengaitkan teori dengan kenyataan.",
+        "tantangan": "Materi yang sangat abstrak terasa jauh dari kehidupan.",
+        "strategi": [
+          "Cari contoh nyata di sekitarmu untuk tiap konsep (mis. peluang pada permainan, grafik pada berita).",
+          "Lakukan pengamatan kecil dan catat datanya, lalu analisis.",
+          "Belajar sesekali di ruang terbuka atau tempat yang tenang dan nyaman."
+        ]
+      },
+      {
+        "id": "musikal",
+        "nama": "Musikal",
+        "ikon": "🎵",
+        "ringkas": "Kamu terbantu oleh irama, bunyi, dan pola berulang saat mengingat materi.",
+        "kuat": "Mudah mengingat lewat lagu, ritme, dan jembatan keledai.",
+        "tantangan": "Suasana bising yang tidak teratur bisa mengganggu fokus.",
+        "strategi": [
+          "Ubah rumus atau urutan langkah menjadi singkatan, pantun, atau lagu pendek.",
+          "Pakai musik tanpa lirik dengan volume rendah saat mengerjakan soal.",
+          "Ucapkan hafalan dengan irama tertentu supaya lebih melekat."
+        ]
+      }
+    ],
+    "butir": [
+      {
+        "d": "visual",
+        "t": "Saya lebih mudah paham kalau materi digambar sebagai diagram, grafik, atau peta pikiran."
+      },
+      {
+        "d": "auditori",
+        "t": "Saya lebih mudah ingat kalau penjelasan didengarkan langsung daripada hanya dibaca."
+      },
+      {
+        "d": "bacatulis",
+        "t": "Saya paling paham kalau menulis ulang materi dengan kata-kata saya sendiri."
+      },
+      {
+        "d": "kinestetik",
+        "t": "Saya lebih paham kalau langsung mencoba, praktik, atau membuat sesuatu."
+      },
+      {
+        "d": "logis",
+        "t": "Saya suka mencari alasan dan aturan di balik sebuah rumus atau konsep."
+      },
+      {
+        "d": "sosial",
+        "t": "Saya lebih semangat belajar kelompok dan saling menjelaskan."
+      },
+      {
+        "d": "mandiri",
+        "t": "Saya lebih fokus kalau belajar sendirian dengan ritme saya sendiri."
+      },
+      {
+        "d": "naturalis",
+        "t": "Saya lebih paham kalau materi dikaitkan dengan contoh nyata di alam atau kehidupan sehari-hari."
+      },
+      {
+        "d": "musikal",
+        "t": "Saya mudah ingat materi lewat irama, lagu, atau singkatan yang berima."
+      },
+      {
+        "d": "visual",
+        "t": "Saya sering memakai warna atau stabilo untuk menandai bagian penting di catatan."
+      },
+      {
+        "d": "auditori",
+        "t": "Saya suka membaca materi dengan suara keras atau menjelaskannya sambil berbicara."
+      },
+      {
+        "d": "bacatulis",
+        "t": "Saya nyaman belajar dari buku, artikel, atau modul tertulis."
+      },
+      {
+        "d": "kinestetik",
+        "t": "Saya sulit duduk diam lama, belajar sambil bergerak terasa lebih enak."
+      },
+      {
+        "d": "logis",
+        "t": "Saya senang soal yang menuntut penalaran bertahap."
+      },
+      {
+        "d": "sosial",
+        "t": "Saya lebih cepat paham setelah bertanya atau berdiskusi dengan teman."
+      },
+      {
+        "d": "mandiri",
+        "t": "Saya suka menentukan sendiri target dan cara belajar saya."
+      },
+      {
+        "d": "naturalis",
+        "t": "Saya tertarik mengamati pola dan perubahan di lingkungan sekitar."
+      },
+      {
+        "d": "musikal",
+        "t": "Musik tertentu membantu saya lebih fokus saat belajar."
+      },
+      {
+        "d": "visual",
+        "t": "Saya bisa membayangkan gambar atau bentuk di kepala saat sedang belajar."
+      },
+      {
+        "d": "auditori",
+        "t": "Saya mudah mengingat hal yang pernah dibicarakan atau didiskusikan."
+      },
+      {
+        "d": "bacatulis",
+        "t": "Saya suka membuat daftar, ringkasan, dan catatan yang rapi."
+      },
+      {
+        "d": "kinestetik",
+        "t": "Saya ingat suatu langkah karena pernah mengerjakannya sendiri."
+      },
+      {
+        "d": "logis",
+        "t": "Saya suka mengelompokkan dan mengurutkan informasi secara sistematis."
+      },
+      {
+        "d": "sosial",
+        "t": "Saya suka mengajari teman karena itu membuat saya makin paham."
+      },
+      {
+        "d": "mandiri",
+        "t": "Saya perlu waktu merenung sendiri sebelum bisa menjelaskan sebuah materi."
+      },
+      {
+        "d": "naturalis",
+        "t": "Saya suka belajar lewat pengamatan langsung atau di luar ruangan."
+      },
+      {
+        "d": "musikal",
+        "t": "Saya peka terhadap pola bunyi dan ritme."
+      }
+    ]
+  },
+  "minat": {
+    "tipe": [
+      {
+        "id": "R",
+        "nama": "Realistis (Doers)",
+        "ikon": "🛠️",
+        "ringkas": "Menyukai kegiatan praktis, teknis, dan hasil yang nyata.",
+        "bidang": [
+          "Teknik mesin, sipil, elektro",
+          "Pertanian dan kehutanan",
+          "Teknologi pangan",
+          "Kelautan dan perikanan"
+        ]
+      },
+      {
+        "id": "I",
+        "nama": "Investigatif (Thinkers)",
+        "ikon": "🔬",
+        "ringkas": "Menyukai analisis, riset, dan memecahkan masalah yang rumit.",
+        "bidang": [
+          "Matematika, fisika, kimia, biologi",
+          "Kedokteran dan farmasi",
+          "Ilmu komputer dan data",
+          "Riset dan sains terapan"
+        ]
+      },
+      {
+        "id": "A",
+        "nama": "Artistik (Creators)",
+        "ikon": "🎨",
+        "ringkas": "Menyukai kebebasan berkarya, kreativitas, dan ekspresi diri.",
+        "bidang": [
+          "Desain komunikasi visual, arsitektur",
+          "Seni, film, dan musik",
+          "Sastra dan bahasa",
+          "Media dan jurnalistik"
+        ]
+      },
+      {
+        "id": "S",
+        "nama": "Sosial (Helpers)",
+        "ikon": "💬",
+        "ringkas": "Menyukai membantu, mengajar, dan bekerja bersama orang.",
+        "bidang": [
+          "Pendidikan dan keguruan",
+          "Keperawatan dan kesehatan masyarakat",
+          "Psikologi dan konseling",
+          "Pekerjaan sosial"
+        ]
+      },
+      {
+        "id": "E",
+        "nama": "Enterprising (Persuaders)",
+        "ikon": "🚀",
+        "ringkas": "Menyukai kepemimpinan, bisnis, dan memengaruhi keputusan.",
+        "bidang": [
+          "Manajemen dan bisnis",
+          "Hukum",
+          "Ilmu politik dan hubungan internasional",
+          "Pemasaran dan kewirausahaan"
+        ]
+      },
+      {
+        "id": "C",
+        "nama": "Konvensional (Organizers)",
+        "ikon": "📊",
+        "ringkas": "Menyukai keteraturan, ketelitian, data, dan prosedur.",
+        "bidang": [
+          "Akuntansi dan keuangan",
+          "Administrasi dan perpajakan",
+          "Statistika dan aktuaria",
+          "Manajemen informasi"
+        ]
+      }
+    ],
+    "butir": [
+      {
+        "d": "R",
+        "t": "Saya senang memperbaiki, merakit, atau membuat benda dengan tangan."
+      },
+      {
+        "d": "I",
+        "t": "Saya suka mencari tahu penyebab terjadinya sesuatu."
+      },
+      {
+        "d": "A",
+        "t": "Saya senang menggambar, mendesain, menulis, atau bermusik."
+      },
+      {
+        "d": "S",
+        "t": "Saya senang membantu orang lain yang sedang kesulitan."
+      },
+      {
+        "d": "E",
+        "t": "Saya suka memimpin atau mengajak orang lain bergerak bersama."
+      },
+      {
+        "d": "C",
+        "t": "Saya suka pekerjaan yang teratur, rapi, dan punya prosedur jelas."
+      },
+      {
+        "d": "R",
+        "t": "Saya lebih suka pekerjaan praktis yang hasilnya terlihat nyata."
+      },
+      {
+        "d": "I",
+        "t": "Saya senang memecahkan soal atau masalah yang rumit."
+      },
+      {
+        "d": "A",
+        "t": "Saya suka ide baru dan cara yang unik, bukan cara yang itu-itu saja."
+      },
+      {
+        "d": "S",
+        "t": "Saya sabar mendengarkan cerita atau keluhan teman."
+      },
+      {
+        "d": "E",
+        "t": "Saya berani mengambil risiko demi mencapai tujuan."
+      },
+      {
+        "d": "C",
+        "t": "Saya teliti dengan angka, data, dan administrasi."
+      },
+      {
+        "d": "R",
+        "t": "Saya tertarik pada mesin, alat, kendaraan, atau pekerjaan lapangan."
+      },
+      {
+        "d": "I",
+        "t": "Saya tertarik melakukan percobaan atau penelitian kecil."
+      },
+      {
+        "d": "A",
+        "t": "Saya menikmati mengekspresikan diri lewat sebuah karya."
+      },
+      {
+        "d": "S",
+        "t": "Saya suka mengajar atau membimbing orang lain."
+      },
+      {
+        "d": "E",
+        "t": "Saya tertarik pada usaha, berdagang, atau mengelola proyek."
+      },
+      {
+        "d": "C",
+        "t": "Saya nyaman merapikan berkas, tabel, atau jadwal."
+      },
+      {
+        "d": "R",
+        "t": "Saya nyaman bekerja di bengkel, laboratorium praktik, atau di luar ruangan."
+      },
+      {
+        "d": "I",
+        "t": "Saya suka membaca tentang sains, teknologi, atau penemuan baru."
+      },
+      {
+        "d": "A",
+        "t": "Saya memperhatikan keindahan dan tampilan sesuatu."
+      },
+      {
+        "d": "S",
+        "t": "Saya merasa puas kalau pekerjaan saya bermanfaat bagi banyak orang."
+      },
+      {
+        "d": "E",
+        "t": "Saya suka berbicara di depan banyak orang, berdebat, atau meyakinkan orang."
+      },
+      {
+        "d": "C",
+        "t": "Saya lebih tenang kalau tahu aturan dan langkah kerjanya."
+      },
+      {
+        "d": "R",
+        "t": "Saya suka menggunakan alat atau perangkat keras untuk menyelesaikan tugas."
+      },
+      {
+        "d": "I",
+        "t": "Saya penasaran bagaimana data bisa menjelaskan sebuah fenomena."
+      },
+      {
+        "d": "A",
+        "t": "Saya suka membuat cerita, video, atau konten kreatif."
+      },
+      {
+        "d": "S",
+        "t": "Saya mudah bekerja sama dan menjaga suasana kelompok tetap baik."
+      },
+      {
+        "d": "E",
+        "t": "Saya senang bersaing dan mengejar target yang tinggi."
+      },
+      {
+        "d": "C",
+        "t": "Saya suka memastikan tidak ada kesalahan sekecil apa pun."
+      }
+    ],
+    "rumpun_bobot": {
+      "saintek_tech": {
+        "R": 0.5,
+        "I": 0.35,
+        "C": 0.15
+      },
+      "saintek_med": {
+        "I": 0.4,
+        "S": 0.4,
+        "R": 0.2
+      },
+      "saintek_pure": {
+        "I": 0.6,
+        "R": 0.1,
+        "C": 0.3
+      },
+      "soshum_eco": {
+        "E": 0.45,
+        "C": 0.4,
+        "I": 0.15
+      },
+      "soshum_soc": {
+        "S": 0.4,
+        "E": 0.3,
+        "I": 0.2,
+        "A": 0.1
+      },
+      "soshum_art": {
+        "A": 0.6,
+        "S": 0.2,
+        "E": 0.2
+      }
+    },
+    "rumpun_contoh": {
+      "saintek_tech": "Contoh prodi: Teknik Informatika, Teknik Sipil, Teknik Elektro, Teknik Industri.",
+      "saintek_med": "Contoh prodi: Kedokteran, Keperawatan, Farmasi, Kesehatan Masyarakat.",
+      "saintek_pure": "Contoh prodi: Matematika, Fisika, Kimia, Biologi, Statistika.",
+      "soshum_eco": "Contoh prodi: Manajemen, Akuntansi, Ekonomi Pembangunan, Bisnis Digital.",
+      "soshum_soc": "Contoh prodi: Hukum, Ilmu Politik, Sosiologi, Psikologi, Pendidikan.",
+      "soshum_art": "Contoh prodi: Desain Komunikasi Visual, Sastra, Seni Rupa, Ilmu Komunikasi."
+    }
+  },
+  "ct": {
+    "pilar": [
+      {
+        "id": "dekomposisi",
+        "nama": "Dekomposisi",
+        "ikon": "🧩",
+        "ringkas": "Memecah masalah besar menjadi bagian kecil yang lebih mudah dikerjakan",
+        "latihan": "ambil satu soal cerita, tulis 'diketahui', 'ditanya', lalu pecah menjadi 3 langkah kecil sebelum menghitung."
+      },
+      {
+        "id": "pola",
+        "nama": "Pengenalan Pola",
+        "ikon": "🔍",
+        "ringkas": "Menemukan kesamaan dan keteraturan antar-soal atau data",
+        "latihan": "kerjakan 3 soal sejenis, lalu tulis satu kalimat tentang kesamaan cara penyelesaiannya."
+      },
+      {
+        "id": "abstraksi",
+        "nama": "Abstraksi",
+        "ikon": "🎯",
+        "ringkas": "Menyaring hal penting dan membuat model dari persoalan",
+        "latihan": "coret informasi yang tidak dipakai pada sebuah soal cerita, lalu ubah sisanya menjadi persamaan atau tabel."
+      },
+      {
+        "id": "algoritmik",
+        "nama": "Berpikir Algoritmik",
+        "ikon": "🧭",
+        "ringkas": "Menyusun langkah penyelesaian yang berurutan, jelas, dan dapat diulang",
+        "latihan": "tulis langkah menyelesaikan satu jenis soal sebagai resep bernomor, lalu minta temanmu mencobanya."
+      }
+    ],
+    "butir": [
+      {
+        "d": "dekomposisi",
+        "t": "Saat mendapat soal panjang, saya memecahnya menjadi bagian-bagian kecil dulu."
+      },
+      {
+        "d": "pola",
+        "t": "Saya cepat sadar kalau sebuah soal baru mirip dengan soal yang pernah saya kerjakan."
+      },
+      {
+        "d": "abstraksi",
+        "t": "Saya bisa memilah informasi penting dan mengabaikan yang tidak perlu dalam soal cerita."
+      },
+      {
+        "d": "algoritmik",
+        "t": "Saya menuliskan langkah penyelesaian secara berurutan dan jelas."
+      },
+      {
+        "d": "dekomposisi",
+        "t": "Saya menuliskan apa yang diketahui dan apa yang ditanyakan sebelum mulai menghitung."
+      },
+      {
+        "d": "pola",
+        "t": "Saya suka mencari keteraturan pada deret angka, gambar, atau data."
+      },
+      {
+        "d": "abstraksi",
+        "t": "Saya mampu mengubah soal cerita menjadi model, misalnya persamaan, tabel, atau diagram."
+      },
+      {
+        "d": "algoritmik",
+        "t": "Setelah selesai, saya memeriksa ulang langkah demi langkah untuk mencari kesalahan."
+      },
+      {
+        "d": "dekomposisi",
+        "t": "Untuk masalah besar, saya membuat daftar langkah-langkah kecil."
+      },
+      {
+        "d": "pola",
+        "t": "Saya mencoba beberapa contoh kecil untuk menemukan aturan umumnya."
+      },
+      {
+        "d": "abstraksi",
+        "t": "Saya bisa menjelaskan ide pokok sebuah materi dengan singkat."
+      },
+      {
+        "d": "algoritmik",
+        "t": "Saya senang merancang cara atau rumus yang bisa dipakai berulang untuk soal sejenis."
+      }
+    ],
+    "alat": {
+      "dekomposisi": {
+        "visual": "gambar kotak-kotak atau diagram pohon untuk tiap bagian soal",
+        "auditori": "sebutkan keras-keras bagian-bagian soalnya satu per satu",
+        "bacatulis": "tulis daftar bagian soal dengan nomor",
+        "kinestetik": "tulis tiap bagian di kertas kecil lalu susun urutannya",
+        "logis": "susun bagian-bagian itu berdasarkan urutan sebab-akibat",
+        "sosial": "bagi bagian soal bersama temanmu lalu gabungkan hasilnya",
+        "mandiri": "buat daftar subtugas sendiri lalu centang satu per satu",
+        "naturalis": "samakan dengan proses di alam atau kegiatan sehari-hari yang bertahap",
+        "musikal": "beri ritme atau irama pada urutan bagian agar mudah diingat"
+      },
+      "pola": {
+        "visual": "gambar grafik atau warnai bagian yang sama",
+        "auditori": "ceritakan kemiripan antar-soal kepada temanmu",
+        "bacatulis": "tulis catatan 'ciri soal' dan 'cara penyelesaiannya'",
+        "kinestetik": "coba beberapa contoh sendiri dan lihat apa yang berulang",
+        "logis": "buat tabel hasil dan cari aturan umumnya",
+        "sosial": "bandingkan temuan polamu dengan teman satu kelompok",
+        "mandiri": "kumpulkan soal sejenis dan cari kesamaannya sendiri",
+        "naturalis": "cari pola yang sama pada contoh di alam atau data nyata",
+        "musikal": "cari irama atau urutan berulang pada deret angka"
+      },
+      "abstraksi": {
+        "visual": "ubah soal cerita menjadi sketsa atau diagram sederhana",
+        "auditori": "ringkas soal dengan satu kalimat lisan",
+        "bacatulis": "tulis ulang soal dalam dua kalimat inti",
+        "kinestetik": "peragakan soal dengan benda nyata lalu catat hal pentingnya",
+        "logis": "tetapkan variabel dan tulis hubungannya sebagai persamaan",
+        "sosial": "minta temanmu mengulang soal, lalu cek apakah intinya sama",
+        "mandiri": "tulis sendiri apa yang boleh diabaikan dan apa alasannya",
+        "naturalis": "hubungkan soal dengan situasi nyata yang kamu amati",
+        "musikal": "buat jembatan keledai untuk besaran penting pada soal"
+      },
+      "algoritmik": {
+        "visual": "gambar diagram alur langkah penyelesaian",
+        "auditori": "ucapkan langkah-langkahnya berurutan seperti memberi instruksi",
+        "bacatulis": "tulis langkah sebagai resep bernomor",
+        "kinestetik": "praktikkan langkahnya pada contoh nyata lalu perbaiki urutannya",
+        "logis": "periksa tiap langkah apakah mengikuti dari langkah sebelumnya",
+        "sosial": "minta temanmu menjalankan langkahmu dan catat bagian yang membingungkan",
+        "mandiri": "uji langkahmu pada tiga contoh sendiri",
+        "naturalis": "samakan dengan urutan kegiatan sehari-hari yang sudah kamu kenal",
+        "musikal": "jadikan langkah-langkahnya urutan berirama yang mudah dihafal"
+      }
+    },
+    "templat": "{ringkas}. Latihan: {latihan} Cara yang cocok denganmu: {alat1}, atau {alat2}."
+  },
+  "kebiasaan": {
+    "dimensi": [
+      {
+        "id": "motivasi",
+        "nama": "Motivasi & tujuan",
+        "ikon": "🔥",
+        "tinggi": "Tujuanmu jelas dan kamu tetap bertahan saat sulit.",
+        "rendah": "Tujuan belajar belum terlalu jelas atau semangat mudah turun.",
+        "tips": [
+          "Tulis satu tujuan semester (mis. nilai atau prodi yang dituju) dan tempel di meja belajar.",
+          "Pecah tujuan itu menjadi target kecil tiap minggu.",
+          "Rayakan pencapaian kecil agar semangat terjaga."
+        ]
+      },
+      {
+        "id": "waktu",
+        "nama": "Pengelolaan waktu",
+        "ikon": "⏰",
+        "tinggi": "Waktu belajarmu cukup teratur dan tidak menumpuk.",
+        "rendah": "Belajar sering menumpuk di menit-menit terakhir.",
+        "tips": [
+          "Tentukan 3 slot belajar tetap per minggu, masing-masing 30-45 menit.",
+          "Cicil tugas: kerjakan sebagian di hari tugas diberikan.",
+          "Cek kalender ulangan tiap Senin dan mundurkan persiapan 3 hari dari tanggalnya."
+        ]
+      },
+      {
+        "id": "fokus",
+        "nama": "Fokus & lingkungan",
+        "ikon": "🎧",
+        "tinggi": "Kamu mampu menjaga fokus dan punya lingkungan belajar yang mendukung.",
+        "rendah": "Gangguan (terutama HP) sering memotong waktu belajarmu.",
+        "tips": [
+          "Taruh HP di ruangan lain atau mode senyap selama 25 menit, lalu istirahat 5 menit.",
+          "Siapkan satu sudut belajar yang rapi dan terang.",
+          "Tutup tab dan aplikasi yang tidak dipakai."
+        ]
+      },
+      {
+        "id": "refleksi",
+        "nama": "Refleksi & evaluasi diri",
+        "ikon": "🪞",
+        "tinggi": "Kamu terbiasa mengevaluasi dan menyesuaikan cara belajar.",
+        "rendah": "Kesalahan jarang dianalisis, sehingga mudah terulang.",
+        "tips": [
+          "Buat buku kesalahan: tulis soal yang salah, penyebabnya, dan cara yang benar.",
+          "Akhir minggu, tulis 1 hal yang berhasil dan 1 hal yang diubah.",
+          "Coba satu cara belajar baru selama seminggu, lalu bandingkan hasilnya."
+        ]
+      }
+    ],
+    "butir": [
+      {
+        "d": "motivasi",
+        "t": "Saya tahu alasan saya belajar dan apa yang ingin saya capai."
+      },
+      {
+        "d": "waktu",
+        "t": "Saya punya jadwal belajar yang cukup teratur."
+      },
+      {
+        "d": "fokus",
+        "t": "Saya bisa menjauhkan HP saat sedang belajar."
+      },
+      {
+        "d": "refleksi",
+        "t": "Setelah ulangan, saya mengecek bagian mana yang salah dan mengapa."
+      },
+      {
+        "d": "motivasi",
+        "t": "Saya tetap berusaha meski nilai saya sedang kurang bagus."
+      },
+      {
+        "d": "waktu",
+        "t": "Saya mulai mengerjakan tugas jauh sebelum batas waktunya."
+      },
+      {
+        "d": "fokus",
+        "t": "Saya mampu belajar 25 menit tanpa terganggu hal lain."
+      },
+      {
+        "d": "refleksi",
+        "t": "Saya tahu cara belajar mana yang paling efektif untuk saya."
+      },
+      {
+        "d": "motivasi",
+        "t": "Saya punya target belajar yang jelas."
+      },
+      {
+        "d": "waktu",
+        "t": "Saya jarang menumpuk belajar hanya menjelang ulangan."
+      },
+      {
+        "d": "fokus",
+        "t": "Saya punya tempat belajar yang nyaman."
+      },
+      {
+        "d": "refleksi",
+        "t": "Saya mengubah cara belajar kalau hasilnya belum memuaskan."
+      }
+    ]
+  },
+  "kesiapan": {
+    "mapel": "Matematika",
+    "catatan": "Daftar topik di bawah ini adalah draf. Guru dapat menyesuaikannya di berkas data/profil-belajar.json. Ini penilaian dirimu sendiri, bukan tes.",
+    "skala": [
+      {
+        "v": 1,
+        "label": "Belum paham"
+      },
+      {
+        "v": 2,
+        "label": "Paham sedikit"
+      },
+      {
+        "v": 3,
+        "label": "Cukup paham"
+      },
+      {
+        "v": 4,
+        "label": "Sangat paham"
+      }
+    ],
+    "tingkat": [
+      {
+        "maks": 40,
+        "id": "dasar",
+        "label": "Perlu penguatan dasar",
+        "saran": "Mulai dari konsep dasar dengan contoh yang sederhana dan kerjakan latihan bertahap. Jangan ragu meminta penjelasan ulang atau belajar bersama teman."
+      },
+      {
+        "maks": 75,
+        "id": "menengah",
+        "label": "Sedang berkembang",
+        "saran": "Konsep dasarmu sudah ada. Perkuat lewat variasi soal dan perbaiki topik yang masih kamu nilai rendah."
+      },
+      {
+        "maks": 101,
+        "id": "lanjut",
+        "label": "Siap tantangan",
+        "saran": "Kamu cukup siap. Coba soal yang lebih menantang, soal penalaran, atau bantu temanmu supaya pemahamanmu makin dalam."
+      }
+    ],
+    "topik": {
+      "X": [
+        "Eksponen dan logaritma",
+        "Fungsi dan persamaan kuadrat",
+        "Sistem persamaan linear dan pertidaksamaan",
+        "Trigonometri dasar",
+        "Statistika",
+        "Peluang"
+      ],
+      "XI": [
+        "Fungsi (rasional, akar, eksponen, logaritma)",
+        "Trigonometri",
+        "Vektor",
+        "Lingkaran",
+        "Statistika: diagram pencar dan regresi",
+        "Barisan dan deret"
+      ],
+      "XII": [
+        "Bilangan",
+        "Aljabar",
+        "Geometri dan pengukuran",
+        "Trigonometri",
+        "Data dan peluang"
+      ]
+    }
+  }
+}
