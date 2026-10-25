@@ -32,6 +32,7 @@ rumpun minat secara otomatis.
     var CFG_URL = "/data/profil-belajar.json";
     var RS_URL = "/data/rasionalisasi.json";
     var STORE_KEY = "smansasoo_profil_belajar";
+    var DRAFT_KEY = "smansasoo_profil_belajar_draft";
     var PER_PAGE = 6;
 
     var cfg = null;
@@ -115,6 +116,61 @@ rumpun minat secara otomatis.
         data.ts = new Date().toISOString();
         s[key] = data;
         saveStore(s);
+
+    }
+
+    // Draf jawaban yang belum selesai, supaya siswa bisa melanjutkan kalau
+    // halaman tertutup di tengah jalan. Berisi angka jawaban saja.
+    function loadDrafts() {
+
+        try {
+            var raw = localStorage.getItem(DRAFT_KEY);
+            var obj = raw ? JSON.parse(raw) : {};
+            return (obj && typeof obj === "object") ? obj : {};
+        } catch (e) {
+            return {};
+        }
+
+    }
+
+    function saveDraft() {
+
+        if (!state.mod) return;
+
+        var d = loadDrafts();
+
+        d[state.mod] = { page: state.page, answers: state.answers, kelas: state.kelas };
+
+        try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch (e) { /* abaikan */ }
+
+    }
+
+    function clearDraft(key) {
+
+        var d = loadDrafts();
+
+        delete d[key];
+
+        try {
+            if (Object.keys(d).length) localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
+            else localStorage.removeItem(DRAFT_KEY);
+        } catch (e) { /* abaikan */ }
+
+    }
+
+    function validDraft(key, d) {
+
+        if (!d || typeof d.answers !== "object" || d.answers === null) return false;
+
+        var max = key === "kesiapan" ? 6 : butirOf(key).length;
+        var ok = Object.keys(d.answers).every(function (k) {
+            var v = d.answers[k];
+            return Number(k) >= 0 && Number(k) < max && v >= 1 && v <= 4;
+        });
+
+        if (key === "kesiapan") return ok && (d.kelas === "" || !!cfg.kesiapan.topik[d.kelas]);
+
+        return ok && d.page >= 0 && d.page < totalPages(key);
 
     }
 
@@ -254,6 +310,7 @@ rumpun minat secara otomatis.
     function renderHub() {
 
         var s = loadStore();
+        var drafts = loadDrafts();
         var box = $("pbMods");
 
         if (!cfg) {
@@ -264,9 +321,12 @@ rumpun minat secara otomatis.
         box.innerHTML = MODS.map(function (m) {
 
             var done = !!s[m.key];
+            var draft = !done && validDraft(m.key, drafts[m.key]) && Object.keys(drafts[m.key].answers).length > 0;
             var badge = done
                 ? "<span class=\"pb-badge\">Sudah diisi</span>"
-                : "<span class=\"pb-badge pb-badge--todo\">Belum diisi</span>";
+                : draft
+                    ? "<span class=\"pb-badge pb-badge--todo\">Lanjutkan</span>"
+                    : "<span class=\"pb-badge pb-badge--todo\">Belum diisi</span>";
 
             return "<button type=\"button\" class=\"pb-mod\" data-mod=\"" + m.key + "\">"
                 + "<span class=\"pb-mod-ico\" aria-hidden=\"true\">" + m.ikon + "</span>"
@@ -377,12 +437,24 @@ rumpun minat secara otomatis.
 
     /* ---------- mengerjakan modul ---------- */
 
-    function startModule(key) {
+    function startModule(key, fresh) {
 
         state.mod = key;
         state.page = 0;
         state.answers = {};
         state.kelas = "";
+
+        if (fresh) {
+            clearDraft(key);
+        } else {
+            var dr = loadDrafts()[key];
+
+            if (validDraft(key, dr)) {
+                state.page = Number(dr.page) || 0;
+                state.answers = dr.answers;
+                state.kelas = dr.kelas || "";
+            }
+        }
 
         var m = modOf(key);
 
@@ -401,6 +473,10 @@ rumpun minat secara otomatis.
 
         renderPage();
         show("run");
+
+        if (Object.keys(state.answers).length) {
+            $("pbRunSub").textContent += " Jawabanmu sebelumnya dilanjutkan.";
+        }
 
     }
 
@@ -558,6 +634,7 @@ rumpun minat secara otomatis.
 
         if (state.page < totalPages(key) - 1) {
             state.page++;
+            saveDraft();
             renderPage();
             try { window.scrollTo(0, 0); } catch (e) { /* abaikan */ }
             return;
@@ -573,6 +650,7 @@ rumpun minat secara otomatis.
 
         if (state.mod !== "kesiapan" && state.page > 0) {
             state.page--;
+            saveDraft();
             renderPage();
             return;
         }
@@ -595,6 +673,7 @@ rumpun minat secara otomatis.
         }
 
         saveModule(key, data);
+        clearDraft(key);
         showResult(key);
 
     }
@@ -624,6 +703,7 @@ rumpun minat secara otomatis.
             prioritas: prioritas
         });
 
+        clearDraft("kesiapan");
         showResult("kesiapan");
 
     }
@@ -1084,14 +1164,19 @@ rumpun minat secara otomatis.
                 state.kelas = e.target.value;
                 state.answers = {};
                 renderTopics();
+                saveDraft();
             }
 
+        });
+
+        $("pbRunBody").addEventListener("change", function (e) {
+            if (e.target.type === "radio") { readRadios(); saveDraft(); }
         });
 
         $("pbNext").addEventListener("click", onNext);
         $("pbBack").addEventListener("click", onBack);
 
-        $("pbUlang").addEventListener("click", function () { startModule(state.mod); });
+        $("pbUlang").addEventListener("click", function () { startModule(state.mod, true); });
 
         $("pbKeHub").addEventListener("click", function () {
             renderHub();
@@ -1105,7 +1190,10 @@ rumpun minat secara otomatis.
 
             if (!window.confirm("Hapus semua hasil Profil Belajar di browser ini? Tindakan ini tidak bisa dibatalkan.")) return;
 
-            try { localStorage.removeItem(STORE_KEY); } catch (e) { /* abaikan */ }
+            try {
+                localStorage.removeItem(STORE_KEY);
+                localStorage.removeItem(DRAFT_KEY);
+            } catch (e) { /* abaikan */ }
 
             renderHub();
 
