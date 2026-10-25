@@ -61,7 +61,14 @@ body[data-page="profil-belajar"] .bg-layer {
 
 /* ---------- hero & alert ---------- */
 
-.pb-hero { margin-bottom: 1rem; }
+.pb-hero,
+.pb-run-head {
+    margin-bottom: 1rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--pb-line);
+    border-radius: 16px;
+    background: var(--pb-panel);
+}
 
 .pb-hello {
     margin: 0;
@@ -227,7 +234,16 @@ body[data-page="profil-belajar"] .bg-layer {
     background: var(--pb-panel);
 }
 
-.pb-q legend { padding: 0 0.3rem; color: var(--pb-muted); font-size: 0.8rem; font-weight: 800; }
+.pb-q legend {
+    float: left;
+    width: 100%;
+    padding: 0 0 0.3rem;
+    color: var(--pb-muted);
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.pb-q legend + * { clear: both; }
 .pb-q-text { margin: 0 0 0.7rem; font-size: 1.02rem; font-weight: 700; }
 
 .pb-opts { display: grid; gap: 0.5rem; grid-template-columns: repeat(4, 1fr); }
@@ -321,4 +337,12 @@ body[data-page="profil-belajar"] .bg-layer {
     body.pb-printing .pb-print { display: block !important; }
     body.pb-printing .pb-res { break-inside: avoid; border-color: #999; }
     body.pb-printing .pb-bar-fill { background: #444 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+
+/* judul layar hasil di atas foto latar: beri panel supaya terbaca */
+#pbResult > .pb-h2 {
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--pb-line);
+    border-radius: 16px;
+    background: var(--pb-panel);
 }
