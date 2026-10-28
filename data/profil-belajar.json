@@ -1,10 +1,10 @@
 {
-  "versi": "1.0.0",
-  "catatan": "Konten dibuat orisinal untuk portal ini (bukan salinan tes mana pun). Ini alat refleksi diri untuk mendukung pembelajaran berdiferensiasi, bukan tes psikologi dan bukan label permanen. Bobot, ambang, dan daftar topik bisa diubah di berkas ini.",
+  "versi": "2.0.0",
+  "catatan": "Konten dibuat orisinal untuk portal ini (bukan salinan tes mana pun). Ini alat refleksi diri untuk mendukung pembelajaran berdiferensiasi, bukan tes psikologi dan bukan label permanen. Semua butir diisi dalam satu rangkaian dengan slider 5 tingkat, lalu dianalisis per topik. Bobot, ambang, dan daftar topik bisa diubah di berkas ini.",
   "skala": [
     {
       "v": 1,
-      "label": "Tidak sesuai"
+      "label": "Sangat tidak sesuai"
     },
     {
       "v": 2,
@@ -12,10 +12,14 @@
     },
     {
       "v": 3,
-      "label": "Cukup sesuai"
+      "label": "Kadang-kadang"
     },
     {
       "v": 4,
+      "label": "Cukup sesuai"
+    },
+    {
+      "v": 5,
       "label": "Sangat sesuai"
     }
   ],
@@ -723,25 +727,7 @@
   },
   "kesiapan": {
     "mapel": "Matematika",
-    "catatan": "Daftar topik di bawah ini adalah draf. Guru dapat menyesuaikannya di berkas data/profil-belajar.json. Ini penilaian dirimu sendiri, bukan tes.",
-    "skala": [
-      {
-        "v": 1,
-        "label": "Belum paham"
-      },
-      {
-        "v": 2,
-        "label": "Paham sedikit"
-      },
-      {
-        "v": 3,
-        "label": "Cukup paham"
-      },
-      {
-        "v": 4,
-        "label": "Sangat paham"
-      }
-    ],
+    "catatan": "Daftar topik kesiapan adalah draf. Guru dapat menyesuaikannya di berkas data/profil-belajar.json. Ini penilaian dirimu sendiri, bukan tes.",
     "tingkat": [
       {
         "maks": 40,
@@ -786,6 +772,39 @@
         "Trigonometri",
         "Data dan peluang"
       ]
+    },
+    "pernyataan": "Saya memahami topik {topik} dan bisa mengerjakan soalnya.",
+    "prioritas_maks": 2
+  },
+  "skala_ujung": [
+    "Tidak sesuai denganku",
+    "Sangat sesuai denganku"
+  ],
+  "topik_info": {
+    "kesiapan": {
+      "judul": "Kesiapan Belajar",
+      "ikon": "🧱",
+      "tanya": "Seberapa paham topik Matematika kelasmu"
+    },
+    "gaya": {
+      "judul": "Cara Belajar (9 gaya)",
+      "ikon": "🎧",
+      "tanya": "Cara belajar yang paling pas untukmu"
+    },
+    "minat": {
+      "judul": "Minat & Bakat (RIASEC)",
+      "ikon": "🧭",
+      "tanya": "Minat kariermu dan kaitannya dengan rumpun SNBP"
+    },
+    "ct": {
+      "judul": "Computational Thinking",
+      "ikon": "🧩",
+      "tanya": "Cara kamu memecahkan masalah"
+    },
+    "kebiasaan": {
+      "judul": "Kebiasaan Belajar",
+      "ikon": "📅",
+      "tanya": "Motivasi, waktu, fokus, dan refleksi"
     }
   }
 }

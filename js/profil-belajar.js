@@ -2,26 +2,31 @@
 ==========================================================
 SMANSASOO Academic Portal
 Profil Belajar (pages/profil-belajar.html)
-Version : 1.0.0
+Version : 2.0.0
 ==========================================================
 Alat refleksi diri untuk mendukung pembelajaran berdiferensiasi
 (kesiapan, minat, profil belajar). Semua butir, bobot, ambang,
 dan teks saran ada di data/profil-belajar.json -- guru bisa
 mengubahnya tanpa menyentuh berkas ini.
 
-Modul:
-  kesiapan  : penilaian diri per topik Matematika (per kelas)
+Alur (v2): SATU rangkaian tes yang menggabungkan lima topik,
+dijawab lewat slider 5 tingkat, lalu dianalisis per topik:
+  kesiapan  : pemahaman topik Matematika per kelas
   gaya      : 9 gaya belajar (kecenderungan campuran)
   minat     : minat karier model RIASEC -> rumpun SNBP
   ct        : Computational Thinking (4 pilar) + cara yang cocok
               dengan gaya belajar
-  kebiasaan : kebiasaan belajar (motivasi, waktu, fokus, refleksi)
+  kebiasaan : motivasi, waktu, fokus, refleksi
 
-Aturan saran sepenuhnya berbasis aturan (tanpa AI/LLM).
-Data TIDAK dikirim ke server: hanya persentase per dimensi
-yang disimpan di localStorage (kunci STORE_KEY) di browser ini.
-Kunci tersebut juga dibaca js/rasionalisasi.js untuk mengisi
-rumpun minat secara otomatis.
+Butir dari kelima topik diselang-seling (proporsional) agar
+terasa satu kesatuan. Hasil akhir: "Arah potensialmu" (sintesis
+berbasis aturan) + kartu hasil tiap topik beserta rekomendasinya.
+Seluruh saran berbasis aturan (tanpa AI/LLM).
+
+Data TIDAK dikirim ke server: hanya persentase per dimensi yang
+disimpan di localStorage (STORE_KEY); jawaban yang belum selesai
+disimpan sebagai draf (DRAFT_KEY) dan dihapus saat selesai.
+STORE_KEY juga dibaca js/rasionalisasi.js untuk mengisi rumpun.
 ==========================================================
 */
 
@@ -33,25 +38,18 @@ rumpun minat secara otomatis.
     var RS_URL = "/data/rasionalisasi.json";
     var STORE_KEY = "smansasoo_profil_belajar";
     var DRAFT_KEY = "smansasoo_profil_belajar_draft";
-    var PER_PAGE = 6;
+    var PER_PAGE = 8;
+    var TOPICS = ["kesiapan", "gaya", "minat", "ct", "kebiasaan"];
 
     var cfg = null;
     var rsCfg = null;
 
     var state = {
-        mod: "",
+        kelas: "",
         page: 0,
         answers: {},
-        kelas: ""
+        items: []
     };
-
-    var MODS = [
-        { key: "kesiapan", ikon: "🧱", judul: "Kesiapan Belajar", desc: "Nilai sendiri seberapa paham topik Matematika kelasmu, supaya latihan bisa dimulai dari titik yang pas.", waktu: "±3 menit" },
-        { key: "gaya", ikon: "🎧", judul: "Cara Belajar (9 gaya)", desc: "Kenali kecenderungan cara belajarmu: visual, auditori, baca-tulis, kinestetik, dan lainnya.", waktu: "±6 menit" },
-        { key: "minat", ikon: "🧭", judul: "Minat & Bakat (RIASEC)", desc: "Lihat minat kariermu dan kaitannya dengan rumpun pilihan SNBP.", waktu: "±7 menit" },
-        { key: "ct", ikon: "🧩", judul: "Computational Thinking", desc: "Seberapa terbiasa kamu memecah, mengenali pola, menyaring, dan menyusun langkah untuk memecahkan masalah.", waktu: "±3 menit" },
-        { key: "kebiasaan", ikon: "📅", judul: "Kebiasaan Belajar", desc: "Cek motivasi, pengelolaan waktu, fokus, dan refleksi dirimu.", waktu: "±3 menit" }
-    ];
 
     var $ = function (id) { return document.getElementById(id); };
 
@@ -65,16 +63,6 @@ rumpun minat secara otomatis.
 
     }
 
-    function modOf(key) {
-
-        for (var i = 0; i < MODS.length; i++) {
-            if (MODS[i].key === key) return MODS[i];
-        }
-
-        return null;
-
-    }
-
     function join(list) {
 
         if (list.length <= 1) return list.join("");
@@ -84,133 +72,9 @@ rumpun minat secara otomatis.
 
     function round(n) { return Math.round(n); }
 
-    /* ---------- penyimpanan lokal ---------- */
+    function levels() { return cfg.skala.length; }
 
-    function loadStore() {
-
-        try {
-            var raw = localStorage.getItem(STORE_KEY);
-            var obj = raw ? JSON.parse(raw) : {};
-            return (obj && typeof obj === "object") ? obj : {};
-        } catch (e) {
-            return {};
-        }
-
-    }
-
-    function saveStore(obj) {
-
-        try {
-            localStorage.setItem(STORE_KEY, JSON.stringify(obj));
-            return true;
-        } catch (e) {
-            return false;
-        }
-
-    }
-
-    function saveModule(key, data) {
-
-        var s = loadStore();
-
-        data.ts = new Date().toISOString();
-        s[key] = data;
-        saveStore(s);
-
-    }
-
-    // Draf jawaban yang belum selesai, supaya siswa bisa melanjutkan kalau
-    // halaman tertutup di tengah jalan. Berisi angka jawaban saja.
-    function loadDrafts() {
-
-        try {
-            var raw = localStorage.getItem(DRAFT_KEY);
-            var obj = raw ? JSON.parse(raw) : {};
-            return (obj && typeof obj === "object") ? obj : {};
-        } catch (e) {
-            return {};
-        }
-
-    }
-
-    function saveDraft() {
-
-        if (!state.mod) return;
-
-        var d = loadDrafts();
-
-        d[state.mod] = { page: state.page, answers: state.answers, kelas: state.kelas };
-
-        try { localStorage.setItem(DRAFT_KEY, JSON.stringify(d)); } catch (e) { /* abaikan */ }
-
-    }
-
-    function clearDraft(key) {
-
-        var d = loadDrafts();
-
-        delete d[key];
-
-        try {
-            if (Object.keys(d).length) localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
-            else localStorage.removeItem(DRAFT_KEY);
-        } catch (e) { /* abaikan */ }
-
-    }
-
-    function validDraft(key, d) {
-
-        if (!d || typeof d.answers !== "object" || d.answers === null) return false;
-
-        var max = key === "kesiapan" ? 6 : butirOf(key).length;
-        var ok = Object.keys(d.answers).every(function (k) {
-            var v = d.answers[k];
-            return Number(k) >= 0 && Number(k) < max && v >= 1 && v <= 4;
-        });
-
-        if (key === "kesiapan") return ok && (d.kelas === "" || !!cfg.kesiapan.topik[d.kelas]);
-
-        return ok && d.page >= 0 && d.page < totalPages(key);
-
-    }
-
-    /* ---------- skor ---------- */
-
-    function pct(sum, n) {
-
-        return ((sum - n) / (3 * n)) * 100;
-
-    }
-
-    // butir: [{d,t}], answers: {index: 1..4} -> {dimId: persen}
-    function scoreDims(butir, answers) {
-
-        var sum = {};
-        var cnt = {};
-
-        butir.forEach(function (b, i) {
-            sum[b.d] = (sum[b.d] || 0) + Number(answers[i]);
-            cnt[b.d] = (cnt[b.d] || 0) + 1;
-        });
-
-        var out = {};
-
-        Object.keys(sum).forEach(function (d) {
-            out[d] = pct(sum[d], cnt[d]);
-        });
-
-        return out;
-
-    }
-
-    // urut menurun dari {id: persen} -> [{id, v}]
-    function ranked(scores) {
-
-        return Object.keys(scores).map(function (id) {
-            return { id: id, v: scores[id] };
-        }).sort(function (a, b) { return b.v - a.v; });
-
-    }
+    function info(key) { return cfg.topik_info[key]; }
 
     function byId(list, id) {
 
@@ -219,6 +83,170 @@ rumpun minat secara otomatis.
         }
 
         return null;
+
+    }
+
+    /* ---------- penyimpanan lokal ---------- */
+
+    function readJson(key) {
+
+        try {
+            var raw = localStorage.getItem(key);
+            var obj = raw ? JSON.parse(raw) : {};
+            return (obj && typeof obj === "object") ? obj : {};
+        } catch (e) {
+            return {};
+        }
+
+    }
+
+    function writeJson(key, obj) {
+
+        try {
+            localStorage.setItem(key, JSON.stringify(obj));
+            return true;
+        } catch (e) {
+            return false;
+        }
+
+    }
+
+    function removeKey(key) {
+
+        try { localStorage.removeItem(key); } catch (e) { /* abaikan */ }
+
+    }
+
+    function loadStore() { return readJson(STORE_KEY); }
+
+    function storeComplete(s) {
+
+        return TOPICS.every(function (k) { return !!s[k]; });
+
+    }
+
+    function loadDraft() {
+
+        var d = readJson(DRAFT_KEY);
+
+        return (d && typeof d.answers === "object" && d.answers) ? d : null;
+
+    }
+
+    function saveDraft() {
+
+        writeJson(DRAFT_KEY, { kelas: state.kelas, page: state.page, answers: state.answers });
+
+    }
+
+    /* ---------- butir: satu rangkaian terpadu ---------- */
+
+    function kesiapanTopik(kelas) {
+
+        return (cfg.kesiapan.topik[kelas] || []).slice();
+
+    }
+
+    // Menggabungkan butir kelima topik. Butir ke-k dari topik berisi n
+    // butir diberi posisi (k+0.5)/n, lalu diurutkan, sehingga topik
+    // terselang-seling secara proporsional (satu kesatuan utuh).
+    function buildItems(kelas) {
+
+        var items = [];
+        var order = 0;
+
+        ["gaya", "minat", "ct", "kebiasaan"].forEach(function (m) {
+
+            var butir = cfg[m].butir;
+
+            butir.forEach(function (b, i) {
+                items.push({ key: m + ":" + i, m: m, d: b.d, t: b.t, pos: (i + 0.5) / butir.length, ord: order });
+            });
+
+            order++;
+
+        });
+
+        var topik = kesiapanTopik(kelas);
+
+        topik.forEach(function (t, i) {
+            items.push({
+                key: "kesiapan:" + i,
+                m: "kesiapan",
+                d: String(i),
+                t: cfg.kesiapan.pernyataan.replace("{topik}", t),
+                pos: (i + 0.5) / topik.length,
+                ord: order
+            });
+        });
+
+        items.sort(function (a, b) { return (a.pos - b.pos) || (a.ord - b.ord); });
+
+        return items;
+
+    }
+
+    function validAnswers(items, answers) {
+
+        var out = {};
+        var L = levels();
+
+        items.forEach(function (it) {
+
+            var v = Number(answers[it.key]);
+
+            if (answers[it.key] !== undefined && v >= 1 && v <= L && Math.floor(v) === v) out[it.key] = v;
+
+        });
+
+        return out;
+
+    }
+
+    /* ---------- skor ---------- */
+
+    // persen 0-100 dari jumlah jawaban (skala 1..L) pada n butir
+    function pctOf(sum, n) {
+
+        return ((sum - n) / ((levels() - 1) * n)) * 100;
+
+    }
+
+    function scoreModule(m) {
+
+        var sum = {};
+        var cnt = {};
+
+        state.items.forEach(function (it) {
+
+            if (it.m !== m) return;
+
+            sum[it.d] = (sum[it.d] || 0) + state.answers[it.key];
+            cnt[it.d] = (cnt[it.d] || 0) + 1;
+
+        });
+
+        var out = {};
+
+        Object.keys(sum).forEach(function (d) { out[d] = pctOf(sum[d], cnt[d]); });
+
+        return out;
+
+    }
+
+    function ranked(scores) {
+
+        return Object.keys(scores).map(function (id) {
+            return { id: id, v: scores[id] };
+        }).sort(function (a, b) { return b.v - a.v; });
+
+    }
+
+    function avg(scores) {
+
+        var k = Object.keys(scores);
+
+        return k.reduce(function (a, id) { return a + scores[id]; }, 0) / k.length;
 
     }
 
@@ -252,8 +280,7 @@ rumpun minat secara otomatis.
 
     function rumpunLabel(id) {
 
-        var list = (rsCfg && rsCfg.rumpun_minat) || [];
-        var r = byId(list, id);
+        var r = byId((rsCfg && rsCfg.rumpun_minat) || [], id);
 
         if (r) return r.label;
 
@@ -270,13 +297,10 @@ rumpun minat secara otomatis.
 
     }
 
-    function levelCT(v) {
+    // kelas status untuk skor rata-rata: kurang / sedang / baik
+    function band(v) { return v < 40 ? "kurang" : (v < 70 ? "sedang" : "baik"); }
 
-        if (v < 40) return "perlu dilatih";
-        if (v < 70) return "berkembang";
-        return "kuat";
-
-    }
+    function levelCT(v) { return { kurang: "perlu dilatih", sedang: "berkembang", baik: "kuat" }[band(v)]; }
 
     function kesiapanTier(p) {
 
@@ -290,305 +314,191 @@ rumpun minat secara otomatis.
 
     }
 
-    /* ---------- tampilan: pindah layar ---------- */
+    /* ---------- layar ---------- */
 
     function show(which) {
 
-        $("pbHub").hidden = which !== "hub";
+        $("pbStart").hidden = which !== "start";
         $("pbRun").hidden = which !== "run";
         $("pbResult").hidden = which !== "result";
 
-        var heading = which === "hub" ? $("pbHello") : (which === "run" ? $("pbRunTitle") : $("pbResultTitle"));
+        var heading = which === "start" ? $("pbStartTitle") : (which === "run" ? $("pbRunTitle") : $("pbResultTitle"));
 
         try { window.scrollTo(0, 0); } catch (e) { /* abaikan */ }
         if (heading && heading.focus) heading.focus();
 
     }
 
-    /* ---------- beranda ---------- */
+    /* ---------- layar mulai ---------- */
 
-    function renderHub() {
+    function renderStart() {
 
-        var s = loadStore();
-        var drafts = loadDrafts();
-        var box = $("pbMods");
+        var box = $("pbTopics");
 
         if (!cfg) {
             box.innerHTML = "<div class=\"pb-error\">Data profil belajar belum bisa dimuat. Coba muat ulang halaman.</div>";
+            $("pbMulai").disabled = true;
             return;
         }
 
-        box.innerHTML = MODS.map(function (m) {
+        $("pbMulai").disabled = false;
 
-            var done = !!s[m.key];
-            var draft = !done && validDraft(m.key, drafts[m.key]) && Object.keys(drafts[m.key].answers).length > 0;
-            var badge = done
-                ? "<span class=\"pb-badge\">Sudah diisi</span>"
-                : draft
-                    ? "<span class=\"pb-badge pb-badge--todo\">Lanjutkan</span>"
-                    : "<span class=\"pb-badge pb-badge--todo\">Belum diisi</span>";
+        box.innerHTML = TOPICS.map(function (k) {
 
-            return "<button type=\"button\" class=\"pb-mod\" data-mod=\"" + m.key + "\">"
-                + "<span class=\"pb-mod-ico\" aria-hidden=\"true\">" + m.ikon + "</span>"
-                + "<span class=\"pb-mod-title\">" + esc(m.judul) + "</span>"
-                + "<span class=\"pb-mod-desc\">" + esc(m.desc) + "</span>"
-                + "<span class=\"pb-mod-meta\">" + badge + " · " + esc(m.waktu) + "</span>"
-                + "</button>";
+            var n = k === "kesiapan" ? "±" + (cfg.kesiapan.topik.XI || []).length : String(cfg[k].butir.length);
+
+            return "<div class=\"pb-sum-card\"><span class=\"ico\" aria-hidden=\"true\">" + info(k).ikon + "</span>"
+                + "<strong>" + esc(info(k).judul) + "</strong><span>" + esc(info(k).tanya) + " (" + n + " pernyataan)</span></div>";
 
         }).join("");
-
-        renderSummary();
-
-    }
-
-    /* ---------- ringkasan & rencana ---------- */
-
-    function summaryRows(s) {
-
-        var rows = [];
-
-        if (s.kesiapan) {
-            var tier = kesiapanTier(s.kesiapan.pct);
-            rows.push(["Kesiapan Matematika", "Kelas " + s.kesiapan.kelas + ": " + tier.label + " (" + round(s.kesiapan.pct) + "%)"]);
-        }
-
-        if (s.gaya) {
-            var gr = ranked(s.gaya.skor);
-            var names = (isMerata(gr) ? gr.slice(0, 3) : gr.slice(0, 2)).map(function (r) {
-                return byId(cfg.gaya.dimensi, r.id).nama;
-            });
-            rows.push(["Cara belajar", (isMerata(gr) ? "Merata: " : "") + join(names)]);
-        }
-
-        if (s.minat) {
-            var mr = ranked(s.minat.skor);
-            var code = mr.slice(0, 3).map(function (r) { return r.id; }).join("");
-            rows.push(["Minat (RIASEC)", code + " · " + rumpunLabel(s.minat.rumpunTop)]);
-        }
-
-        if (s.ct) {
-            var cr = ranked(s.ct.skor);
-            rows.push(["Computational Thinking", "Terkuat: " + byId(cfg.ct.pilar, cr[0].id).nama + ". Perlu dilatih: " + byId(cfg.ct.pilar, cr[cr.length - 1].id).nama]);
-        }
-
-        if (s.kebiasaan) {
-            var kr = ranked(s.kebiasaan.skor);
-            rows.push(["Kebiasaan belajar", "Kuat di " + byId(cfg.kebiasaan.dimensi, kr[0].id).nama + ". Perlu perhatian: " + byId(cfg.kebiasaan.dimensi, kr[kr.length - 1].id).nama]);
-        }
-
-        return rows;
-
-    }
-
-    function weeklyPlan(s) {
-
-        var plan = [];
-
-        if (s.gaya) {
-            var g = byId(cfg.gaya.dimensi, ranked(s.gaya.skor)[0].id);
-            plan.push("Cara belajar " + g.nama + ": " + g.strategi[0]);
-        }
-
-        if (s.kebiasaan) {
-            var kr = ranked(s.kebiasaan.skor);
-            var k = byId(cfg.kebiasaan.dimensi, kr[kr.length - 1].id);
-            plan.push("Kebiasaan (" + k.nama + "): " + k.tips[0]);
-        }
-
-        if (s.ct) {
-            var cr = ranked(s.ct.skor);
-            var p = byId(cfg.ct.pilar, cr[cr.length - 1].id);
-            plan.push("Latihan " + p.nama + ": " + p.latihan);
-        }
-
-        if (s.kesiapan && s.kesiapan.prioritas && s.kesiapan.prioritas.length) {
-            plan.push("Ulang topik " + join(s.kesiapan.prioritas.slice(0, 2)) + ", lalu kerjakan 5 soal untuk tiap topik.");
-        }
-
-        if (s.minat) {
-            plan.push("Cari tahu satu prodi dari rumpun " + rumpunLabel(s.minat.rumpunTop) + ", lalu baca mata kuliah dan syarat seleksinya di situs resmi SNPMB.");
-        }
-
-        return plan;
-
-    }
-
-    function renderSummary() {
 
         var s = loadStore();
-        var any = MODS.some(function (m) { return !!s[m.key]; });
+        var d = loadDraft();
+        var kelas = (d && d.kelas) || (s.kesiapan && s.kesiapan.kelas) || "";
+        var done = storeComplete(s);
 
-        $("pbSummary").hidden = !any;
+        if (!$("pbKelas").value && kelas) $("pbKelas").value = kelas;
 
-        if (!any || !cfg) return;
+        $("pbLihat").hidden = !done;
+        $("pbStartError").hidden = true;
 
-        var rows = summaryRows(s).map(function (r) {
-            return "<div class=\"pb-sum-row\"><span class=\"pb-sum-k\">" + esc(r[0]) + "</span><span class=\"pb-sum-v\">" + esc(r[1]) + "</span></div>";
-        }).join("");
+        var hasDraft = !!d && Object.keys(d.answers).length > 0;
 
-        var plan = weeklyPlan(s);
-        var planHtml = plan.length
-            ? "<h3 class=\"pb-h3\">Rencana belajar minggu ini</h3><ol>" + plan.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol>"
-            : "";
-
-        $("pbSummaryBody").innerHTML = "<div class=\"pb-res\">" + rows + planHtml + "</div>";
+        if (hasDraft) {
+            $("pbMulai").textContent = "Lanjutkan tes";
+            $("pbStartInfo").textContent = "Ada " + Object.keys(d.answers).length + " jawaban tersimpan di browser ini. Kamu bisa melanjutkan dari halaman terakhir.";
+        } else {
+            $("pbMulai").textContent = done ? "Ulangi tes" : "Mulai tes";
+            $("pbStartInfo").textContent = done ? "Hasil terakhirmu masih tersimpan di browser ini." : "Perkiraan waktu 10 sampai 15 menit. Jawabanmu tersimpan otomatis kalau halaman tertutup.";
+        }
 
     }
 
-    /* ---------- mengerjakan modul ---------- */
+    function onMulai() {
 
-    function startModule(key, fresh) {
+        var kelas = $("pbKelas").value;
 
-        state.mod = key;
+        if (!kelas) {
+            $("pbStartError").textContent = "Pilih kelasmu dulu, karena topik kesiapan Matematika berbeda tiap kelas.";
+            $("pbStartError").hidden = false;
+            return;
+        }
+
+        state.kelas = kelas;
+        state.items = buildItems(kelas);
         state.page = 0;
         state.answers = {};
-        state.kelas = "";
 
-        if (fresh) {
-            clearDraft(key);
-        } else {
-            var dr = loadDrafts()[key];
+        var d = loadDraft();
 
-            if (validDraft(key, dr)) {
-                state.page = Number(dr.page) || 0;
-                state.answers = dr.answers;
-                state.kelas = dr.kelas || "";
+        if (d && Object.keys(d.answers).length) {
+
+            var ans = d.answers;
+
+            // ganti kelas: jawaban kesiapan milik kelas lain dibuang
+            if (d.kelas !== kelas) {
+                ans = {};
+                Object.keys(d.answers).forEach(function (k) {
+                    if (k.indexOf("kesiapan:") !== 0) ans[k] = d.answers[k];
+                });
             }
-        }
 
-        var m = modOf(key);
+            state.answers = validAnswers(state.items, ans);
+            state.page = Math.min(Math.max(Number(d.page) || 0, 0), totalPages() - 1);
 
-        $("pbRunTitle").textContent = m.judul;
-        $("pbError").hidden = true;
-
-        if (key === "kesiapan") {
-            $("pbRunSub").textContent = "Pilih kelasmu, lalu nilai seberapa paham kamu pada tiap topik " + cfg.kesiapan.mapel + ".";
-            $("pbProgressWrap").hidden = true;
-            $("pbProgressText").textContent = "";
-            $("pbNext").textContent = "Lihat hasil";
         } else {
-            $("pbRunSub").textContent = "Pilih seberapa sesuai tiap pernyataan dengan dirimu saat ini.";
-            $("pbProgressWrap").hidden = false;
+            removeKey(DRAFT_KEY);
         }
 
+        saveDraft();
         renderPage();
         show("run");
 
-        if (Object.keys(state.answers).length) {
-            $("pbRunSub").textContent += " Jawabanmu sebelumnya dilanjutkan.";
-        }
-
     }
 
-    function butirOf(key) {
+    /* ---------- mengerjakan tes ---------- */
 
-        return cfg[key === "gaya" ? "gaya" : key === "minat" ? "minat" : key === "ct" ? "ct" : "kebiasaan"].butir;
+    function totalPages() { return Math.ceil(state.items.length / PER_PAGE); }
 
-    }
+    function answeredCount() { return Object.keys(state.answers).length; }
 
-    function totalPages(key) {
+    function sliderHtml(it, n, total) {
 
-        return Math.ceil(butirOf(key).length / PER_PAGE);
+        var L = levels();
+        var v = state.answers[it.key];
+        var has = v !== undefined;
+        var mid = Math.ceil(L / 2);
+        var cur = has ? v : mid;
+        var label = has ? cfg.skala[cur - 1].label : "Geser untuk menjawab";
+        var fill = ((cur - 1) / (L - 1)) * 100;
+        var ticks = "";
 
-    }
+        for (var i = 0; i < L; i++) ticks += "<i></i>";
 
-    function radioGroup(name, scale, checked) {
-
-        return "<div class=\"pb-opts\" role=\"radiogroup\">" + scale.map(function (o) {
-            return "<label class=\"pb-opt\"><input type=\"radio\" name=\"" + name + "\" value=\"" + o.v + "\""
-                + (Number(checked) === o.v ? " checked" : "") + "><span>" + esc(o.label) + "</span></label>";
-        }).join("") + "</div>";
+        return "<div class=\"pb-card pb-q" + (has ? " is-answered" : "") + "\" role=\"group\" aria-labelledby=\"qt" + n + "\" data-qkey=\"" + it.key + "\">"
+            + "<span class=\"pb-q-kode\">Pernyataan " + n + " dari " + total + "</span>"
+            + "<p class=\"pb-q-text\" id=\"qt" + n + "\">" + esc(it.t) + "</p>"
+            + "<div class=\"pb-slider" + (has ? "" : " is-empty") + "\" style=\"--fill:" + fill + "%\">"
+            + "<input class=\"pb-range\" type=\"range\" min=\"1\" max=\"" + L + "\" step=\"1\" value=\"" + cur + "\" data-key=\"" + it.key + "\""
+            + " aria-labelledby=\"qt" + n + "\" aria-valuetext=\"" + esc(has ? label : "Belum dijawab") + "\">"
+            + "<div class=\"pb-ticks\" aria-hidden=\"true\">" + ticks + "</div>"
+            + "<div class=\"pb-ends\" aria-hidden=\"true\"><span>" + esc(cfg.skala_ujung[0]) + "</span><span>" + esc(cfg.skala_ujung[1]) + "</span></div>"
+            + "<div class=\"pb-val\" aria-live=\"polite\">" + esc(label) + "</div>"
+            + "</div></div>";
 
     }
 
     function renderPage() {
 
-        var key = state.mod;
-        var body = $("pbRunBody");
+        var from = state.page * PER_PAGE;
+        var to = Math.min(from + PER_PAGE, state.items.length);
+        var html = "";
 
         $("pbError").hidden = true;
 
-        if (key === "kesiapan") {
-            renderKesiapanForm(body);
-            $("pbBack").textContent = "Kembali";
-            return;
-        }
-
-        var butir = butirOf(key);
-        var tp = totalPages(key);
-        var from = state.page * PER_PAGE;
-        var to = Math.min(from + PER_PAGE, butir.length);
-        var html = "";
-
         for (var i = from; i < to; i++) {
-
-            html += "<fieldset class=\"pb-q\"><legend>Pernyataan " + (i + 1) + " dari " + butir.length + "</legend>"
-                + "<p class=\"pb-q-text\">" + esc(butir[i].t) + "</p>"
-                + radioGroup("q" + i, cfg.skala, state.answers[i])
-                + "</fieldset>";
-
+            html += sliderHtml(state.items[i], i + 1, state.items.length);
         }
 
-        body.innerHTML = html;
+        $("pbRunBody").innerHTML = html;
+        updateProgress();
 
-        var done = Object.keys(state.answers).length;
-
-        $("pbProgress").style.width = Math.round((done / butir.length) * 100) + "%";
-        $("pbProgressText").textContent = "Halaman " + (state.page + 1) + " dari " + tp + " · terjawab " + done + " dari " + butir.length;
-        $("pbNext").textContent = state.page === tp - 1 ? "Lihat hasil" : "Lanjut";
+        $("pbNext").textContent = state.page === totalPages() - 1 ? "Lihat hasil" : "Lanjut";
         $("pbBack").textContent = state.page === 0 ? "Batal" : "Sebelumnya";
 
     }
 
-    function renderKesiapanForm(body) {
+    function updateProgress() {
 
-        var k = cfg.kesiapan;
-        var opts = ["<option value=\"\">Pilih kelas</option>"].concat(["X", "XI", "XII"].map(function (c) {
-            return "<option value=\"" + c + "\"" + (state.kelas === c ? " selected" : "") + ">Kelas " + c + "</option>";
-        })).join("");
+        var n = state.items.length;
+        var done = answeredCount();
 
-        var html = "<div class=\"pb-panel\"><label class=\"pb-label\" for=\"pbKelas\">Kelasmu</label>"
-            + "<select class=\"pb-select\" id=\"pbKelas\">" + opts + "</select>"
-            + "<p class=\"pb-sub\">" + esc(k.catatan) + "</p><div id=\"pbTopics\"></div></div>";
-
-        body.innerHTML = html;
-        renderTopics();
+        $("pbProgress").style.width = Math.round((done / n) * 100) + "%";
+        $("pbProgressText").textContent = "Halaman " + (state.page + 1) + " dari " + totalPages() + " · terjawab " + done + " dari " + n;
 
     }
 
-    function renderTopics() {
+    // dipanggil saat siswa menyentuh/menggeser slider
+    function answer(input) {
 
-        var k = cfg.kesiapan;
-        var box = $("pbTopics");
+        var key = input.getAttribute("data-key");
+        var v = Number(input.value);
+        var wrap = input.closest(".pb-slider");
+        var card = input.closest(".pb-q");
+        var L = levels();
 
-        if (!box) return;
+        state.answers[key] = v;
 
-        if (!state.kelas) {
-            box.innerHTML = "";
-            return;
-        }
+        wrap.classList.remove("is-empty");
+        wrap.style.setProperty("--fill", (((v - 1) / (L - 1)) * 100) + "%");
+        wrap.querySelector(".pb-val").textContent = cfg.skala[v - 1].label;
+        input.setAttribute("aria-valuetext", cfg.skala[v - 1].label);
 
-        var list = k.topik[state.kelas] || [];
+        card.classList.add("is-answered");
+        card.classList.remove("is-missing");
 
-        box.innerHTML = list.map(function (t, i) {
-            return "<div class=\"pb-topic\"><p class=\"pb-topic-name\">" + esc(t) + "</p>"
-                + radioGroup("t" + i, k.skala, state.answers[i]) + "</div>";
-        }).join("");
-
-    }
-
-    function readRadios() {
-
-        var inputs = document.querySelectorAll("#pbRunBody input[type=radio]:checked");
-
-        Array.prototype.forEach.call(inputs, function (el) {
-
-            var name = el.name;
-            var idx = Number(name.slice(1));
-
-            state.answers[idx] = Number(el.value);
-
-        });
+        updateProgress();
+        saveDraft();
 
     }
 
@@ -599,40 +509,36 @@ rumpun minat secara otomatis.
         e.textContent = msg;
         e.hidden = false;
 
-        try { e.scrollIntoView({ block: "center" }); } catch (x) { /* abaikan */ }
-
     }
 
     function onNext() {
 
-        readRadios();
-
-        var key = state.mod;
-
-        if (key === "kesiapan") {
-
-            if (!state.kelas) { showError("Pilih kelasmu dulu."); return; }
-
-            var list = cfg.kesiapan.topik[state.kelas] || [];
-
-            for (var j = 0; j < list.length; j++) {
-                if (!state.answers[j]) { showError("Nilai dulu topik \"" + list[j] + "\" ya."); return; }
-            }
-
-            finishKesiapan();
-            return;
-
-        }
-
-        var butir = butirOf(key);
         var from = state.page * PER_PAGE;
-        var to = Math.min(from + PER_PAGE, butir.length);
+        var to = Math.min(from + PER_PAGE, state.items.length);
+        var first = null;
 
         for (var i = from; i < to; i++) {
-            if (!state.answers[i]) { showError("Masih ada pernyataan yang belum dijawab di halaman ini."); return; }
+
+            if (state.answers[state.items[i].key] === undefined) {
+
+                var card = document.querySelector("[data-qkey=\"" + state.items[i].key + "\"]");
+
+                if (card) {
+                    card.classList.add("is-missing");
+                    if (!first) first = card;
+                }
+
+            }
+
         }
 
-        if (state.page < totalPages(key) - 1) {
+        if (first) {
+            showError("Masih ada pernyataan yang belum dijawab di halaman ini. Geser atau ketuk slidernya dulu ya.");
+            try { first.scrollIntoView({ block: "center" }); } catch (e) { /* abaikan */ }
+            return;
+        }
+
+        if (state.page < totalPages() - 1) {
             state.page++;
             saveDraft();
             renderPage();
@@ -640,75 +546,62 @@ rumpun minat secara otomatis.
             return;
         }
 
-        finishQuiz();
+        finish();
 
     }
 
     function onBack() {
 
-        readRadios();
-
-        if (state.mod !== "kesiapan" && state.page > 0) {
+        if (state.page > 0) {
             state.page--;
             saveDraft();
             renderPage();
+            try { window.scrollTo(0, 0); } catch (e) { /* abaikan */ }
             return;
         }
 
-        renderHub();
-        show("hub");
+        renderStart();
+        show("start");
 
     }
 
     /* ---------- menyimpan hasil ---------- */
 
-    function finishQuiz() {
+    function finish() {
 
-        var key = state.mod;
-        var skor = scoreDims(butirOf(key), state.answers);
-        var data = { skor: skor };
+        var s = {};
 
-        if (key === "minat") {
-            data.rumpunTop = rumpunRank(skor)[0].id;
-        }
+        s.gaya = { skor: scoreModule("gaya") };
 
-        saveModule(key, data);
-        clearDraft(key);
-        showResult(key);
+        s.minat = { skor: scoreModule("minat") };
+        s.minat.rumpunTop = rumpunRank(s.minat.skor)[0].id;
 
-    }
+        s.ct = { skor: scoreModule("ct") };
+        s.kebiasaan = { skor: scoreModule("kebiasaan") };
 
-    function finishKesiapan() {
-
-        var list = cfg.kesiapan.topik[state.kelas];
-        var sum = 0;
+        var topik = kesiapanTopik(state.kelas);
+        var rincian = topik.map(function (t, i) { return state.answers["kesiapan:" + i]; });
+        var sum = rincian.reduce(function (a, v) { return a + v; }, 0);
+        var maks = Math.max(1, Math.round(levels() / 2));
         var prioritas = [];
-        var rincian = [];
 
-        list.forEach(function (t, i) {
+        rincian.forEach(function (v, i) { if (v <= maks - 1) prioritas.push(topik[i]); });
 
-            var v = state.answers[i];
+        // prioritas: jawaban di bawah tengah skala (mis. 1 atau 2 dari 5)
+        s.kesiapan = { kelas: state.kelas, levels: levels(), pct: pctOf(sum, topik.length), rincian: rincian, prioritas: prioritas };
 
-            sum += v;
-            rincian.push(v);
+        var ts = new Date().toISOString();
 
-            if (v <= 2) prioritas.push(t);
+        TOPICS.forEach(function (k) { s[k].ts = ts; });
 
-        });
+        writeJson(STORE_KEY, s);
+        removeKey(DRAFT_KEY);
 
-        saveModule("kesiapan", {
-            kelas: state.kelas,
-            pct: pct(sum, list.length),
-            rincian: rincian,
-            prioritas: prioritas
-        });
-
-        clearDraft("kesiapan");
-        showResult("kesiapan");
+        showResult();
 
     }
 
-    /* ---------- hasil ---------- */
+    /* ---------- komponen hasil ---------- */
 
     function bars(rank, nameOf, topN) {
 
@@ -733,9 +626,7 @@ rumpun minat secara otomatis.
         var merata = isMerata(rank);
         var top = rank.slice(0, merata ? 3 : 2);
         var d1 = byId(cfg.gaya.dimensi, top[0].id);
-        var html = "";
-
-        html += "<div class=\"pb-res\"><div class=\"pb-top\"><span class=\"pb-top-ico\" aria-hidden=\"true\">" + d1.ikon + "</span><div>"
+        var html = "<div class=\"pb-res\"><div class=\"pb-top\"><span class=\"pb-top-ico\" aria-hidden=\"true\">" + d1.ikon + "</span><div>"
             + "<div class=\"pb-top-sub\">" + (merata ? "Profil merata" : "Kecenderungan utama") + "</div>"
             + "<div class=\"pb-top-name\">" + esc(join(top.map(function (r) { return byId(cfg.gaya.dimensi, r.id).nama; }))) + "</div></div></div>";
 
@@ -751,16 +642,14 @@ rumpun minat secara otomatis.
 
             var d = byId(cfg.gaya.dimensi, r.id);
 
-            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">" + d.ikon + " " + esc(d.nama) + "</h3>"
+            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">" + d.ikon + " " + esc(d.nama) + "</h3>"
                 + "<p><b>Kekuatan:</b> " + esc(d.kuat) + "</p>"
                 + "<p><b>Hal yang perlu diwaspadai:</b> " + esc(d.tantangan) + "</p>"
-                + "<p><b>Cara mencobanya:</b></p>" + list(idx === 0 ? d.strategi : d.strategi.slice(0, 2)) + "</div>";
+                + "<p><b>Arah yang disarankan, coba:</b></p>" + list(idx === 0 ? d.strategi : d.strategi.slice(0, 2)) + "</div>";
 
         });
 
-        html += "<p class=\"pb-note\">Gaya belajar bukan label tetap. Pakai ini sebagai ide untuk mencoba, dan gabungkan beberapa cara sesuai materi.</p>";
-
-        return html;
+        return html + "<p class=\"pb-note\">Gaya belajar bukan label tetap. Pakai ini sebagai ide untuk mencoba, dan gabungkan beberapa cara sesuai materi.</p>";
 
     }
 
@@ -780,9 +669,7 @@ rumpun minat secara otomatis.
         var top3 = rank.slice(0, 3);
         var code = top3.map(function (r) { return r.id; }).join("");
         var rr = rumpunRank(s.skor);
-        var html = "";
-
-        html += "<div class=\"pb-res\"><div class=\"pb-top\"><span class=\"pb-top-ico\" aria-hidden=\"true\">🧭</span><div>"
+        var html = "<div class=\"pb-res\"><div class=\"pb-top\"><span class=\"pb-top-ico\" aria-hidden=\"true\">🧭</span><div>"
             + "<div class=\"pb-top-sub\">Kode minat (tiga teratas)</div>"
             + "<div class=\"pb-top-name\">" + esc(code) + "</div></div></div>";
 
@@ -797,12 +684,12 @@ rumpun minat secara otomatis.
 
             var t = byId(cfg.minat.tipe, r.id);
 
-            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">" + t.ikon + " " + esc(t.nama) + "</h3>"
+            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">" + t.ikon + " " + esc(t.nama) + "</h3>"
                 + "<p>" + esc(t.ringkas) + "</p><p><b>Bidang yang sering sejalan:</b></p>" + list(t.bidang) + "</div>";
 
         });
 
-        html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">Rumpun SNBP yang paling sejalan</h3>";
+        html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">Arah yang disarankan: rumpun SNBP paling sejalan</h3>";
 
         rr.slice(0, 2).forEach(function (r, i) {
 
@@ -813,9 +700,7 @@ rumpun minat secara otomatis.
 
         html += "<p>Rumpun pertama akan terisi otomatis di <a class=\"pb-link\" href=\"/pages/rasionalisasi.html\">Rasionalisasi SNBP</a>.</p></div>";
 
-        html += "<p class=\"pb-note\">Ini gambaran minat saat ini, bukan penentu jurusan. Minat bisa berkembang, jadi gali lebih jauh lewat guru BK, alumni, dan informasi resmi prodi.</p>";
-
-        return html;
+        return html + "<p class=\"pb-note\">Ini gambaran minat saat ini, bukan penentu jurusan. Minat bisa berkembang, jadi gali lebih jauh lewat guru BK, alumni, dan informasi resmi prodi.</p>";
 
     }
 
@@ -823,10 +708,9 @@ rumpun minat secara otomatis.
 
         if (!gayaSkor) return [];
 
-        var rank = ranked(gayaSkor).slice(0, 2);
         var map = cfg.ct.alat[pilarId] || {};
 
-        return rank.map(function (r) { return map[r.id]; }).filter(Boolean);
+        return ranked(gayaSkor).slice(0, 2).map(function (r) { return map[r.id]; }).filter(Boolean);
 
     }
 
@@ -834,15 +718,9 @@ rumpun minat secara otomatis.
 
         var t = cfg.ct.templat;
 
-        if (alat.length < 2) {
-            t = t.replace(/ Cara yang cocok denganmu:.*$/, "");
-        }
+        if (alat.length < 2) t = t.replace(/ Cara yang cocok denganmu:.*$/, "");
 
-        return t
-            .replace("{ringkas}", p.ringkas)
-            .replace("{latihan}", p.latihan)
-            .replace("{alat1}", alat[0] || "")
-            .replace("{alat2}", alat[1] || "");
+        return t.replace("{ringkas}", p.ringkas).replace("{latihan}", p.latihan).replace("{alat1}", alat[0] || "").replace("{alat2}", alat[1] || "");
 
     }
 
@@ -854,25 +732,15 @@ rumpun minat secara otomatis.
         var html = "<div class=\"pb-res\"><p>Computational Thinking (CT) adalah cara berpikir sistematis untuk memecahkan masalah. Skor di bawah adalah penilaian dirimu, bukan nilai ujian.</p>"
             + bars(rank, function (id) { return byId(cfg.ct.pilar, id).nama + " (" + levelCT(s.skor[id]) + ")"; }, 1) + "</div>";
 
-        var focus = rank.slice().reverse().slice(0, 2);
-
-        focus.forEach(function (r) {
+        rank.slice().reverse().slice(0, 2).forEach(function (r) {
 
             var p = byId(cfg.ct.pilar, r.id);
 
-            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">" + p.ikon + " Latih " + esc(p.nama) + "</h3><p>" + esc(ctText(p, alatFor(p.id, gs))) + "</p></div>";
+            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">" + p.ikon + " Arah latihan: " + esc(p.nama) + "</h3><p>" + esc(ctText(p, alatFor(p.id, gs))) + "</p></div>";
 
         });
 
-        var best = byId(cfg.ct.pilar, rank[0].id);
-
-        html += "<p class=\"pb-note\">Kekuatan CT-mu ada di " + esc(best.nama) + ". Manfaatkan untuk membantu pilar lain.</p>";
-
-        if (!gs) {
-            html += "<p class=\"pb-note\">Isi juga modul <b>Cara Belajar</b> supaya saran latihan disesuaikan dengan gaya belajarmu.</p>";
-        }
-
-        return html;
+        return html + "<p class=\"pb-note\">Kekuatan CT-mu ada di " + esc(byId(cfg.ct.pilar, rank[0].id).nama) + ". Manfaatkan untuk membantu pilar lain.</p>";
 
     }
 
@@ -882,14 +750,14 @@ rumpun minat secara otomatis.
         var html = "<div class=\"pb-res\">" + bars(rank, function (id) { return byId(cfg.kebiasaan.dimensi, id).nama; }, 1) + "</div>";
         var best = byId(cfg.kebiasaan.dimensi, rank[0].id);
 
-        html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">" + best.ikon + " Kekuatanmu: " + esc(best.nama) + "</h3><p>" + esc(best.tinggi) + "</p></div>";
+        html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">" + best.ikon + " Kekuatanmu: " + esc(best.nama) + "</h3><p>" + esc(best.tinggi) + "</p></div>";
 
         rank.slice().reverse().slice(0, 2).forEach(function (r) {
 
             var d = byId(cfg.kebiasaan.dimensi, r.id);
 
-            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">" + d.ikon + " Perlu perhatian: " + esc(d.nama) + "</h3>"
-                + "<p>" + esc(d.rendah) + "</p><p><b>Coba:</b></p>" + list(d.tips) + "</div>";
+            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">" + d.ikon + " Perlu perhatian: " + esc(d.nama) + "</h3>"
+                + "<p>" + esc(d.rendah) + "</p><p><b>Arah yang disarankan, coba:</b></p>" + list(d.tips) + "</div>";
 
         });
 
@@ -900,9 +768,9 @@ rumpun minat secara otomatis.
     function resultKesiapan(s) {
 
         var tier = kesiapanTier(s.pct);
+        var L = s.levels || 4;
         var topik = cfg.kesiapan.topik[s.kelas] || [];
-        var rank = topik.map(function (t, i) { return { id: String(i), v: pct(s.rincian[i], 1) }; });
-
+        var rank = topik.map(function (t, i) { return { id: String(i), v: ((s.rincian[i] - 1) / (L - 1)) * 100 }; });
         var html = "<div class=\"pb-res\"><div class=\"pb-top\"><span class=\"pb-top-ico\" aria-hidden=\"true\">🧱</span><div>"
             + "<div class=\"pb-top-sub\">Kelas " + esc(s.kelas) + " · " + esc(cfg.kesiapan.mapel) + "</div>"
             + "<div class=\"pb-top-name\">" + esc(tier.label) + " (" + round(s.pct) + "%)</div></div></div>"
@@ -910,7 +778,7 @@ rumpun minat secara otomatis.
             + bars(rank, function (id) { return topik[Number(id)]; }, 0) + "</div>";
 
         if (s.prioritas && s.prioritas.length) {
-            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">Topik yang perlu diulang dulu</h3>" + list(s.prioritas) + "</div>";
+            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\">Arah yang disarankan: ulang topik ini dulu</h3>" + list(s.prioritas) + "</div>";
         } else {
             html += "<p class=\"pb-note\">Semua topik kamu nilai cukup paham atau lebih. Coba soal penalaran yang lebih menantang.</p>";
         }
@@ -919,22 +787,154 @@ rumpun minat secara otomatis.
 
     }
 
-    function showResult(key) {
+    var RENDER = { kesiapan: resultKesiapan, gaya: resultGaya, minat: resultMinat, ct: resultCT, kebiasaan: resultKebiasaan };
 
-        var s = loadStore()[key];
-        var m = modOf(key);
-        var map = {
-            gaya: resultGaya,
-            minat: resultMinat,
-            ct: resultCT,
-            kebiasaan: resultKebiasaan,
-            kesiapan: resultKesiapan
-        };
+    // label status ringkas per topik: {teks, kelas}
+    function chipOf(k, s) {
 
-        state.mod = key;
+        if (k === "kesiapan") {
+            var tier = kesiapanTier(s.kesiapan.pct);
+            return { teks: tier.label, kelas: { dasar: "kurang", menengah: "sedang", lanjut: "baik" }[tier.id] || "netral" };
+        }
 
-        $("pbResultTitle").textContent = "Hasil: " + m.judul;
-        $("pbResultBody").innerHTML = map[key](s);
+        if (k === "gaya") {
+            var gr = ranked(s.gaya.skor);
+            return { teks: isMerata(gr) ? "Profil merata" : join(gr.slice(0, 2).map(function (r) { return byId(cfg.gaya.dimensi, r.id).nama; })), kelas: "netral" };
+        }
+
+        if (k === "minat") {
+            return { teks: "Kode " + ranked(s.minat.skor).slice(0, 3).map(function (r) { return r.id; }).join(""), kelas: "netral" };
+        }
+
+        var a = avg(s[k].skor);
+        var b = band(a);
+
+        return { teks: (k === "ct" ? "CT " : "Kebiasaan ") + { kurang: "perlu dilatih", sedang: "berkembang", baik: "kuat" }[b], kelas: b };
+
+    }
+
+    /* ---------- sintesis: arah potensialmu ---------- */
+
+    function weakest(scores) { var r = ranked(scores); return r[r.length - 1]; }
+
+    function synthesis(s) {
+
+        var rr = rumpunRank(s.minat.skor);
+        var top = rr[0];
+        var second = rr[1];
+        var group = top.id.split("_")[0];
+        var codes = ranked(s.minat.skor).slice(0, 3).map(function (r) { return byId(cfg.minat.tipe, r.id).nama.split(" (")[0]; });
+        var ctAvg = avg(s.ct.skor);
+        var kebAvg = avg(s.kebiasaan.skor);
+        var gr = ranked(s.gaya.skor);
+        var gayaTop = (isMerata(gr) ? gr.slice(0, 3) : gr.slice(0, 2)).map(function (r) { return byId(cfg.gaya.dimensi, r.id).nama; });
+        var ctBest = byId(cfg.ct.pilar, ranked(s.ct.skor)[0].id);
+        var ctWeak = byId(cfg.ct.pilar, weakest(s.ct.skor).id);
+        var kebBest = byId(cfg.kebiasaan.dimensi, ranked(s.kebiasaan.skor)[0].id);
+        var kebWeak = byId(cfg.kebiasaan.dimensi, weakest(s.kebiasaan.skor).id);
+        var notes = [];
+
+        if (group === "saintek" && ctAvg >= 65) notes.push("Kemampuan berpikir komputasimu cukup kuat dan sejalan dengan rumpun saintek. Manfaatkan lewat proyek, lomba, atau olimpiade bidang sains, matematika, atau informatika.");
+        if (group === "saintek" && ctAvg < 40) notes.push("Rumpun saintek menuntut penalaran yang sistematis, jadi latih pilar " + ctWeak.nama + " secara rutin sebelum menargetkan prodi saintek.");
+        if (group === "saintek" && s.kesiapan.pct < 40) notes.push("Dasar Matematikamu masih perlu diperkuat. Mulai dari topik prioritas sebelum mengambil mata uji pilihan tingkat lanjut.");
+        if (group === "soshum" && ctAvg >= 65) notes.push("Kemampuan menyaring informasi dan menyusun langkah akan membantu analisis di bidang sosial, hukum, dan ekonomi.");
+        if (group === "soshum" && s.kesiapan.pct < 40) notes.push("Matematika tetap dipakai di banyak prodi soshum (statistika, ekonomi). Kuatkan dasarnya lewat topik prioritas.");
+        if (kebAvg < 40) notes.push("Apa pun rumpunnya, perbaiki kebiasaan belajar (terutama " + kebWeak.nama.toLowerCase() + ") supaya potensimu tidak tertahan.");
+
+        if (!notes.length) notes.push("Profilmu cukup seimbang. Pertahankan kebiasaan yang sudah baik dan jelajahi prodi di rumpun pilihanmu.");
+
+        var html = "<div class=\"pb-card pb-arah\"><span class=\"pb-eyebrow\">Arah potensialmu</span>"
+            + "<h3 class=\"pb-h3\">" + esc(rumpunLabel(top.id)) + "</h3>"
+            + "<p>Minatmu paling kuat di " + esc(join(codes)) + ", dan ini paling sejalan dengan rumpun tersebut"
+            + (second ? ", dengan alternatif <b>" + esc(rumpunLabel(second.id)) + "</b>" : "") + ". "
+            + esc((cfg.minat.rumpun_contoh || {})[top.id] || "") + "</p>"
+            + tkaSaran(top.id)
+            + "<h3 class=\"pb-h3\">Kekuatanmu</h3>" + list([
+                "Cara belajar: " + join(gayaTop),
+                "Computational Thinking: " + ctBest.nama,
+                "Kebiasaan: " + kebBest.nama
+            ])
+            + "<h3 class=\"pb-h3\">Perlu diperkuat</h3>" + list([
+                s.kesiapan.prioritas.length ? "Topik Matematika: " + join(s.kesiapan.prioritas.slice(0, 3)) : "Topik Matematika: semuanya sudah cukup, coba soal penalaran",
+                "Computational Thinking: " + ctWeak.nama,
+                "Kebiasaan: " + kebWeak.nama
+            ])
+            + "<h3 class=\"pb-h3\">Catatan untuk arahmu</h3>" + list(notes)
+            + "<h3 class=\"pb-h3\">Rencana belajar minggu ini</h3><ol>" + weeklyPlan(s).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>";
+
+        return html;
+
+    }
+
+    function summaryRows(s) {
+
+        var rows = [];
+        var tier = kesiapanTier(s.kesiapan.pct);
+        var gr = ranked(s.gaya.skor);
+        var names = (isMerata(gr) ? gr.slice(0, 3) : gr.slice(0, 2)).map(function (r) { return byId(cfg.gaya.dimensi, r.id).nama; });
+        var mr = ranked(s.minat.skor);
+        var cr = ranked(s.ct.skor);
+        var kr = ranked(s.kebiasaan.skor);
+
+        rows.push(["Kesiapan Matematika", "Kelas " + s.kesiapan.kelas + ": " + tier.label + " (" + round(s.kesiapan.pct) + "%)"]);
+        rows.push(["Cara belajar", (isMerata(gr) ? "Merata: " : "") + join(names)]);
+        rows.push(["Minat (RIASEC)", mr.slice(0, 3).map(function (r) { return r.id; }).join("") + " · " + rumpunLabel(s.minat.rumpunTop)]);
+        rows.push(["Computational Thinking", "Terkuat: " + byId(cfg.ct.pilar, cr[0].id).nama + ". Perlu dilatih: " + byId(cfg.ct.pilar, cr[cr.length - 1].id).nama]);
+        rows.push(["Kebiasaan belajar", "Kuat di " + byId(cfg.kebiasaan.dimensi, kr[0].id).nama + ". Perlu perhatian: " + byId(cfg.kebiasaan.dimensi, kr[kr.length - 1].id).nama]);
+
+        return rows;
+
+    }
+
+    function weeklyPlan(s) {
+
+        var plan = [];
+        var g = byId(cfg.gaya.dimensi, ranked(s.gaya.skor)[0].id);
+        var k = byId(cfg.kebiasaan.dimensi, weakest(s.kebiasaan.skor).id);
+        var p = byId(cfg.ct.pilar, weakest(s.ct.skor).id);
+
+        plan.push("Cara belajar " + g.nama + ": " + g.strategi[0]);
+        plan.push("Kebiasaan (" + k.nama + "): " + k.tips[0]);
+        plan.push("Latihan " + p.nama + ": " + p.latihan);
+
+        if (s.kesiapan.prioritas && s.kesiapan.prioritas.length) {
+            plan.push("Ulang topik " + join(s.kesiapan.prioritas.slice(0, 2)) + ", lalu kerjakan 5 soal untuk tiap topik.");
+        }
+
+        plan.push("Cari tahu satu prodi dari rumpun " + rumpunLabel(s.minat.rumpunTop) + ", lalu baca mata kuliah dan syarat seleksinya di situs resmi SNPMB.");
+
+        return plan;
+
+    }
+
+    /* ---------- layar hasil ---------- */
+
+    function showResult() {
+
+        var s = loadStore();
+
+        if (!cfg || !storeComplete(s)) {
+            renderStart();
+            show("start");
+            return;
+        }
+
+        var html = synthesis(s);
+
+        TOPICS.forEach(function (k, i) {
+
+            var chip = chipOf(k, s);
+
+            html += "<details class=\"pb-card pb-topic t-" + chip.kelas + "\" open>"
+                + "<summary><span class=\"pb-topic-ico\" aria-hidden=\"true\">" + info(k).ikon + "</span>"
+                + "<span><span class=\"pb-topic-kode\">Topik " + (i + 1) + "</span><span class=\"pb-topic-nama\">" + esc(info(k).judul) + "</span>"
+                + "<span class=\"pb-label-chip " + chip.kelas + "\">" + esc(chip.teks) + "</span></span></summary>"
+                + "<div class=\"pb-topic-body\">" + RENDER[k](s[k]) + "</div></details>";
+
+        });
+
+        $("pbResultBody").innerHTML = html;
+        $("pbResultSub").textContent = "Kelas " + s.kesiapan.kelas + " · lima topik dianalisis dari satu rangkaian jawabanmu.";
 
         show("result");
 
@@ -942,29 +942,23 @@ rumpun minat secara otomatis.
 
     /* ---------- cetak / simpan PDF ---------- */
 
-    // Menyusun lembar rekap lengkap (ringkasan, rencana, dan hasil tiap
-    // modul) lalu memanggil dialog cetak browser; siswa/guru bisa memilih
-    // "Simpan sebagai PDF". Tidak ada yang dikirim ke server.
     function printAll() {
 
         var s = loadStore();
-        var map = { kesiapan: resultKesiapan, gaya: resultGaya, minat: resultMinat, ct: resultCT, kebiasaan: resultKebiasaan };
+
+        if (!storeComplete(s)) return;
+
         var tgl = new Date().toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric" });
         var rows = summaryRows(s).map(function (r) {
             return "<div class=\"pb-sum-row\"><span class=\"pb-sum-k\">" + esc(r[0]) + "</span><span class=\"pb-sum-v\">" + esc(r[1]) + "</span></div>";
         }).join("");
-        var plan = weeklyPlan(s);
         var html = "<div class=\"pb-print-head\"><h1>Profil Belajar</h1><p>SMAN 1 Sooko Mojokerto · dicetak " + esc(tgl) + "</p>"
             + "<div class=\"pb-print-id\"><span>Nama:</span><span>Kelas:</span></div></div>"
-            + "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">Ringkasan</h3>" + rows + "</div>";
+            + "<div class=\"pb-card\"><h3 class=\"pb-h3\">Ringkasan</h3>" + rows + "</div>"
+            + synthesis(s);
 
-        if (plan.length) {
-            html += "<div class=\"pb-res\"><h3 class=\"pb-h3\" style=\"margin-top:0\">Rencana belajar minggu ini</h3><ol>"
-                + plan.map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ol></div>";
-        }
-
-        MODS.forEach(function (m) {
-            if (s[m.key]) html += "<h2 class=\"pb-h2\" style=\"margin-top:1.2rem\">" + esc(m.judul) + "</h2>" + map[m.key](s[m.key]);
+        TOPICS.forEach(function (k) {
+            html += "<h2 class=\"pb-h2\" style=\"margin-top:1.2rem\">" + esc(info(k).judul) + "</h2>" + RENDER[k](s[k]);
         });
 
         html += "<p class=\"pb-fine\">Refleksi diri pribadi, bukan tes psikologi dan bukan penentu jurusan. Preferensi bersifat campuran dan bisa berubah.</p>";
@@ -1081,29 +1075,25 @@ rumpun minat secara otomatis.
 
         });
 
-        if (plan.length) {
+        y += 8;
+        ctx.font = "800 24px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#0f4c81";
+        ctx.fillText("Rencana belajar minggu ini", x, y);
+        y += 38;
 
-            y += 8;
-            ctx.font = "800 24px 'Plus Jakarta Sans', sans-serif";
-            ctx.fillStyle = "#0f4c81";
-            ctx.fillText("Rencana belajar minggu ini", x, y);
-            y += 38;
+        ctx.font = "600 20px 'Plus Jakarta Sans', sans-serif";
+        ctx.fillStyle = "#14233a";
 
-            ctx.font = "600 20px 'Plus Jakarta Sans', sans-serif";
-            ctx.fillStyle = "#14233a";
+        plan.forEach(function (t, i) {
 
-            plan.forEach(function (t, i) {
-
-                wrapTextLines(ctx, (i + 1) + ". " + t, maxW).forEach(function (ln) {
-                    if (y < H - pad - 70) ctx.fillText(ln, x, y);
-                    y += 28;
-                });
-
-                y += 8;
-
+            wrapTextLines(ctx, (i + 1) + ". " + t, maxW).forEach(function (ln) {
+                if (y < H - pad - 70) ctx.fillText(ln, x, y);
+                y += 28;
             });
 
-        }
+            y += 8;
+
+        });
 
         ctx.font = "600 18px 'Plus Jakarta Sans', sans-serif";
         ctx.fillStyle = "#55657d";
@@ -1114,6 +1104,8 @@ rumpun minat secara otomatis.
     }
 
     function downloadCard() {
+
+        if (!storeComplete(loadStore())) return;
 
         var go = function () {
 
@@ -1138,51 +1130,32 @@ rumpun minat secara otomatis.
 
     /* ---------- event ---------- */
 
+    function onRunEvent(e) {
+
+        var t = e.target;
+
+        if (!t || !t.classList || !t.classList.contains("pb-range")) return;
+
+        if (e.type === "keyup" && e.key !== "Enter" && e.key !== " ") return;
+
+        answer(t);
+
+    }
+
     function bind() {
 
-        $("pbMods").addEventListener("click", function (e) {
+        var body = $("pbRunBody");
 
-            var btn = e.target.closest ? e.target.closest("[data-mod]") : null;
+        ["input", "change", "click", "keyup"].forEach(function (ev) { body.addEventListener(ev, onRunEvent); });
 
-            if (!btn) return;
-
-            var key = btn.getAttribute("data-mod");
-            var s = loadStore();
-
-            if (s[key]) {
-                showResult(key);
-            } else {
-                startModule(key);
-            }
-
-        });
-
-        $("pbRunBody").addEventListener("change", function (e) {
-
-            if (e.target.id === "pbKelas") {
-                readRadios();
-                state.kelas = e.target.value;
-                state.answers = {};
-                renderTopics();
-                saveDraft();
-            }
-
-        });
-
-        $("pbRunBody").addEventListener("change", function (e) {
-            if (e.target.type === "radio") { readRadios(); saveDraft(); }
-        });
-
+        $("pbMulai").addEventListener("click", onMulai);
+        $("pbLihat").addEventListener("click", showResult);
         $("pbNext").addEventListener("click", onNext);
         $("pbBack").addEventListener("click", onBack);
 
-        $("pbUlang").addEventListener("click", function () { startModule(state.mod, true); });
+        $("pbKelas").addEventListener("change", function () { $("pbStartError").hidden = true; });
 
-        $("pbKeHub").addEventListener("click", function () {
-            renderHub();
-            show("hub");
-        });
-
+        $("pbUlang").addEventListener("click", function () { renderStart(); show("start"); });
         $("pbUnduh").addEventListener("click", downloadCard);
         $("pbCetak").addEventListener("click", printAll);
 
@@ -1190,12 +1163,12 @@ rumpun minat secara otomatis.
 
             if (!window.confirm("Hapus semua hasil Profil Belajar di browser ini? Tindakan ini tidak bisa dibatalkan.")) return;
 
-            try {
-                localStorage.removeItem(STORE_KEY);
-                localStorage.removeItem(DRAFT_KEY);
-            } catch (e) { /* abaikan */ }
+            removeKey(STORE_KEY);
+            removeKey(DRAFT_KEY);
 
-            renderHub();
+            $("pbKelas").value = "";
+            renderStart();
+            show("start");
 
         });
 
@@ -1216,14 +1189,14 @@ rumpun minat secara otomatis.
 
         // Konfigurasi rasionalisasi hanya dipakai untuk saran mapel pilihan
         // TKA dan nama rumpun; kalau gagal dimuat, halaman tetap jalan.
-        fetchJson(RS_URL).then(function (d) { rsCfg = d; renderSummary(); }, function () { rsCfg = null; });
+        fetchJson(RS_URL).then(function (d) { rsCfg = d; }, function () { rsCfg = null; });
 
         fetchJson(CFG_URL).then(function (d) {
             cfg = d;
-            renderHub();
+            renderStart();
         }, function () {
             cfg = null;
-            renderHub();
+            renderStart();
         });
 
     }
